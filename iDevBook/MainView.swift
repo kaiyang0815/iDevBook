@@ -10,12 +10,16 @@ import SwiftUI
 
 struct MainView: View {
     @State private var searchText: String = ""
-    
+
     var body: some View {
         NavigationStack {
             List {
-                Section("latest") {
-
+                Section("Latest") {
+                    NavigationLink {
+                        SwiftLanguage6View()
+                    } label: {
+                        Text("Swift 6")
+                    }
                 }
                 Section("Views") {
                     NavigationLink {
@@ -49,17 +53,33 @@ struct MainView: View {
                         Text("Gestures")
                     }
                 }
+
                 Section("View layout") {
                     Text("Layout fundamentals")
                 }
-                
+
+                Section("Packages") {
+                    NavigationLink {
+                        RichTextKitDemoView()
+                    } label: {
+                        Text("RichTextKit")
+                    }
+                }
+
+                Section("Examples") {
+                    NavigationLink {
+                        AppShortcutsDemoView()
+                    } label: {
+                        Text("App Shortcuts")
+                    }
+                }
+
                 Section("Other") {
                     NavigationLink {
                         BookmarkView()
                     } label: {
                         Text("Bookmark")
                     }
-
                 }
             }
             .navigationTitle("iDev Book")
