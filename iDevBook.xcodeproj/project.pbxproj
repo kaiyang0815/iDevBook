@@ -6,6 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105692D7662EE00549A0F /* RichTextKit */; };
+		BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */; };
+		BDB1056F2D76668B00549A0F /* Lexical in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056E2D76668B00549A0F /* Lexical */; };
+		BDB105712D76668B00549A0F /* LexicalHTML in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105702D76668B00549A0F /* LexicalHTML */; };
+		BDB105732D76668B00549A0F /* LexicalInlineImagePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */; };
+		BDB105752D76668B00549A0F /* LexicalLinkPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105742D76668B00549A0F /* LexicalLinkPlugin */; };
+		BDB105772D76668B00549A0F /* LexicalListHTMLSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105762D76668B00549A0F /* LexicalListHTMLSupport */; };
+		BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105782D76668B00549A0F /* LexicalListPlugin */; };
+		BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FBA912A72D49CFA000447692 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +64,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDB105752D76668B00549A0F /* LexicalLinkPlugin in Frameworks */,
+				BDB105772D76668B00549A0F /* LexicalListHTMLSupport in Frameworks */,
+				BDB1056F2D76668B00549A0F /* Lexical in Frameworks */,
+				BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */,
+				BDB105712D76668B00549A0F /* LexicalHTML in Frameworks */,
+				BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */,
+				BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */,
+				BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */,
+				BDB105732D76668B00549A0F /* LexicalInlineImagePlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +133,15 @@
 			);
 			name = iDevBook;
 			packageProductDependencies = (
+				BDB105692D7662EE00549A0F /* RichTextKit */,
+				BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */,
+				BDB1056E2D76668B00549A0F /* Lexical */,
+				BDB105702D76668B00549A0F /* LexicalHTML */,
+				BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */,
+				BDB105742D76668B00549A0F /* LexicalLinkPlugin */,
+				BDB105762D76668B00549A0F /* LexicalListHTMLSupport */,
+				BDB105782D76668B00549A0F /* LexicalListPlugin */,
+				BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */,
 			);
 			productName = iDevBook;
 			productReference = FBA912932D49CF9E00447692 /* iDevBook.app */;
@@ -195,6 +225,10 @@
 			);
 			mainGroup = FBA9128A2D49CF9E00447692;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */,
+				BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FBA912942D49CF9E00447692 /* Products */;
 			projectDirPath = "";
@@ -585,6 +619,73 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielsaidi/RichTextKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.2;
+			};
+		};
+		BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/lexical-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDB105692D7662EE00549A0F /* RichTextKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */;
+			productName = RichTextKit;
+		};
+		BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = EditorHistoryPlugin;
+		};
+		BDB1056E2D76668B00549A0F /* Lexical */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = Lexical;
+		};
+		BDB105702D76668B00549A0F /* LexicalHTML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = LexicalHTML;
+		};
+		BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = LexicalInlineImagePlugin;
+		};
+		BDB105742D76668B00549A0F /* LexicalLinkPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = LexicalLinkPlugin;
+		};
+		BDB105762D76668B00549A0F /* LexicalListHTMLSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = LexicalListHTMLSupport;
+		};
+		BDB105782D76668B00549A0F /* LexicalListPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = LexicalListPlugin;
+		};
+		BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
+			productName = SelectableDecoratorNode;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FBA9128B2D49CF9E00447692 /* Project object */;
 }

@@ -64,6 +64,12 @@ struct MainView: View {
                     } label: {
                         Text("RichTextKit")
                     }
+                    
+                    NavigationLink {
+                        LexicalDemoView()
+                    } label: {
+                        Text("lexical-ios")
+                    }
                 }
 
                 Section("Examples") {
