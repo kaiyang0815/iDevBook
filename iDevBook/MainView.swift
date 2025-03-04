@@ -84,6 +84,11 @@ struct MainView: View {
                     } label: {
                         Text("App Shortcuts")
                     }
+                    NavigationLink {
+                        ManualViewOrientationControlView()
+                    } label: {
+                        Text("Manual View Orientation Control")
+                    }
                 }
 
                 Section("Other") {

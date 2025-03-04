@@ -9,14 +9,15 @@ import HighlightSwift
 import SwiftUI
 
 struct SwiftLanguage6View: View {
-    let someCode: String = """
-        print(\"Hello World\")
-        """
     var body: some View {
-        CodeText(someCode)
-            .highlightLanguage(.swift)
-            .codeTextStyle(.card)
-            .codeTextColors(.theme(.github))
+        NavigationStack {
+            List {
+                NavigationLink("Function and Closures") {
+                    FunctionandClosuresView()
+                }
+            }
+            .navigationTitle("Swift 6")
+        }
     }
 }
 
