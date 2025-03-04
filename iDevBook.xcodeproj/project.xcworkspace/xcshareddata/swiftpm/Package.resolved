@@ -1,6 +1,15 @@
 {
-  "originHash" : "806ee1747848d8bfcce383c2ec035436fdefd789dab0fa1dab3bd9ed6628b9d9",
+  "originHash" : "e469c2712605c54edfd322c8a000fc44730a767b8cc8a7d46980d738cc695f5d",
   "pins" : [
+    {
+      "identity" : "highlightswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/appstefan/HighlightSwift.git",
+      "state" : {
+        "revision" : "784ca3ccfc8a2cf724fbb2f06cb6ec3329424da3",
+        "version" : "1.1.0"
+      }
+    },
     {
       "identity" : "lexical-ios",
       "kind" : "remoteSourceControl",

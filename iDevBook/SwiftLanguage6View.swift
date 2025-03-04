@@ -5,12 +5,18 @@
 // Copyright © 2025 Kaiyang0815.
 // All Rights Reserved.
 
-
+import HighlightSwift
 import SwiftUI
 
 struct SwiftLanguage6View: View {
+    let someCode: String = """
+        print(\"Hello World\")
+        """
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        CodeText(someCode)
+            .highlightLanguage(.swift)
+            .codeTextStyle(.card)
+            .codeTextColors(.theme(.github))
     }
 }
 

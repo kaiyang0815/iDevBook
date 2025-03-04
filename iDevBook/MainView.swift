@@ -70,6 +70,12 @@ struct MainView: View {
                     } label: {
                         Text("lexical-ios")
                     }
+                    
+                    NavigationLink {
+                        HighlightSwiftView()
+                    } label: {
+                        Text("HighlightSwift")
+                    }
                 }
 
                 Section("Examples") {
