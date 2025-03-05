@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BD722C482D77C4E4003141DF /* ManualViewOrientationControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD722C472D77C4E4003141DF /* ManualViewOrientationControlView.swift */; };
 		BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105692D7662EE00549A0F /* RichTextKit */; };
 		BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */; };
 		BDB1056F2D76668B00549A0F /* Lexical in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056E2D76668B00549A0F /* Lexical */; };
@@ -38,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BD722C472D77C4E4003141DF /* ManualViewOrientationControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualViewOrientationControlView.swift; sourceTree = "<group>"; };
 		FBA912932D49CF9E00447692 /* iDevBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDevBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBA912A62D49CFA000447692 /* iDevBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDevBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBA912B02D49CFA000447692 /* iDevBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDevBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,7 +98,6 @@
 		FBA9128A2D49CF9E00447692 = {
 			isa = PBXGroup;
 			children = (
-				BD722C472D77C4E4003141DF /* ManualViewOrientationControlView.swift */,
 				FBA912952D49CF9E00447692 /* iDevBook */,
 				FBA912A92D49CFA000447692 /* iDevBookTests */,
 				FBA912B32D49CFA000447692 /* iDevBookUITests */,
@@ -277,7 +274,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD722C482D77C4E4003141DF /* ManualViewOrientationControlView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
