@@ -160,7 +160,8 @@ struct TextInputAndOutputView: View {
         "You can’t connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future."
 
     @FocusState private var textFieldIsFocused: Bool
-
+    @State private var hideTabBar: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -765,6 +766,12 @@ struct TextInputAndOutputView: View {
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
+                }
+            }
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar = true
                 }
             }
         }

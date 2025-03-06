@@ -13,7 +13,7 @@ enum RootTab: String, CaseIterable, Identifiable {
     case article = "Articles"
     case setting = "Settings"
     case search = "Search"
-    case notifications = "Notifications"
+    case newsletter = "Newsletter"
 
     var id: Self {
         return self
@@ -29,7 +29,7 @@ enum RootTab: String, CaseIterable, Identifiable {
             "gearshape"
         case .search:
             "magnifyingglass"
-        case .notifications:
+        case .newsletter:
             "bell"
         }
     }
@@ -40,21 +40,33 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab(RootTab.book.rawValue, systemImage: RootTab.book.symbol, value: .book) {
+            Tab(
+                RootTab.book.rawValue, systemImage: RootTab.book.symbol,
+                value: .book
+            ) {
                 MainView()
             }
-            Tab(RootTab.article.rawValue, systemImage: RootTab.article.symbol, value: .article) {
+            Tab(
+                RootTab.article.rawValue, systemImage: RootTab.article.symbol,
+                value: .article
+            ) {
                 ArticlesView()
             }
-            Tab(RootTab.setting.rawValue, systemImage: RootTab.setting.symbol, value: .setting) {
-                SettingsView()
-            }
-            Tab(RootTab.notifications.rawValue, systemImage: RootTab.notifications.symbol, value: .notifications) {
-                Text("Notifications")
+            Tab(
+                RootTab.newsletter.rawValue,
+                systemImage: RootTab.newsletter.symbol, value: .newsletter
+            ) {
+                NewslettersView()
             }
             .tabPlacement(.pinned)
             Tab(value: .search, role: .search) {
                 Text("Search...")
+            }
+            Tab(
+                RootTab.setting.rawValue, systemImage: RootTab.setting.symbol,
+                value: .setting
+            ) {
+                SettingsView()
             }
         }
         .tabViewStyle(.sidebarAdaptable)

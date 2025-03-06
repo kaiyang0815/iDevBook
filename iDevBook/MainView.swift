@@ -10,7 +10,8 @@ import SwiftUI
 
 struct MainView: View {
     @State private var searchText: String = ""
-
+    @State private var hideTabBar: Bool = true
+    
     var body: some View {
         NavigationStack {
             List {
@@ -21,7 +22,7 @@ struct MainView: View {
                         Text("Swift 6")
                     }
                 }
-                Section("Views") {
+                Section("SwiftUI") {
                     NavigationLink {
                         AnimationsView()
                     } label: {
@@ -100,6 +101,12 @@ struct MainView: View {
                 }
             }
             .navigationTitle("iDev Book")
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar = false
+                }
+            }
             #if os(iOS)
                 .toolbarRole(.editor)
             #endif
@@ -108,5 +115,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    RootView()
 }

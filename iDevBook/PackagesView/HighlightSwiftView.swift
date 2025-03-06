@@ -112,40 +112,44 @@ struct HighlightSwiftView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("Raw code") {
-                    TextEditor(text: $someCode)
-                }
-
-                Section("Highlighed code") {
-                    CodeText(someCode)
-                        .highlightLanguage(selectedLanguage)
-                        .codeTextStyle(selecteedStyle.codeTextStyle)
-                        .codeTextColors(.theme(selectedTheme))
-                        .frame(height: 100)
-                }
-
-                Section("Controller") {
-                    Picker("Style", selection: $selecteedStyle) {
-                        ForEach(CodeTextStyleType.allCases, id: \.self) {
-                            style in
-                            Text(style.rawValue)
-                                .tag(style)
-                        }
+            VStack {
+                List {
+                    Section("Preview") {
+                        CodeText(someCode)
+                            .highlightLanguage(selectedLanguage)
+                            .codeTextStyle(selecteedStyle.codeTextStyle)
+                            .codeTextColors(.theme(selectedTheme))
+                            .frame(height: 100)
                     }
+                }
+                .scrollDisabled(true)
+                .frame(height: 280)
+                Divider()
+                List {
+                    Section("Controll") {
+                        TextEditor(text: $someCode)
 
-                    Picker("Theme", selection: $selectedTheme) {
-                        ForEach(HighlightTheme.allCases) { theme in
-                            Text(theme.rawValue)
-                                .tag(theme)
+                        Picker("Style", selection: $selecteedStyle) {
+                            ForEach(CodeTextStyleType.allCases, id: \.self) {
+                                style in
+                                Text(style.rawValue)
+                                    .tag(style)
+                            }
                         }
-                    }
 
-                    Picker("Language", selection: $selectedLanguage) {
-                        ForEach(HighlightLanguage.allCases, id: \.self) {
-                            lang in
-                            Text(lang.rawValue)
-                                .tag(lang)
+                        Picker("Theme", selection: $selectedTheme) {
+                            ForEach(HighlightTheme.allCases) { theme in
+                                Text(theme.rawValue)
+                                    .tag(theme)
+                            }
+                        }
+
+                        Picker("Language", selection: $selectedLanguage) {
+                            ForEach(HighlightLanguage.allCases, id: \.self) {
+                                lang in
+                                Text(lang.rawValue)
+                                    .tag(lang)
+                            }
                         }
                     }
                 }

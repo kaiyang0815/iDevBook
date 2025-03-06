@@ -295,7 +295,8 @@ struct ControlsAndIndicatorsView: View {
     @State private var progressTotal = 1.0
 
     @State private var showDescription: Bool = false
-
+    @State private var hideTabBar: Bool = false
+    
     @FocusState private var isFocused: Bool
     
     var listHeight: Double {
@@ -944,6 +945,7 @@ struct ControlsAndIndicatorsView: View {
                 }
             }
             .navigationTitle("Controls and indicators")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {
@@ -951,6 +953,12 @@ struct ControlsAndIndicatorsView: View {
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
+                }
+            }
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar = true
                 }
             }
         }

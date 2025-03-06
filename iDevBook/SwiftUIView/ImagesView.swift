@@ -94,6 +94,8 @@ struct ImagesView: View {
     @State private var showSymbolEffect: Bool = true
     @State private var showSymbolEffectsRemoved: Bool = true
 
+    @State private var hideTabBar: Bool = false
+
     func createTriangleCGImage() -> CGImage? {
         let width = 200
         let height = 200
@@ -264,7 +266,8 @@ struct ImagesView: View {
                                 case .local:
                                     exampleImage
                                         .resizable(
-                                            resizingMode: selectedImageResizingMode
+                                            resizingMode:
+                                                selectedImageResizingMode
                                         )
                                         .aspectRatio(
                                             contentMode: selectedContentMode
@@ -295,7 +298,8 @@ struct ImagesView: View {
                                                         selectedImageResizingMode
                                                 )
                                                 .aspectRatio(
-                                                    contentMode: selectedContentMode
+                                                    contentMode:
+                                                        selectedContentMode
                                                 )
                                                 .border(
                                                     showBorder
@@ -333,7 +337,8 @@ struct ImagesView: View {
                                                 uiImage: UIImage(
                                                     cgImage: cgImage, scale: 1,
                                                     orientation:
-                                                        selectedImageOrientation)
+                                                        selectedImageOrientation
+                                                )
                                             )
                                             .resizable(
                                                 resizingMode:
@@ -344,7 +349,8 @@ struct ImagesView: View {
                                             )
                                             .border(
                                                 showBorder
-                                                    ? Color.primary : Color.clear)
+                                                    ? Color.primary
+                                                    : Color.clear)
                                         }
                                         Spacer()
                                     }
@@ -406,7 +412,8 @@ struct ImagesView: View {
                                         .imageScale(selectedImageScale)
                                         .symbolVariant(selectedSymbolVariants)
                                         .symbolEffect(
-                                            .variableColor, value: showSymbolEffect)
+                                            .variableColor,
+                                            value: showSymbolEffect)
                                 case .breathe:
                                     symbolImage
                                         .imageScale(selectedImageScale)
@@ -428,7 +435,8 @@ struct ImagesView: View {
                                 }
                                 Text(
                                     "bolt."
-                                        + selectedSymbolVariants.name.lowercased())
+                                        + selectedSymbolVariants.name
+                                        .lowercased())
                             }
                         }
                     }
@@ -451,7 +459,8 @@ struct ImagesView: View {
                                 "Content Mode",
                                 selection: $selectedContentMode.animation()
                             ) {
-                                ForEach(ContentMode.allCases, id: \.self) { mode in
+                                ForEach(ContentMode.allCases, id: \.self) {
+                                    mode in
                                     Text(mode.name)
                                 }
                             }
@@ -467,9 +476,11 @@ struct ImagesView: View {
                         VStack(alignment: .leading) {
                             Picker(
                                 "Resizing Mode",
-                                selection: $selectedImageResizingMode.animation()
+                                selection:
+                                    $selectedImageResizingMode.animation()
                             ) {
-                                ForEach(Image.ResizingMode.allCases, id: \.self) {
+                                ForEach(Image.ResizingMode.allCases, id: \.self)
+                                {
                                     mode in
                                     Text(mode.name)
                                 }
@@ -508,7 +519,8 @@ struct ImagesView: View {
                             VStack(alignment: .leading) {
                                 Picker(
                                     "Orientation",
-                                    selection: $selectedImageOrientation.animation()
+                                    selection:
+                                        $selectedImageOrientation.animation()
                                 ) {
                                     ForEach(
                                         UIImage.Orientation.allCases, id: \.self
@@ -539,37 +551,43 @@ struct ImagesView: View {
                                         case SymbolVariants.circle:
                                             Button("Circle") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .none
+                                                    selectedSymbolVariants =
+                                                        .none
                                                 }
                                             }
                                         case SymbolVariants.fill:
                                             Button("Fill") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .none
+                                                    selectedSymbolVariants =
+                                                        .none
                                                 }
                                             }
                                         case SymbolVariants.rectangle:
                                             Button("Rectangle") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .none
+                                                    selectedSymbolVariants =
+                                                        .none
                                                 }
                                             }
                                         case SymbolVariants.slash:
                                             Button("Slash") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .none
+                                                    selectedSymbolVariants =
+                                                        .none
                                                 }
                                             }
                                         case SymbolVariants.square:
                                             Button("Square") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .square
+                                                    selectedSymbolVariants =
+                                                        .square
                                                 }
                                             }
                                         case SymbolVariants.none:
                                             Button("None") {
                                                 withAnimation {
-                                                    selectedSymbolVariants = .none
+                                                    selectedSymbolVariants =
+                                                        .none
                                                 }
                                             }
                                         default:
@@ -598,7 +616,8 @@ struct ImagesView: View {
 
                     Section("Value") {
                         if selectedSource == .asyncImage {
-                            LabeledContent("Phase", value: asyncImagePhaseString)
+                            LabeledContent(
+                                "Phase", value: asyncImagePhaseString)
                         }
                     }
                 }
@@ -622,6 +641,12 @@ struct ImagesView: View {
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
+                }
+            }
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar = true
                 }
             }
         }

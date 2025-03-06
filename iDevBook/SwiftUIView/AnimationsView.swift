@@ -148,6 +148,7 @@ struct AnimationsView: View {
     @State private var springAnimationBounce: Double = 0.0
     
     @State private var offseX: CGFloat = 180
+    @State private var hideTabBar: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -479,6 +480,12 @@ struct AnimationsView: View {
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
+                }
+            }
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar = true
                 }
             }
         }
