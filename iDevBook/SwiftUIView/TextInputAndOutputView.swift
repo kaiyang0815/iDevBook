@@ -162,11 +162,26 @@ struct TextInputAndOutputView: View {
     @FocusState private var textFieldIsFocused: Bool
     @State private var hideTabBar: Bool = false
     
+    var listHeight: Double {
+        switch selectedTextInputAndOutputType {
+        case .text:
+            140
+        case .label:
+            100
+        case .textField:
+            100
+        case .secureField:
+            100
+        case .textEditor:
+            200
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 List {
-                    Section {
+                    Section("Preview") {
                         VStack {
                             switch selectedTextInputAndOutputType {
                             case .text:
@@ -304,7 +319,7 @@ struct TextInputAndOutputView: View {
                     }
                 }
                 .scrollDisabled(true)
-                .frame(height: 180)
+                .frame(height: listHeight)
                 Divider()
                 List {
                     Section {
@@ -759,6 +774,7 @@ struct TextInputAndOutputView: View {
                 }
             }
             .navigationTitle("Text input and output")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {

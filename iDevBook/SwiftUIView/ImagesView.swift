@@ -253,6 +253,19 @@ struct ImagesView: View {
             }
         }
     }
+    
+    var listHeight: Double {
+        switch selectedSource {
+        case .local:
+            280
+        case .asyncImage:
+            280
+        case .bitmap:
+            200
+        case .symbol:
+            360
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -442,7 +455,7 @@ struct ImagesView: View {
                     }
                 }
                 .scrollDisabled(true)
-                .frame(height: 240)
+                .frame(height: listHeight)
                 Divider()
                 List {
                     Section("Control") {
@@ -623,6 +636,7 @@ struct ImagesView: View {
                 }
             }
             .navigationTitle("Images")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {

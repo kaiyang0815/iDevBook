@@ -66,7 +66,7 @@ struct ShapesView: View {
     @State private var selectedStrokeColor: Color = Color.blue
     @State private var selectedRoundedCornerStyle: RoundedCornerStyle =
         .circular
-    @State private var selectedStrokeWidth: CGFloat = 4
+    @State private var selectedStrokeWidth: CGFloat = 0
     @State private var selectedStrokeDash: [CGFloat] = [10]
 
     @State private var isStrokeBorder: Bool = false
@@ -94,8 +94,8 @@ struct ShapesView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 List {
-                    GeometryReader { proxy in
-                        Section("Preview") {
+                    Section("Preview") {
+                        GeometryReader { proxy in
                             VStack {
                                 switch selectedShapeType {
                                 case .rectangle:
@@ -169,11 +169,13 @@ struct ShapesView: View {
                                 }
                             }
                         }
+                        .padding()
+                        .frame(height: 180)
+                        .shadow(radius: 20)
                     }
-                    .frame(height: 180)
                 }
                 .scrollDisabled(true)
-                .frame(height: 280)
+                .frame(height: 260)
                 Divider()
                 List {
                     Section {
@@ -283,6 +285,7 @@ struct ShapesView: View {
                 }
             }
             .navigationTitle("Shapes")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {

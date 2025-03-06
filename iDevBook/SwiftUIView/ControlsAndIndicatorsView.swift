@@ -334,11 +334,11 @@ struct ControlsAndIndicatorsView: View {
         case .colorPicker:
             100
         case .gauge:
-            180
+            160
         case .progressView:
-            180
+            160
         case .contentUnavailableView:
-            280
+            260
         }
     }
 
@@ -612,7 +612,11 @@ struct ControlsAndIndicatorsView: View {
                                 .datePickerStyle(.wheel)
                             }
                         case .multiDatePicker:
-                            Text("")
+                            #if os(iOS)
+                                Text("macOS only")
+                            #elseif os(macOS)
+                            MultiDatePicker("Time", selection: $datePickerValue)
+                            #endif
                         case .colorPicker:
                             ColorPicker(
                                 "Color Picker", selection: $colorPickerValue,

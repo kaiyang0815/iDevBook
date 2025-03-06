@@ -174,35 +174,69 @@ struct GesturesView: View {
                                     .sensoryFeedback(
                                         .success, trigger: tapCount)
                             case .dragGesture:
-                                RoundedRectangle(cornerRadius: 12)
-                                    .offset(
-                                        x: dragOffset.width,
-                                        y: dragOffset.height
-                                    )
-                                    .gesture(dragGesture)
-                                    .shadow(radius: 4)
-                                    .sensoryFeedback(
-                                        .success, trigger: tapCount)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.secondary.opacity(0.35))
+                                        .frame(width: 50, height: 50)
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(
+                                                    .secondary, lineWidth: 1)
+                                        }
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .frame(width: 50, height: 50)
+                                        .offset(
+                                            x: dragOffset.width,
+                                            y: dragOffset.height
+                                        )
+                                        .gesture(dragGesture)
+                                        .shadow(radius: 4)
+                                        .sensoryFeedback(
+                                            .success, trigger: tapCount)
+                                }
                             case .windowDragGesture:
-                                RoundedRectangle(cornerRadius: 12)
+                                #if os(iOS)
+                                    Text("macOS Only")
+                                #endif
                             case .magnifyGesture:
-                                RoundedRectangle(cornerRadius: 12)
-                                    .gesture(magnifyGesture)
-                                    .scaleEffect(magnifyBy)
-                                    .shadow(radius: 4)
+                                ZStack {
+                                    HStack {
+                                        Spacer()
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .frame(width: 120, height: 120)
+                                        Spacer()
+                                    }
+                                    Image(systemName: "arrow.down.left.and.arrow.up.right")
+                                        .foregroundStyle(.white)
+                                        .font(.largeTitle)
+                                }
+                                .gesture(magnifyGesture)
+                                .scaleEffect(magnifyBy)
+                                .shadow(radius: 4)
                             case .rotateGesture:
-                                RoundedRectangle(cornerRadius: 12)
-                                    .gesture(rotateGesture)
-                                    .rotationEffect(angle)
-                                    .shadow(radius: 4)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .frame(height: 60)
+                                    HStack {
+                                        Image(systemName: "arrowshape.up")
+                                            .foregroundStyle(.white)
+                                        Spacer()
+                                        Image(systemName: "arrowshape.down")
+                                            .foregroundStyle(.white)
+                                    }
+                                    .padding(.horizontal)
+                                }
+                                .gesture(rotateGesture)
+                                .rotationEffect(angle)
+                                .shadow(radius: 4)
                             }
                         }
-                        .frame(height: 100)
+                        .frame(height: selectedGesture == .rotateGesture || selectedGesture == .magnifyGesture ? 200 : 100)
                         .padding(.vertical, 10)
                     }
                 }
                 .scrollDisabled(true)
-                .frame(height: 200)
+                .frame(height: selectedGesture == .rotateGesture || selectedGesture == .magnifyGesture ? 300 : 200)
                 Divider()
                 List {
                     Section {

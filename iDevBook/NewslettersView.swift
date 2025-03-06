@@ -36,18 +36,21 @@ struct NewslettersView: View {
         NavigationStack {
             List {
                 ForEach(NewslettersList.sorted(by: { $0.publishedAt > $1.publishedAt }), id: \.id) { newsletter in
-                    NavigationLink {
-                        Text(newsletter.description)
-                    } label: {
-                        Section {
-                            Text(newsletter.title)
-                                .font(.headline)
+                    Section {
+                        NavigationLink {
                             Text(newsletter.description)
-                                .lineLimit(3)
-                                .foregroundStyle(.secondary)
-                        } footer: {
-                            Text(newsletter.publishedAt, format: .dateTime)
+                        } label: {
+                            VStack(alignment: .leading) {
+                                Text(newsletter.title)
+                                    .font(.headline)
+                                Divider()
+                                Text(newsletter.description)
+                                    .lineLimit(3)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
+                    } footer: {
+                        Text(newsletter.publishedAt, format: .dateTime)
                     }
                 }
             }
