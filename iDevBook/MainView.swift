@@ -64,13 +64,13 @@ struct MainView: View {
                     } label: {
                         Text("RichTextKit")
                     }
-                    
+
                     NavigationLink {
                         LexicalDemoView()
                     } label: {
                         Text("lexical-ios")
                     }
-                    
+
                     NavigationLink {
                         HighlightSwiftView()
                     } label: {
@@ -100,7 +100,9 @@ struct MainView: View {
                 }
             }
             .navigationTitle("iDev Book")
-            .searchable(text: $searchText)
+            #if os(iOS)
+                .toolbarRole(.editor)
+            #endif
         }
     }
 }

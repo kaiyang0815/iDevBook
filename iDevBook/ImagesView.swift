@@ -254,41 +254,87 @@ struct ImagesView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    HStack {
-                        Spacer()
-                        VStack {
-                            switch selectedSource {
-                            case .local:
-                                exampleImage
-                                    .resizable(
-                                        resizingMode: selectedImageResizingMode
-                                    )
-                                    .aspectRatio(
-                                        contentMode: selectedContentMode
-                                    )
-                                    .border(
-                                        showBorder
-                                            ? Color.primary : Color.clear)
-                            case .asyncImage:
-                                AsyncImage(
-                                    url: URL(
-                                        string:
-                                            "https://images.unsplash.com/photo-1737143765999-bd3be790ab4f?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    )
-                                ) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            .onAppear {
-                                                withAnimation {
-                                                    asyncImagePhaseString =
-                                                        "Loading"
+            VStack(spacing: 0) {
+                List {
+                    Section {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                switch selectedSource {
+                                case .local:
+                                    exampleImage
+                                        .resizable(
+                                            resizingMode: selectedImageResizingMode
+                                        )
+                                        .aspectRatio(
+                                            contentMode: selectedContentMode
+                                        )
+                                        .border(
+                                            showBorder
+                                                ? Color.primary : Color.clear)
+                                case .asyncImage:
+                                    AsyncImage(
+                                        url: URL(
+                                            string:
+                                                "https://images.unsplash.com/photo-1737143765999-bd3be790ab4f?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        )
+                                    ) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                                .onAppear {
+                                                    withAnimation {
+                                                        asyncImagePhaseString =
+                                                            "Loading"
+                                                    }
                                                 }
-                                            }
-                                    case .success(let image):
-                                        image
+                                        case .success(let image):
+                                            image
+                                                .resizable(
+                                                    resizingMode:
+                                                        selectedImageResizingMode
+                                                )
+                                                .aspectRatio(
+                                                    contentMode: selectedContentMode
+                                                )
+                                                .border(
+                                                    showBorder
+                                                        ? Color.primary
+                                                        : Color.clear
+                                                )
+                                                .onAppear {
+                                                    withAnimation {
+                                                        asyncImagePhaseString =
+                                                            "Loaded"
+                                                    }
+                                                }
+                                        case .failure(let error):
+                                            Image(
+                                                systemName:
+                                                    "photo.badge.exclamationmark"
+                                            )
+                                            .font(.title)
+                                            Text(error.localizedDescription)
+                                                .onAppear {
+                                                    withAnimation {
+                                                        asyncImagePhaseString =
+                                                            "Error"
+                                                    }
+                                                }
+                                        @unknown default:
+                                            Color.orange.opacity(0.3)
+                                        }
+                                    }
+                                case .bitmap:
+                                    HStack {
+                                        Spacer()
+                                        if let cgImage = cgImage {
+                                            Image(
+                                                uiImage: UIImage(
+                                                    cgImage: cgImage, scale: 1,
+                                                    orientation:
+                                                        selectedImageOrientation)
+                                            )
                                             .resizable(
                                                 resizingMode:
                                                     selectedImageResizingMode
@@ -298,42 +344,12 @@ struct ImagesView: View {
                                             )
                                             .border(
                                                 showBorder
-                                                    ? Color.primary
-                                                    : Color.clear
-                                            )
-                                            .onAppear {
-                                                withAnimation {
-                                                    asyncImagePhaseString =
-                                                        "Loaded"
-                                                }
-                                            }
-                                    case .failure(let error):
-                                        Image(
-                                            systemName:
-                                                "photo.badge.exclamationmark"
-                                        )
-                                        .font(.title)
-                                        Text(error.localizedDescription)
-                                            .onAppear {
-                                                withAnimation {
-                                                    asyncImagePhaseString =
-                                                        "Error"
-                                                }
-                                            }
-                                    @unknown default:
-                                        Color.orange.opacity(0.3)
+                                                    ? Color.primary : Color.clear)
+                                        }
+                                        Spacer()
                                     }
-                                }
-                            case .bitmap:
-                                HStack {
-                                    Spacer()
-                                    if let cgImage = cgImage {
-                                        Image(
-                                            uiImage: UIImage(
-                                                cgImage: cgImage, scale: 1,
-                                                orientation:
-                                                    selectedImageOrientation)
-                                        )
+                                case .symbol:
+                                    Image(systemName: "apple.logo")
                                         .resizable(
                                             resizingMode:
                                                 selectedImageResizingMode
@@ -344,257 +360,246 @@ struct ImagesView: View {
                                         .border(
                                             showBorder
                                                 ? Color.primary : Color.clear)
-                                    }
-                                    Spacer()
                                 }
-                            case .symbol:
-                                Image(systemName: "apple.logo")
-                                    .resizable(
-                                        resizingMode:
-                                            selectedImageResizingMode
-                                    )
-                                    .aspectRatio(
-                                        contentMode: selectedContentMode
-                                    )
-                                    .border(
-                                        showBorder
-                                            ? Color.primary : Color.clear)
                             }
-                        }
-                        .onAppear {
-                            cgImage = createTriangleCGImage()
-                        }
-                        .frame(width: 200, height: 200)
-                        .overlay {
-                            Rectangle()
-                                .stroke(Color.accentColor, lineWidth: 2)
-                        }
-                        Spacer()
-                    }
-                }
-
-                if selectedSource == .symbol {
-                    Section {
-                        HStack {
-                            switch selectedSymbolEffect {
-                            case .appear:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                            case .bounce:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .bounce, value: showSymbolEffect)
-                            case .disappear:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                            case .pulse:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .pulse, value: showSymbolEffect)
-                            case .scale:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                            case .variableColor:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .variableColor, value: showSymbolEffect)
-                            case .breathe:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .breathe, value: showSymbolEffect)
-                            case .rotate:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .rotate, value: showSymbolEffect)
-                            case .wiggle:
-                                symbolImage
-                                    .imageScale(selectedImageScale)
-                                    .symbolVariant(selectedSymbolVariants)
-                                    .symbolEffect(
-                                        .wiggle, value: showSymbolEffect)
+                            .onAppear {
+                                cgImage = createTriangleCGImage()
                             }
-                            Text(
-                                "bolt."
-                                    + selectedSymbolVariants.name.lowercased())
-                        }
-                    }
-                }
-
-                Section("Control") {
-                    Picker("Type", selection: $selectedSource.animation()) {
-                        ForEach(SourceType.allCases) { type in
-                            Text(type.name)
-                        }
-                    }
-
-                    Toggle("Image Border", isOn: $showBorder.animation())
-
-                    VStack(alignment: .leading) {
-                        Picker(
-                            "Content Mode",
-                            selection: $selectedContentMode.animation()
-                        ) {
-                            ForEach(ContentMode.allCases, id: \.self) { mode in
-                                Text(mode.name)
+                            .frame(width: 200, height: 200)
+                            .overlay {
+                                Rectangle()
+                                    .stroke(Color.accentColor, lineWidth: 2)
                             }
-                        }
-                        if showDescription {
-                            Text(
-                                "Constants that define how a view’s content fills the available space."
-                            )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            Spacer()
                         }
                     }
-
-                    VStack(alignment: .leading) {
-                        Picker(
-                            "Resizing Mode",
-                            selection: $selectedImageResizingMode.animation()
-                        ) {
-                            ForEach(Image.ResizingMode.allCases, id: \.self) {
-                                mode in
-                                Text(mode.name)
-                            }
-                        }
-                        if showDescription {
-                            Text(
-                                "The modes that SwiftUI uses to resize an image to fit within its containing view."
-                            )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        }
-                    }
-
                     if selectedSource == .symbol {
+                        Section {
+                            HStack {
+                                switch selectedSymbolEffect {
+                                case .appear:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                case .bounce:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .bounce, value: showSymbolEffect)
+                                case .disappear:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                case .pulse:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .pulse, value: showSymbolEffect)
+                                case .scale:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                case .variableColor:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .variableColor, value: showSymbolEffect)
+                                case .breathe:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .breathe, value: showSymbolEffect)
+                                case .rotate:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .rotate, value: showSymbolEffect)
+                                case .wiggle:
+                                    symbolImage
+                                        .imageScale(selectedImageScale)
+                                        .symbolVariant(selectedSymbolVariants)
+                                        .symbolEffect(
+                                            .wiggle, value: showSymbolEffect)
+                                }
+                                Text(
+                                    "bolt."
+                                        + selectedSymbolVariants.name.lowercased())
+                            }
+                        }
+                    }
+                }
+                .scrollDisabled(true)
+                .frame(height: 240)
+                Divider()
+                List {
+                    Section("Control") {
+                        Picker("Type", selection: $selectedSource.animation()) {
+                            ForEach(SourceType.allCases) { type in
+                                Text(type.name)
+                            }
+                        }
+
+                        Toggle("Image Border", isOn: $showBorder.animation())
+
                         VStack(alignment: .leading) {
                             Picker(
-                                "ImageScale",
-                                selection: $selectedImageScale.animation()
+                                "Content Mode",
+                                selection: $selectedContentMode.animation()
                             ) {
-                                ForEach(Image.Scale.allCases, id: \.self) {
-                                    scale in
-                                    Text(scale.name)
+                                ForEach(ContentMode.allCases, id: \.self) { mode in
+                                    Text(mode.name)
                                 }
                             }
                             if showDescription {
                                 Text(
-                                    "A scale to apply to vector images relative to text."
+                                    "Constants that define how a view’s content fills the available space."
                                 )
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             }
                         }
-                    }
 
-                    if selectedSource == .bitmap {
                         VStack(alignment: .leading) {
                             Picker(
-                                "Orientation",
-                                selection: $selectedImageOrientation.animation()
+                                "Resizing Mode",
+                                selection: $selectedImageResizingMode.animation()
                             ) {
-                                ForEach(
-                                    UIImage.Orientation.allCases, id: \.self
-                                ) { orientation in
-                                    Text(orientation.name)
+                                ForEach(Image.ResizingMode.allCases, id: \.self) {
+                                    mode in
+                                    Text(mode.name)
                                 }
                             }
                             if showDescription {
-                                Text("The orientation of an image.")
+                                Text(
+                                    "The modes that SwiftUI uses to resize an image to fit within its containing view."
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+                        }
+
+                        if selectedSource == .symbol {
+                            VStack(alignment: .leading) {
+                                Picker(
+                                    "ImageScale",
+                                    selection: $selectedImageScale.animation()
+                                ) {
+                                    ForEach(Image.Scale.allCases, id: \.self) {
+                                        scale in
+                                        Text(scale.name)
+                                    }
+                                }
+                                if showDescription {
+                                    Text(
+                                        "A scale to apply to vector images relative to text."
+                                    )
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-
-                    if selectedSource == .symbol {
-                        VStack(alignment: .leading) {
-                            Picker(
-                                "symbolVariant",
-                                selection: $selectedSymbolVariants
-                            ) {
-                                ForEach(
-                                    SymbolVariants.predefinedVariants,
-                                    id: \.self
-                                ) {
-                                    variant in
-                                    switch variant {
-                                    case SymbolVariants.circle:
-                                        Button("Circle") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .none
-                                            }
-                                        }
-                                    case SymbolVariants.fill:
-                                        Button("Fill") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .none
-                                            }
-                                        }
-                                    case SymbolVariants.rectangle:
-                                        Button("Rectangle") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .none
-                                            }
-                                        }
-                                    case SymbolVariants.slash:
-                                        Button("Slash") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .none
-                                            }
-                                        }
-                                    case SymbolVariants.square:
-                                        Button("Square") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .square
-                                            }
-                                        }
-                                    case SymbolVariants.none:
-                                        Button("None") {
-                                            withAnimation {
-                                                selectedSymbolVariants = .none
-                                            }
-                                        }
-                                    default:
-                                        Text("None")
-                                    }
                                 }
                             }
-                            if showDescription {
-                                Text(
-                                    "Makes symbols within the view show a particular variant."
-                                )
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                        }
+
+                        if selectedSource == .bitmap {
+                            VStack(alignment: .leading) {
+                                Picker(
+                                    "Orientation",
+                                    selection: $selectedImageOrientation.animation()
+                                ) {
+                                    ForEach(
+                                        UIImage.Orientation.allCases, id: \.self
+                                    ) { orientation in
+                                        Text(orientation.name)
+                                    }
+                                }
+                                if showDescription {
+                                    Text("The orientation of an image.")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+
+                        if selectedSource == .symbol {
+                            VStack(alignment: .leading) {
+                                Picker(
+                                    "symbolVariant",
+                                    selection: $selectedSymbolVariants
+                                ) {
+                                    ForEach(
+                                        SymbolVariants.predefinedVariants,
+                                        id: \.self
+                                    ) {
+                                        variant in
+                                        switch variant {
+                                        case SymbolVariants.circle:
+                                            Button("Circle") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .none
+                                                }
+                                            }
+                                        case SymbolVariants.fill:
+                                            Button("Fill") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .none
+                                                }
+                                            }
+                                        case SymbolVariants.rectangle:
+                                            Button("Rectangle") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .none
+                                                }
+                                            }
+                                        case SymbolVariants.slash:
+                                            Button("Slash") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .none
+                                                }
+                                            }
+                                        case SymbolVariants.square:
+                                            Button("Square") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .square
+                                                }
+                                            }
+                                        case SymbolVariants.none:
+                                            Button("None") {
+                                                withAnimation {
+                                                    selectedSymbolVariants = .none
+                                                }
+                                            }
+                                        default:
+                                            Text("None")
+                                        }
+                                    }
+                                }
+                                if showDescription {
+                                    Text(
+                                        "Makes symbols within the view show a particular variant."
+                                    )
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+
+                        if selectedSource == .symbol {
+                            Button("Show Symbol Effect") {
+                                withAnimation {
+                                    showSymbolEffect.toggle()
+                                }
                             }
                         }
                     }
 
-                    if selectedSource == .symbol {
-                        Button("Show Symbol Effect") {
-                            withAnimation {
-                                showSymbolEffect.toggle()
-                            }
+                    Section("Value") {
+                        if selectedSource == .asyncImage {
+                            LabeledContent("Phase", value: asyncImagePhaseString)
                         }
-                    }
-                }
-
-                Section("Value") {
-                    if selectedSource == .asyncImage {
-                        LabeledContent("Phase", value: asyncImagePhaseString)
                     }
                 }
             }

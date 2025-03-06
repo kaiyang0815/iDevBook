@@ -17,6 +17,9 @@ struct SwiftLanguage6View: View {
                 }
             }
             .navigationTitle("Swift 6")
+            #if os(iOS)
+                .toolbarRole(.editor)
+            #endif
         }
     }
 }

@@ -12,6 +12,8 @@ enum RootTab: String, CaseIterable, Identifiable {
     case book = "Book"
     case article = "Articles"
     case setting = "Settings"
+    case search = "Search"
+    case notifications = "Notifications"
 
     var id: Self {
         return self
@@ -25,6 +27,10 @@ enum RootTab: String, CaseIterable, Identifiable {
             "newspaper"
         case .setting:
             "gearshape"
+        case .search:
+            "magnifyingglass"
+        case .notifications:
+            "bell"
         }
     }
 }
@@ -43,7 +49,15 @@ struct RootView: View {
             Tab(RootTab.setting.rawValue, systemImage: RootTab.setting.symbol, value: .setting) {
                 SettingsView()
             }
+            Tab(RootTab.notifications.rawValue, systemImage: RootTab.notifications.symbol, value: .notifications) {
+                Text("Notifications")
+            }
+            .tabPlacement(.pinned)
+            Tab(value: .search, role: .search) {
+                Text("Search...")
+            }
         }
+        .tabViewStyle(.sidebarAdaptable)
     }
 }
 
