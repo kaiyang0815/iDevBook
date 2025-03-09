@@ -49,9 +49,14 @@ struct MainView: View {
                         Text("Shapes")
                     }
                     NavigationLink {
-                        GesturesView()
+                        ShapesView()
                     } label: {
-                        Text("Gestures")
+                        Text("Shapes")
+                    }
+                    NavigationLink {
+                        DrawingandGraphicsView()
+                    } label: {
+                        Text("Drawing and graphics")
                     }
                 }
 
