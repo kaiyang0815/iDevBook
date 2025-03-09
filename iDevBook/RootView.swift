@@ -60,7 +60,7 @@ struct RootView: View {
             }
             .tabPlacement(.pinned)
             Tab(value: .search, role: .search) {
-                Text("Search...")
+                SearchView()
             }
             Tab(
                 RootTab.setting.rawValue, systemImage: RootTab.setting.symbol,
