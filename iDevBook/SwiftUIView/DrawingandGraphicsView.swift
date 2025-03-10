@@ -28,7 +28,7 @@ enum DGType: String, CaseIterable, Identifiable {
         case .meshGradient:
             "MeshGradient"
         case .material:
-            "AnyGradient"
+            "Material"
         case .angularGradient:
             "AngularGradient"
         case .ellipticalGradient:
@@ -186,7 +186,7 @@ extension ColorRenderingMode {
     }
 }
 
-enum AGUnitPoint: String, CaseIterable, Identifiable {
+enum EUnitPoint: String, CaseIterable, Identifiable {
     var id: Self {
         return self
     }
@@ -247,8 +247,55 @@ enum AGUnitPoint: String, CaseIterable, Identifiable {
     }
 }
 
+enum EMaterial: String, CaseIterable, Identifiable {
+    case ultraThin
+    case thin
+    case regular
+    case ultraThick
+    case thick
+    case bar
+
+    var id: Self {
+        return self
+    }
+
+    var name: String {
+        switch self {
+        case .ultraThin:
+            "ultraThin"
+        case .thin:
+            "thin"
+        case .regular:
+            "regular"
+        case .ultraThick:
+            "ultraThick"
+        case .thick:
+            "thick"
+        case .bar:
+            "bar"
+        }
+    }
+
+    var material: Material {
+        switch self {
+        case .ultraThin:
+            .ultraThin
+        case .thin:
+            .thin
+        case .regular:
+            .regular
+        case .ultraThick:
+            .ultraThick
+        case .thick:
+            .thick
+        case .bar:
+            .bar
+        }
+    }
+}
+
 struct DrawingandGraphicsView: View {
-    @State private var selectedDGType: DGType = .angularGradient
+    @State private var selectedDGType: DGType = .material
     @State private var showDescription: Bool = false
     @State private var hideTabBar: Bool = false
     @State private var selectedInnerColor: InnerColor = .black
@@ -270,11 +317,23 @@ struct DrawingandGraphicsView: View {
     @State private var canvasColorRenderingMode: ColorRenderingMode = .nonLinear
 
     @State private var linearGradientStopsCount: Int = 2
-    
+
     @State private var angularGradientStopsCount: Int = 5
-    @State private var angularGradientCenter: AGUnitPoint = .center
+    @State private var angularGradientCenter: EUnitPoint = .center
     @State private var angularStartAngle: Double = 0.0
     @State private var angularEndAngle: Double = 360.0
+
+    @State private var ellipticalGradientStopsCount: Int = 3
+    @State private var ellipticalGradientCenter: EUnitPoint = .topLeading
+    @State private var ellipticalGradientStartRadiusFraction: CGFloat = 0
+    @State private var ellipticalGradientEndRadiusFraction: CGFloat = 1
+
+    @State private var radialGradientStopsCount: Int = 3
+    @State private var radialGradientCenter: EUnitPoint = .topLeading
+    @State private var radialGradientStartRadius: CGFloat = 0
+    @State private var radialGradientEndRadius: CGFloat = 1
+
+    @State private var selectedEMaterial: EMaterial = .regular
 
     private func generatePoints(_ width: Int, _ height: Int) -> [SIMD2<Float>] {
         var points: [SIMD2<Float>] = []
@@ -425,22 +484,59 @@ struct DrawingandGraphicsView: View {
                             )
                             .frame(height: 180)
                         case .material:
-                            Text("ca")
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.orange)
+
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(selectedEMaterial.material)
+                                    .padding()
+                            }
+                            .frame(height: 180)
                         case .angularGradient:
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(
                                     AngularGradient(
-                                        stops: generateStops(angularGradientStopsCount),
+                                        stops: generateStops(
+                                            angularGradientStopsCount),
                                         center: angularGradientCenter.unitPoint,
-                                        startAngle: Angle(degrees: angularStartAngle),
-                                        endAngle: Angle(degrees: angularEndAngle)
+                                        startAngle: Angle(
+                                            degrees: angularStartAngle),
+                                        endAngle: Angle(
+                                            degrees: angularEndAngle)
                                     )
                                 )
                                 .frame(height: 180)
                         case .ellipticalGradient:
-                            Text("ca")
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(
+                                    EllipticalGradient(
+                                        stops: generateStops(
+                                            ellipticalGradientStopsCount),
+                                        center: ellipticalGradientCenter
+                                            .unitPoint,
+                                        startRadiusFraction:
+                                            ellipticalGradientStartRadiusFraction,
+                                        endRadiusFraction:
+                                            ellipticalGradientEndRadiusFraction
+                                    )
+                                )
+                                .frame(height: 180)
                         case .radialGradient:
-                            Text("ca")
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(
+                                    RadialGradient(
+                                        stops: generateStops(
+                                            radialGradientStopsCount),
+                                        center: radialGradientCenter
+                                            .unitPoint,
+                                        startRadius:
+                                            radialGradientStartRadius,
+                                        endRadius:
+                                            radialGradientEndRadius
+                                    )
+                                )
+                                .frame(height: 180)
                         }
                     }
                     if selectedDGType == .color {
@@ -606,25 +702,11 @@ struct DrawingandGraphicsView: View {
                                 }
                             }
                         case .material:
-                            Picker("Colors", selection: $selectedInnerColor) {
-                                ForEach(InnerColor.allCases) { color in
-                                    Text(color.name)
-                                        .tag(color)
+                            Picker("Material", selection: $selectedEMaterial) {
+                                ForEach(EMaterial.allCases) { material in
+                                    Text(material.name)
+                                        .tag(material)
                                 }
-                            }
-
-                            Toggle(isOn: $useTint) {
-                                Text(".tint")
-                            }
-                            if showDescription {
-                                Text("Sets the tint color within this view.")
-                            }
-
-                            Toggle(isOn: $useColorGradient) {
-                                Text(".gradient")
-                            }
-                            if showDescription {
-                                Text("Sets the tint color within this view.")
                             }
                         case .angularGradient:
                             Stepper {
@@ -641,13 +723,17 @@ struct DrawingandGraphicsView: View {
                                     angularGradientStopsCount = 1
                                 }
                             }
-                            Picker("center", selection: $angularGradientCenter) {
-                                ForEach(AGUnitPoint.allCases) { unitPoint in
+                            Picker("center", selection: $angularGradientCenter)
+                            {
+                                ForEach(EUnitPoint.allCases) { unitPoint in
                                     Text(unitPoint.name)
                                 }
                             }
                             LabeledContent {
-                                Slider(value: $angularStartAngle, in: 0...360, step: 1) {
+                                Slider(
+                                    value: $angularStartAngle, in: 0...360,
+                                    step: 1
+                                ) {
                                     Text("startAngle")
                                 } minimumValueLabel: {
                                     Text("0")
@@ -659,7 +745,10 @@ struct DrawingandGraphicsView: View {
                             }
 
                             LabeledContent {
-                                Slider(value: $angularEndAngle, in: 0...360, step: 1) {
+                                Slider(
+                                    value: $angularEndAngle, in: 0...360,
+                                    step: 1
+                                ) {
                                     Text("endAngle")
                                 } minimumValueLabel: {
                                     Text("0")
@@ -671,12 +760,108 @@ struct DrawingandGraphicsView: View {
                             }
 
                         case .ellipticalGradient:
-                            Toggle(isOn: $useColorGradient) {
-                                Text(".gradient")
+                            Picker(
+                                "center", selection: $ellipticalGradientCenter
+                            ) {
+                                ForEach(EUnitPoint.allCases) { unitPoint in
+                                    Text(unitPoint.name)
+                                }
+                            }
+                            Stepper {
+                                Text("Gradient stop count")
+                                Text(
+                                    ellipticalGradientStopsCount,
+                                    format: .number)
+                            } onIncrement: {
+                                ellipticalGradientStopsCount += 1
+                                if ellipticalGradientStopsCount >= 10 {
+                                    ellipticalGradientStopsCount = 10
+                                }
+                            } onDecrement: {
+                                ellipticalGradientStopsCount -= 1
+                                if ellipticalGradientStopsCount < 1 {
+                                    ellipticalGradientStopsCount = 1
+                                }
+                            }
+                            Stepper {
+                                Text("startRadiusFraction")
+                                Text(
+                                    ellipticalGradientStartRadiusFraction,
+                                    format: .number)
+                            } onIncrement: {
+                                ellipticalGradientStartRadiusFraction += 0.1
+                                if ellipticalGradientStartRadiusFraction >= 1 {
+                                    ellipticalGradientStartRadiusFraction = 1
+                                }
+                            } onDecrement: {
+                                ellipticalGradientStartRadiusFraction -= 0.1
+                                if ellipticalGradientStartRadiusFraction < 0 {
+                                    ellipticalGradientStartRadiusFraction = 0
+                                }
+                            }
+                            Stepper {
+                                Text("endRadiusFraction")
+                                Text(
+                                    ellipticalGradientEndRadiusFraction,
+                                    format: .number)
+                            } onIncrement: {
+                                ellipticalGradientEndRadiusFraction += 0.1
+                                if ellipticalGradientEndRadiusFraction >= 1 {
+                                    ellipticalGradientEndRadiusFraction = 1
+                                }
+                            } onDecrement: {
+                                ellipticalGradientEndRadiusFraction -= 0.1
+                                if ellipticalGradientEndRadiusFraction < 0 {
+                                    ellipticalGradientEndRadiusFraction = 0
+                                }
                             }
                         case .radialGradient:
-                            Toggle(isOn: $useColorGradient) {
-                                Text(".gradient")
+                            Picker("center", selection: $radialGradientCenter) {
+                                ForEach(EUnitPoint.allCases) { unitPoint in
+                                    Text(unitPoint.name)
+                                }
+                            }
+                            Stepper {
+                                Text("Gradient stop count")
+                                Text(radialGradientStopsCount, format: .number)
+                            } onIncrement: {
+                                radialGradientStopsCount += 1
+                                if radialGradientStopsCount >= 10 {
+                                    radialGradientStopsCount = 10
+                                }
+                            } onDecrement: {
+                                radialGradientStopsCount -= 1
+                                if radialGradientStopsCount < 1 {
+                                    radialGradientStopsCount = 1
+                                }
+                            }
+                            Stepper {
+                                Text("startRadius")
+                                Text(radialGradientStartRadius, format: .number)
+                            } onIncrement: {
+                                radialGradientStartRadius += 0.1
+                                if radialGradientStartRadius >= 1 {
+                                    radialGradientStartRadius = 1
+                                }
+                            } onDecrement: {
+                                radialGradientStartRadius -= 0.1
+                                if radialGradientStartRadius < 0 {
+                                    radialGradientStartRadius = 0
+                                }
+                            }
+                            Stepper {
+                                Text("endRadius")
+                                Text(radialGradientEndRadius, format: .number)
+                            } onIncrement: {
+                                radialGradientEndRadius += 0.1
+                                if radialGradientEndRadius >= 1 {
+                                    radialGradientEndRadius = 1
+                                }
+                            } onDecrement: {
+                                radialGradientEndRadius -= 0.1
+                                if radialGradientEndRadius < 0 {
+                                    radialGradientEndRadius = 0
+                                }
                             }
                         }
                         if selectedDGType == .meshGradient {
