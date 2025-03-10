@@ -1,0 +1,42 @@
+{
+  "originHash" : "e469c2712605c54edfd322c8a000fc44730a767b8cc8a7d46980d738cc695f5d",
+  "pins" : [
+    {
+      "identity" : "highlightswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/appstefan/HighlightSwift.git",
+      "state" : {
+        "revision" : "784ca3ccfc8a2cf724fbb2f06cb6ec3329424da3",
+        "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "lexical-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/facebook/lexical-ios.git",
+      "state" : {
+        "revision" : "4a85d223a2e1e8683e49569a1ad172bdbf84cbc6",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "richtextkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/RichTextKit.git",
+      "state" : {
+        "revision" : "d390d66740161554095e3acbd27f84dc3dcc5b03",
+        "version" : "1.1.2"
+      }
+    },
+    {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "state" : {
+        "revision" : "64e4daa41b0f22affa94a6063d509c137c26909c",
+        "version" : "2.8.5"
+      }
+    }
+  ],
+  "version" : 3
+}
