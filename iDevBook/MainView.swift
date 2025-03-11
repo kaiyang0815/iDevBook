@@ -61,6 +61,14 @@ struct MainView: View {
                         Text("Capture")
                     }
                 }
+                
+                Section("SF Symbols") {
+                    NavigationLink {
+                        SFSymbolsView()
+                    } label: {
+                        Text("SF Symbols Picker")
+                    }
+                }
 
                 Section("Packages") {
                     NavigationLink {
