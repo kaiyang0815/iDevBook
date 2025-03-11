@@ -309,6 +309,7 @@ struct DrawingandGraphicsView: View {
     @State private var colorSaturation: Double = 1
     @State private var colorGrayscale: Double = 0
     @State private var colorHueRotation: Double = 0
+    @State private var squareFillColor: Color = .red
 
     @State private var useTint: Bool = false
     @State private var useColorGradient: Bool = false
@@ -471,7 +472,7 @@ struct DrawingandGraphicsView: View {
                                 }
                                 if showTransformingColors {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(.red)
+                                        .fill(squareFillColor)
                                         .padding()
                                         .frame(width: 120, height: 120)
                                         .if(showColorMultiply) { view in
@@ -681,6 +682,7 @@ struct DrawingandGraphicsView: View {
                                 Text("Transforming Colors")
                             }
                             if showTransformingColors {
+                                ColorPicker("Square fill color", selection: $squareFillColor)
                                 Toggle(isOn: $showColorInvert) {
                                     Text(".colorInvert")
                                 }
