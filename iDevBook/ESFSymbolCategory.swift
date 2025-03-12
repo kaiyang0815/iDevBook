@@ -13,6 +13,7 @@ enum ESFSymbolCategory: String, CaseIterable, Identifiable {
     var id: Self {
         return self
     }
+    case all
     case whatsNew
     case multicolor
     case variableColor
@@ -46,6 +47,8 @@ enum ESFSymbolCategory: String, CaseIterable, Identifiable {
 
     var name: String {
         switch self {
+        case .all:
+            "All"
         case .whatsNew:
             "What's New"
         case .multicolor:
@@ -111,6 +114,10 @@ enum ESFSymbolCategory: String, CaseIterable, Identifiable {
 
     var symbols: [String] {
         switch self {
+        case .all:
+            [
+                ""
+            ]
         case .whatsNew:
             [
                 "square.and.arrow.up.trianglebadge.exclamationmark.fill",

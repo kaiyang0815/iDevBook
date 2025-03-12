@@ -11,25 +11,45 @@ import SwiftUI
 struct SFSymbolsView: View {
     @State private var selectedSymbolCategory: ESFSymbolCategory = .whatsNew
     @State private var searchText: String = ""
+    @State private var showSymbolInpector: Bool = false
+    @State private var selectedSymbol: String = ""
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
-                    ForEach(selectedSymbolCategory.symbols, id: \.self) {
+                LazyVGrid(
+                    columns: [GridItem(.adaptive(minimum: 100))], spacing: 20
+                ) {
+                    ForEach(
+                        selectedSymbolCategory.symbols.filter({ symbol in
+                            if !searchText.isEmpty {
+                                return symbol.localizedStandardContains(searchText)
+                            } else {
+                                return true
+                            }
+                        }), id: \.self
+                    ) {
                         symbol in
                         VStack(alignment: .center) {
                             Image(systemName: symbol)
-                                .frame(maxWidth: .infinity, minHeight: 80)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(.secondary, lineWidth: 1)
+                                .font(.largeTitle)
+                                .frame(maxWidth: .infinity, minHeight: 100)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(.ultraThickMaterial)
                                 }
                             Text(symbol)
+                                .padding(2)
                                 .font(.caption)
                                 .lineLimit(2)
-                                .multilineTextAlignment(.center)
+                                .frame(minHeight: 40, alignment: .top)
                         }
-                        .frame(maxHeight: .infinity)
+                        .onTapGesture {
+                            withAnimation {
+                                selectedSymbol = symbol
+                                showSymbolInpector.toggle()
+                            }
+                        }
                     }
                 }
                 .padding()
@@ -44,6 +64,9 @@ struct SFSymbolsView: View {
                             .tag(category)
                     }
                 }
+            }
+            .sheet(isPresented: $showSymbolInpector) {
+                SymbolInspectorView(symbol: $selectedSymbol)
             }
         }
     }
