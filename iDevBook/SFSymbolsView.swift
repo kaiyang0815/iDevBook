@@ -9,11 +9,12 @@
 import SwiftUI
 
 struct SFSymbolsView: View {
-    @State private var selectedSymbolCategory: ESFSymbolCategory = .whatsNew
+    @State private var selectedSymbolCategory: ESFSymbolCategory = .all
     @State private var searchText: String = ""
     @State private var showSymbolInpector: Bool = false
     @State private var selectedSymbol: String = ""
-    
+    @State private var hideTabBar: Bool = false
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -55,7 +56,6 @@ struct SFSymbolsView: View {
                 .padding()
             }
             .navigationTitle("SF Symbols Picker")
-            .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchText, prompt: Text("Search"))
             .toolbar {
                 Picker("Category", selection: $selectedSymbolCategory) {
@@ -67,6 +67,12 @@ struct SFSymbolsView: View {
             }
             .sheet(isPresented: $showSymbolInpector) {
                 SymbolInspectorView(symbol: $selectedSymbol)
+            }
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            .onAppear {
+                withAnimation {
+                    hideTabBar.toggle()
+                }
             }
         }
     }

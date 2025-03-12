@@ -16,6 +16,8 @@
 		BDB105772D76668B00549A0F /* LexicalListHTMLSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105762D76668B00549A0F /* LexicalListHTMLSupport */; };
 		BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105782D76668B00549A0F /* LexicalListPlugin */; };
 		BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */; };
+		FB432A1A2D81780700BE347E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A192D81780700BE347E /* FeedKit */; };
+		FB432A1C2D81780700BE347E /* XMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A1B2D81780700BE347E /* XMLKit */; };
 		FBEB1C7C2D76A80C00220F20 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FBEB1C7B2D76A80C00220F20 /* HighlightSwift */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +74,9 @@
 				BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */,
 				BDB105712D76668B00549A0F /* LexicalHTML in Frameworks */,
 				BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */,
+				FB432A1C2D81780700BE347E /* XMLKit in Frameworks */,
 				BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */,
+				FB432A1A2D81780700BE347E /* FeedKit in Frameworks */,
 				BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */,
 				BDB105732D76668B00549A0F /* LexicalInlineImagePlugin in Frameworks */,
 			);
@@ -145,6 +149,8 @@
 				BDB105782D76668B00549A0F /* LexicalListPlugin */,
 				BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */,
 				FBEB1C7B2D76A80C00220F20 /* HighlightSwift */,
+				FB432A192D81780700BE347E /* FeedKit */,
+				FB432A1B2D81780700BE347E /* XMLKit */,
 			);
 			productName = iDevBook;
 			productReference = FBA912932D49CF9E00447692 /* iDevBook.app */;
@@ -232,6 +238,7 @@
 				BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */,
 				BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */,
 				FBEB1C7A2D76A80C00220F20 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
+				FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FBA912942D49CF9E00447692 /* Products */;
@@ -645,6 +652,14 @@
 				minimumVersion = 0.2.0;
 			};
 		};
+		FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nmdias/FeedKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "10.0.0-rc.4";
+			};
+		};
 		FBEB1C7A2D76A80C00220F20 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/appstefan/HighlightSwift.git";
@@ -700,6 +715,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
 			productName = SelectableDecoratorNode;
+		};
+		FB432A192D81780700BE347E /* FeedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = FeedKit;
+		};
+		FB432A1B2D81780700BE347E /* XMLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = XMLKit;
 		};
 		FBEB1C7B2D76A80C00220F20 /* HighlightSwift */ = {
 			isa = XCSwiftPackageProductDependency;
