@@ -5,22 +5,23 @@
 // Copyright © 2025 Kaiyang0815.
 // All Rights Reserved.
 
-
-import SwiftUI
 import FeedKit
+import SwiftUI
 
 struct ArticleDetailsView: View {
     let feedItem: RSSFeedItem
-    
+
     @State private var hideTabBar: Bool = false
+    @State private var contentHeight: CGFloat = .zero
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack {
-                    Text(feedItem.content?.encoded ?? "")
+                VStack(alignment: .leading) {
+                    Text(feedItem.title ?? "")
+                        .font(.title)
                 }
+                .padding(.horizontal)
             }
-            .navigationTitle(feedItem.title ?? "")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
             .onAppear {
@@ -33,5 +34,5 @@ struct ArticleDetailsView: View {
 }
 
 #Preview {
-    ArticleDetailsView(feedItem: RSSFeedItem())
+    ArticleDetailsView(feedItem: RSSFeedItem(title: "Title"))
 }
