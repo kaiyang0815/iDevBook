@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     @State private var searchText: String = ""
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -53,7 +53,7 @@ struct MainView: View {
                         Text("Drawing and graphics")
                     }
                 }
-                
+
                 Section("AVFoundation") {
                     NavigationLink {
                         AVCaptureView()
@@ -61,7 +61,7 @@ struct MainView: View {
                         Text("Capture")
                     }
                 }
-                
+
                 Section("SF Symbols") {
                     NavigationLink {
                         SFSymbolsView()
@@ -121,4 +121,5 @@ struct MainView: View {
 
 #Preview {
     RootView()
+        .modelContainer(for: LocalFeed.self)
 }

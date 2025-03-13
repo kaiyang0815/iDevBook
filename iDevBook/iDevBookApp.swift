@@ -13,7 +13,7 @@ import SwiftUI
 struct iDevBookApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            ShortCutsItem.self,
+            ShortCutsItem.self, LocalFeed.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema, isStoredInMemoryOnly: false)
