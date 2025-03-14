@@ -7,21 +7,15 @@
 //
 
 import SwiftUI
-import AcknowList
 
 struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
                 NavigationLink {
-                    AcknowListSwiftUIView(acknowledgements: [])
-                        .toolbar {
-                            ToolbarItem(placement: .principal) {
-                                Text("3rd Party Libraries")
-                            }
-                        }
+                    AcknowledgementsView()
                 } label: {
-                    Label("AcknowList", systemImage: "list.clipboard")
+                    Text("Acknowledgements")
                 }
             }
             .navigationTitle("Settings")

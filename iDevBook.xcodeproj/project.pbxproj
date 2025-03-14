@@ -18,7 +18,6 @@
 		BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */; };
 		FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07942D82CD8C007A3DD1 /* AcknowList */; };
 		FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07972D82D13F007A3DD1 /* MarkdownUI */; };
-		FB2A07F02D83036C007A3DD1 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = FB2A07EF2D83036C007A3DD1 /* Package.resolved */; };
 		FB432A1A2D81780700BE347E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A192D81780700BE347E /* FeedKit */; };
 		FB432A1C2D81780700BE347E /* XMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A1B2D81780700BE347E /* XMLKit */; };
 		FBEB1C7C2D76A80C00220F20 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FBEB1C7B2D76A80C00220F20 /* HighlightSwift */; };
@@ -42,7 +41,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FB2A07EF2D83036C007A3DD1 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; name = Package.resolved; path = iDevBook.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved; sourceTree = "<group>"; };
 		FBA912932D49CF9E00447692 /* iDevBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDevBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBA912A62D49CFA000447692 /* iDevBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDevBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBA912B02D49CFA000447692 /* iDevBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDevBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,7 +110,6 @@
 				FBA912A92D49CFA000447692 /* iDevBookTests */,
 				FBA912B32D49CFA000447692 /* iDevBookUITests */,
 				FBA912942D49CF9E00447692 /* Products */,
-				FB2A07EF2D83036C007A3DD1 /* Package.resolved */,
 			);
 			sourceTree = "<group>";
 		};
@@ -268,7 +265,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB2A07F02D83036C007A3DD1 /* Package.resolved in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
