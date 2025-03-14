@@ -12,9 +12,15 @@ import SwiftUI
 @main
 struct iDevBookApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            ShortCutsItem.self, LocalFeed.self
-        ])
+        #if os(iOS)
+            let schema = Schema([
+                ShortCutsItem.self, LocalFeed.self,
+            ])
+        #else
+            let schema = Schema([
+                LocalFeed.self
+            ])
+        #endif
         let modelConfiguration = ModelConfiguration(
             schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,7 +32,9 @@ struct iDevBookApp: App {
         }
     }()
 
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #if os(iOS)
+        @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #endif
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -34,20 +42,21 @@ struct iDevBookApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-    static var orientation: UIInterfaceOrientationMask = .all
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication
-            .LaunchOptionsKey: Any]? = nil
-    ) -> Bool {
-        return true
+#if os(iOS)
+    class AppDelegate: NSObject, UIApplicationDelegate {
+        static var orientation: UIInterfaceOrientationMask = .all
+        func application(
+            _ application: UIApplication,
+            didFinishLaunchingWithOptions launchOptions: [UIApplication
+                .LaunchOptionsKey: Any]? = nil
+        ) -> Bool {
+            return true
+        }
+        func application(
+            _ application: UIApplication,
+            supportedInterfaceOrientationsFor window: UIWindow?
+        ) -> UIInterfaceOrientationMask {
+            return Self.orientation
+        }
     }
-    func application(
-        _ application: UIApplication,
-        supportedInterfaceOrientationsFor window: UIWindow?
-    ) -> UIInterfaceOrientationMask {
-        return Self.orientation
-    }
-}
+#endif

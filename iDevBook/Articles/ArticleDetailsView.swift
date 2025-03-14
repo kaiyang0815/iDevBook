@@ -6,6 +6,7 @@
 // All Rights Reserved.
 
 import FeedKit
+import RichText
 import SwiftUI
 
 struct ArticleDetailsView: View {
@@ -16,18 +17,32 @@ struct ArticleDetailsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading) {
-                    Text(feedItem.title ?? "")
-                        .font(.title)
-                }
-                .padding(.horizontal)
+                RichText(html: feedItem.content?.encoded ?? "")
+                    .colorScheme(.auto)
+                    .imageRadius(12)
+                    .fontType(.system)
+#if os(iOS)
+                    .foregroundColor(light: Color.primary, dark: Color.primary)
+                    .linkColor(light: Color.blue, dark: Color.blue)
+                    .colorPreference(forceColor: .onlyLinks)
+                    .linkOpenType(.SFSafariView())
+#endif
+                    .customCSS("")
+                    .placeholder {
+                        ProgressView()
+                    }
+                    .transition(.easeOut)
+                    .padding()
             }
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+#endif
             .onAppear {
                 withAnimation {
                     hideTabBar.toggle()
                 }
+                print(feedItem.content?.encoded ?? "")
             }
         }
     }

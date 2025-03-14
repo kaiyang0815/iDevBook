@@ -9,6 +9,7 @@ import AppIntents
 import SwiftData
 import SwiftUI
 
+#if os(iOS)
 @Model
 class ShortCutsItem {
     var inputText: String
@@ -95,3 +96,5 @@ struct AppShortcutsDemoView: View {
 #Preview {
     AppShortcutsDemoView()
 }
+#endif
+

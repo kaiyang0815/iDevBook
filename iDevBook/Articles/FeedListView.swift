@@ -20,7 +20,9 @@ struct FeedListView: View {
                 }
             }
             .navigationTitle("Feed list")
-            .navigationBarTitleDisplayMode(.inline)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
     }
 }

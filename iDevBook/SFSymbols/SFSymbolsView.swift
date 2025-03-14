@@ -68,7 +68,9 @@ struct SFSymbolsView: View {
             .sheet(isPresented: $showSymbolInpector) {
                 SymbolInspectorView(symbol: $selectedSymbol)
             }
+#if os(iOS)
             .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #endif
             .onAppear {
                 withAnimation {
                     hideTabBar.toggle()

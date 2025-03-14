@@ -62,6 +62,7 @@ enum GestureType: String, CaseIterable, Identifiable {
 
 struct GesturesView: View {
     @State private var showDescription: Bool = false
+    @State private var showInspector: Bool = false
 
     @State private var selectedGesture: GestureType = .tapGesture
     @State private var tapCount: Int = 0
@@ -150,94 +151,89 @@ struct GesturesView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                List {
-                    Section("Preview") {
-                        VStack {
-                            switch selectedGesture {
-                            case .tapGesture:
+            VStack {
+                switch selectedGesture {
+                case .tapGesture:
+                    RoundedRectangle(cornerRadius: 12)
+                        .gesture(tapGesture)
+                        .shadow(radius: 4)
+                        .sensoryFeedback(
+                            .success, trigger: tapCount)
+                case .spatialTapGesture:
+                    RoundedRectangle(cornerRadius: 12)
+                        .gesture(spatialTapGesture)
+                        .shadow(radius: 4)
+                        .sensoryFeedback(
+                            .success, trigger: tapCount)
+                case .longPressGesture:
+                    RoundedRectangle(cornerRadius: 12)
+                        .gesture(longPressGesture)
+                        .shadow(radius: 4)
+                        .sensoryFeedback(
+                            .success, trigger: tapCount)
+                case .dragGesture:
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.secondary.opacity(0.35))
+                            .frame(width: 50, height: 50)
+                            .overlay {
                                 RoundedRectangle(cornerRadius: 12)
-                                    .gesture(tapGesture)
-                                    .shadow(radius: 4)
-                                    .sensoryFeedback(
-                                        .success, trigger: tapCount)
-                            case .spatialTapGesture:
-                                RoundedRectangle(cornerRadius: 12)
-                                    .gesture(spatialTapGesture)
-                                    .shadow(radius: 4)
-                                    .sensoryFeedback(
-                                        .success, trigger: tapCount)
-                            case .longPressGesture:
-                                RoundedRectangle(cornerRadius: 12)
-                                    .gesture(longPressGesture)
-                                    .shadow(radius: 4)
-                                    .sensoryFeedback(
-                                        .success, trigger: tapCount)
-                            case .dragGesture:
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(.secondary.opacity(0.35))
-                                        .frame(width: 50, height: 50)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(
-                                                    .secondary, lineWidth: 1)
-                                        }
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .frame(width: 50, height: 50)
-                                        .offset(
-                                            x: dragOffset.width,
-                                            y: dragOffset.height
-                                        )
-                                        .gesture(dragGesture)
-                                        .shadow(radius: 4)
-                                        .sensoryFeedback(
-                                            .success, trigger: tapCount)
-                                }
-                            case .windowDragGesture:
-                                #if os(iOS)
-                                    Text("macOS Only")
-                                #endif
-                            case .magnifyGesture:
-                                ZStack {
-                                    HStack {
-                                        Spacer()
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .frame(width: 120, height: 120)
-                                        Spacer()
-                                    }
-                                    Image(systemName: "arrow.down.left.and.arrow.up.right")
-                                        .foregroundStyle(.white)
-                                        .font(.largeTitle)
-                                }
-                                .gesture(magnifyGesture)
-                                .scaleEffect(magnifyBy)
-                                .shadow(radius: 4)
-                            case .rotateGesture:
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .frame(height: 60)
-                                    HStack {
-                                        Image(systemName: "arrowshape.up")
-                                            .foregroundStyle(.white)
-                                        Spacer()
-                                        Image(systemName: "arrowshape.down")
-                                            .foregroundStyle(.white)
-                                    }
-                                    .padding(.horizontal)
-                                }
-                                .gesture(rotateGesture)
-                                .rotationEffect(angle)
-                                .shadow(radius: 4)
+                                    .stroke(
+                                        .secondary, lineWidth: 1)
                             }
-                        }
-                        .frame(height: selectedGesture == .rotateGesture || selectedGesture == .magnifyGesture ? 200 : 100)
-                        .padding(.vertical, 10)
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(width: 50, height: 50)
+                            .offset(
+                                x: dragOffset.width,
+                                y: dragOffset.height
+                            )
+                            .gesture(dragGesture)
+                            .shadow(radius: 4)
+                            .sensoryFeedback(
+                                .success, trigger: tapCount)
                     }
+                case .windowDragGesture:
+                    #if os(iOS)
+                        Text("macOS Only")
+                    #endif
+                case .magnifyGesture:
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            RoundedRectangle(cornerRadius: 12)
+                                .frame(width: 120, height: 120)
+                            Spacer()
+                        }
+                        Image(
+                            systemName:
+                                "arrow.down.left.and.arrow.up.right"
+                        )
+                        .foregroundStyle(.white)
+                        .font(.largeTitle)
+                    }
+                    .gesture(magnifyGesture)
+                    .scaleEffect(magnifyBy)
+                    .shadow(radius: 4)
+                case .rotateGesture:
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(height: 60)
+                        HStack {
+                            Image(systemName: "arrowshape.up")
+                                .foregroundStyle(.white)
+                            Spacer()
+                            Image(systemName: "arrowshape.down")
+                                .foregroundStyle(.white)
+                        }
+                        .padding(.horizontal)
+                    }
+                    .gesture(rotateGesture)
+                    .rotationEffect(angle)
+                    .shadow(radius: 4)
                 }
-                .scrollDisabled(true)
-                .frame(height: selectedGesture == .rotateGesture || selectedGesture == .magnifyGesture ? 300 : 200)
-                Divider()
+            }
+            .navigationTitle("Gestures")
+            .inspector(isPresented: $showInspector, content: {
                 List {
                     Section {
                         Picker("Type", selection: $selectedGesture.animation())
@@ -440,8 +436,7 @@ struct GesturesView: View {
                         }
                     }
                 }
-            }
-            .navigationTitle("Gestures")
+            })
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {
@@ -450,8 +445,18 @@ struct GesturesView: View {
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
                 }
+                Button {
+                    withAnimation {
+                        showInspector.toggle()
+                    }
+                } label: {
+                    Label("Show Inspector", systemImage: "sidebar.right")
+                }
             }
-            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #if os(iOS)
+                .toolbarVisibility(
+                    hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #endif
             .onAppear {
                 withAnimation {
                     hideTabBar = true

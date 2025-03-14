@@ -10,10 +10,9 @@ import SwiftUI
 
 struct MainView: View {
     @State private var searchText: String = ""
-
     var body: some View {
         NavigationStack {
-            List {
+            Form {
                 Section("Latest") {
                     NavigationLink {
                         SwiftLanguage6View()
@@ -77,11 +76,13 @@ struct MainView: View {
                         Text("RichTextKit")
                     }
 
-                    NavigationLink {
-                        LexicalDemoView()
-                    } label: {
-                        Text("lexical-ios")
-                    }
+                    #if os(iOS)
+                        NavigationLink {
+//                            LexicalDemoView()
+                        } label: {
+                            Text("lexical-ios")
+                        }
+                    #endif
 
                     NavigationLink {
                         HighlightSwiftView()
@@ -90,18 +91,20 @@ struct MainView: View {
                     }
                 }
 
-                Section("Examples") {
-                    NavigationLink {
-                        AppShortcutsDemoView()
-                    } label: {
-                        Text("App Shortcuts")
+                #if os(iOS)
+                    Section("Examples") {
+                        NavigationLink {
+                            AppShortcutsDemoView()
+                        } label: {
+                            Text("App Shortcuts")
+                        }
+                        NavigationLink {
+                            ManualViewOrientationControlView()
+                        } label: {
+                            Text("Manual View Orientation Control")
+                        }
                     }
-                    NavigationLink {
-                        ManualViewOrientationControlView()
-                    } label: {
-                        Text("Manual View Orientation Control")
-                    }
-                }
+                #endif
 
                 Section("Other") {
                     NavigationLink {
@@ -111,6 +114,7 @@ struct MainView: View {
                     }
                 }
             }
+            .formStyle(.grouped)
             .navigationTitle("iDev Book")
             #if os(iOS)
                 .toolbarRole(.editor)

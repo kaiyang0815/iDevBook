@@ -124,8 +124,10 @@ struct SymbolInspectorView: View {
     @State private var isActive = false
     @State private var isPresented = false
     @State private var foregroundColor: Color = .primary
+#if os(iOS)
     @State private var backgroundColor: Color = Color(
         uiColor: UIColor.secondarySystemGroupedBackground)
+#endif
 
     var body: some View {
         NavigationStack {
@@ -212,7 +214,9 @@ struct SymbolInspectorView: View {
                 } footer: {
                     Text(symbol)
                 }
+#if os(iOS)
                 .listRowBackground(backgroundColor)
+                #endif
 
                 Section("Control") {
                     Picker("Mode", selection: $selectedTab) {
@@ -233,7 +237,9 @@ struct SymbolInspectorView: View {
                             }
                         }
                         ColorPicker("Color", selection: $foregroundColor)
+                        #if os(iOS)
                         ColorPicker("Background", selection: $backgroundColor)
+                        #endif
                     case .animation:
                         Picker("Animation", selection: $selectedSymbolEffect) {
                             ForEach(ESymbolEffect.allCases) { effect in
@@ -260,7 +266,9 @@ struct SymbolInspectorView: View {
                 }
             }
             .navigationTitle("Inspector")
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
     }
 }

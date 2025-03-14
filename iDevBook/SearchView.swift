@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+#if os(macOS)
+typealias PlatformColor = NSColor
+#else
+typealias PlatformColor = UIColor
+#endif
+
 enum SearchScope: String, CaseIterable, Identifiable, Hashable {
     case docs
     case article
@@ -44,19 +50,19 @@ struct SearchView: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(), GridItem()]) {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(uiColor: UIColor.systemGray6))
+                        .fill(Color(PlatformColor.systemGray))
                         .frame(height: 120)
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(uiColor: UIColor.systemGray6))
+                        .fill(Color(PlatformColor.systemGray))
                         .frame(height: 120)
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(uiColor: UIColor.systemGray6))
+                        .fill(Color(PlatformColor.systemGray))
                         .frame(height: 120)
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(uiColor: UIColor.systemGray6))
+                        .fill(Color(PlatformColor.systemGray))
                         .frame(height: 120)
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(uiColor: UIColor.systemGray6))
+                        .fill(Color(PlatformColor.systemGray))
                         .frame(height: 120)
                 }
                 .padding()

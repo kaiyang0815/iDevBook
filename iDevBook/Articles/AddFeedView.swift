@@ -44,46 +44,46 @@ struct AddFeedView: View {
                 }
             }
             .navigationTitle("Add Feed")
-            .navigationBarTitleDisplayMode(.inline)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        if isValid {
-                            let newFeed = LocalFeed(
-                                feedTitle: feedTitle, feedURL: feedURL)
-                            modelContext.insert(newFeed)
-                            dismiss()
-                        } else {
-                            Task {
-                                fetching.toggle()
-                                let feed = try await Feed(
-                                    url: URL(string: feedURL)!)
-                                switch feed {
-                                case .atom(_):
-                                    print("Is atom")  // An AtomFeed instance
-                                case let .rss(feed):
-                                    if let channel = feed.channel,
-                                        let title = channel.title
-                                    {
-                                        feedTitle = title
-                                    }
-                                    fetching.toggle()
-                                    isValid.toggle()
-                                    print("Is rss")  // An RSSFeed instance
-                                case .json(_):
-                                    print("Is json")  // A JSONFeed instance
+                Button {
+                    if isValid {
+                        let newFeed = LocalFeed(
+                            feedTitle: feedTitle, feedURL: feedURL)
+                        modelContext.insert(newFeed)
+                        dismiss()
+                    } else {
+                        Task {
+                            fetching.toggle()
+                            let feed = try await Feed(
+                                url: URL(string: feedURL)!)
+                            switch feed {
+                            case .atom(_):
+                                print("Is atom")  // An AtomFeed instance
+                            case let .rss(feed):
+                                if let channel = feed.channel,
+                                    let title = channel.title
+                                {
+                                    feedTitle = title
                                 }
+                                fetching.toggle()
+                                isValid.toggle()
+                                print("Is rss")  // An RSSFeed instance
+                            case .json(_):
+                                print("Is json")  // A JSONFeed instance
                             }
                         }
-                    } label: {
-                        if fetching {
-                            ProgressView()
+                    }
+                } label: {
+                    if fetching {
+                        ProgressView()
+                    } else {
+                        if isValid {
+                            Text("Save")
                         } else {
-                            if isValid {
-                                Text("Save")
-                            } else {
-                                Text("Fetch")
-                            }
+                            Text("Fetch")
                         }
                     }
                 }

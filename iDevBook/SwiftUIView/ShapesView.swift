@@ -71,6 +71,7 @@ struct ShapesView: View {
 
     @State private var isStrokeBorder: Bool = false
     @State private var showDescription: Bool = false
+    @State private var showInspector: Bool = false
 
     // shape
     @State private var rectangle = Rectangle()
@@ -93,90 +94,87 @@ struct ShapesView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                List {
-                    Section("Preview") {
-                        GeometryReader { proxy in
-                            VStack {
-                                switch selectedShapeType {
-                                case .rectangle:
-                                    rectangle
-                                        .fill(selectedFillColor)
-                                        //                                    .stroke(
-                                        //                                        selectedStrokeColor,
-                                        //                                        lineWidth: selectedStrokeWidth)
-                                        .stroke(
-                                            selectedStrokeColor,
-                                            style: StrokeStyle(
-                                                lineWidth: selectedStrokeWidth,
-                                                dash: selectedStrokeDash,
-                                                dashPhase: 4
-                                            ),
-                                            antialiased: true
-                                        )
-                                case .roundedRectangle:
-                                    roundedRectangle
-                                        .fill(selectedFillColor)
-                                        .stroke(
-                                            selectedStrokeColor,
-                                            lineWidth: selectedStrokeWidth)
-                                case .unevenRoundedRectangle:
-                                    unevenRoundedRectangle
-                                        .fill(selectedFillColor)
-                                        .stroke(
-                                            selectedStrokeColor,
-                                            lineWidth: selectedStrokeWidth)
-                                case .circle:
-                                    HStack {
-                                        Spacer()
-                                        circle
-                                            .fill(selectedFillColor)
-                                            .stroke(
-                                                selectedStrokeColor,
-                                                lineWidth: selectedStrokeWidth)
-                                        Spacer()
-                                    }
-                                case .ellipse:
-                                    ellipse
-                                        .fill(selectedFillColor)
-                                        .stroke(
-                                            selectedStrokeColor,
-                                            lineWidth: selectedStrokeWidth)
-                                case .capsule:
-                                    capsule
-                                        .fill(selectedFillColor)
-                                        .stroke(
-                                            selectedStrokeColor,
-                                            lineWidth: selectedStrokeWidth)
-                                case .path:
-                                    Path { path in
-                                        path.move(
-                                            to: CGPoint(
-                                                x: proxy.size.width / 2, y: 20))
-                                        path.addLine(
-                                            to: CGPoint(
-                                                x: proxy.size.width / 2 - 100,
-                                                y: proxy.size.height - 20))
-                                        path.addLine(
-                                            to: CGPoint(
-                                                x: proxy.size.width / 2 + 100,
-                                                y: proxy.size.height - 20))
-                                        path.closeSubpath()
-                                    }
+                GeometryReader { proxy in
+                    VStack {
+                        switch selectedShapeType {
+                        case .rectangle:
+                            rectangle
+                                .fill(selectedFillColor)
+                                //                                    .stroke(
+                                //                                        selectedStrokeColor,
+                                //                                        lineWidth: selectedStrokeWidth)
+                                .stroke(
+                                    selectedStrokeColor,
+                                    style: StrokeStyle(
+                                        lineWidth: selectedStrokeWidth,
+                                        dash: selectedStrokeDash,
+                                        dashPhase: 4
+                                    ),
+                                    antialiased: true
+                                )
+                        case .roundedRectangle:
+                            roundedRectangle
+                                .fill(selectedFillColor)
+                                .stroke(
+                                    selectedStrokeColor,
+                                    lineWidth: selectedStrokeWidth)
+                        case .unevenRoundedRectangle:
+                            unevenRoundedRectangle
+                                .fill(selectedFillColor)
+                                .stroke(
+                                    selectedStrokeColor,
+                                    lineWidth: selectedStrokeWidth)
+                        case .circle:
+                            HStack {
+                                Spacer()
+                                circle
                                     .fill(selectedFillColor)
                                     .stroke(
                                         selectedStrokeColor,
                                         lineWidth: selectedStrokeWidth)
-                                }
+                                Spacer()
                             }
+                        case .ellipse:
+                            ellipse
+                                .fill(selectedFillColor)
+                                .stroke(
+                                    selectedStrokeColor,
+                                    lineWidth: selectedStrokeWidth)
+                        case .capsule:
+                            capsule
+                                .fill(selectedFillColor)
+                                .stroke(
+                                    selectedStrokeColor,
+                                    lineWidth: selectedStrokeWidth)
+                        case .path:
+                            Path { path in
+                                path.move(
+                                    to: CGPoint(
+                                        x: proxy.size.width / 2, y: 20))
+                                path.addLine(
+                                    to: CGPoint(
+                                        x: proxy.size.width / 2 - 100,
+                                        y: proxy.size.height - 20))
+                                path.addLine(
+                                    to: CGPoint(
+                                        x: proxy.size.width / 2 + 100,
+                                        y: proxy.size.height - 20))
+                                path.closeSubpath()
+                            }
+                            .fill(selectedFillColor)
+                            .stroke(
+                                selectedStrokeColor,
+                                lineWidth: selectedStrokeWidth)
                         }
-                        .padding()
-                        .frame(height: 180)
-                        .shadow(radius: 20)
                     }
                 }
-                .scrollDisabled(true)
-                .frame(height: 260)
-                Divider()
+            }
+            .navigationTitle("Shapes")
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #endif
+            .inspector(isPresented: $showInspector, content: {
                 List {
                     Section {
                         Picker("Type", selection: $selectedShapeType) {
@@ -283,9 +281,7 @@ struct ShapesView: View {
                         }
                     }
                 }
-            }
-            .navigationTitle("Shapes")
-            .navigationBarTitleDisplayMode(.inline)
+            })
             .toolbar {
                 Menu {
                     Toggle(isOn: $showDescription.animation()) {
@@ -294,8 +290,14 @@ struct ShapesView: View {
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
                 }
+                Button {
+                    withAnimation {
+                        showInspector.toggle()
+                    }
+                } label: {
+                    Label("Show Inspector", systemImage: "sidebar.right")
+                }
             }
-            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
             .onAppear {
                 withAnimation {
                     hideTabBar = true

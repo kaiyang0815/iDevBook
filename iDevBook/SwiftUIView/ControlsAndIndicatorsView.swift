@@ -296,9 +296,9 @@ struct ControlsAndIndicatorsView: View {
 
     @State private var showDescription: Bool = false
     @State private var hideTabBar: Bool = false
-    
+
     @FocusState private var isFocused: Bool
-    
+
     var listHeight: Double {
         switch selectedCAITye {
         case .button:
@@ -344,302 +344,310 @@ struct ControlsAndIndicatorsView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                List {
-                    Section("Preview") {
-                        switch selectedCAITye {
-                        case .button:
-                            Group {
-                                switch selectedButtonStyleType {
+            #if os(iOS)
+                VStack(spacing: 0) {
+                    List {
+                        Section("Preview") {
+                            switch selectedCAITye {
+                            case .button:
+                                Group {
+                                    switch selectedButtonStyleType {
+                                    case .automatic:
+                                        Button("Click") {
+                                            withAnimation {
+                                                clickCount += 1
+                                            }
+                                        }
+                                        .buttonStyle(.automatic)
+                                        .buttonRepeatBehavior(
+                                            buttonRepeatBehavior
+                                                ? .enabled : .disabled)
+                                    case .bordered:
+                                        Button("Click") {
+                                            withAnimation {
+                                                clickCount += 1
+                                            }
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .buttonRepeatBehavior(
+                                            buttonRepeatBehavior
+                                                ? .enabled : .disabled)
+                                    case .borderedProminent:
+                                        Button("Click") {
+                                            withAnimation {
+                                                clickCount += 1
+                                            }
+                                        }
+                                        .buttonStyle(.borderedProminent)
+                                        .buttonRepeatBehavior(
+                                            buttonRepeatBehavior
+                                                ? .enabled : .disabled)
+                                    case .borderless:
+                                        Button("Click") {
+                                            withAnimation {
+                                                clickCount += 1
+                                            }
+                                        }
+                                        .buttonStyle(.borderless)
+                                        .buttonRepeatBehavior(
+                                            buttonRepeatBehavior
+                                                ? .enabled : .disabled)
+                                    case .plain:
+                                        Button("Click") {
+                                            withAnimation {
+                                                clickCount += 1
+                                            }
+                                        }
+                                        .buttonStyle(.plain)
+                                        .buttonRepeatBehavior(
+                                            buttonRepeatBehavior
+                                                ? .enabled : .disabled)
+                                    }
+                                }
+                                .controlSize(selectedControlSize)
+                            case .editButton:
+                                EditButton()
+                            case .pasteButton:
+                                PasteButton(payloadType: String.self) {
+                                    strings in
+                                    withAnimation {
+                                        pastedText = strings[0]
+                                    }
+                                }
+                            case .renameButton:
+                                TextField("Enter new name", text: $name)
+                                    .focused($isFocused)
+                                RenameButton()
+                                    .renameAction {
+                                        withAnimation {
+                                            self.name = ""
+                                            self.isFocused = true
+                                        }
+                                    }
+                            case .link:
+                                Link(
+                                    "Open URL",
+                                    destination: URL(
+                                        string: "https://www.example.com")!
+                                )
+                                .environment(
+                                    \.openURL,
+                                    OpenURLAction { url in
+                                        withAnimation {
+                                            self.openedURL = url.absoluteString
+                                            return .handled
+                                        }
+                                    })
+                            case .shareLink:
+                                ShareLink(
+                                    item: URL(
+                                        string:
+                                            "https://developer.apple.com/xcode/swiftui/"
+                                    )!
+                                ) {
+                                    Label(
+                                        "Share Link",
+                                        systemImage: "square.and.arrow.up"
+                                    )
+                                }
+                            case .sharePreview:
+                                ShareLink(
+                                    item: URL(
+                                        string:
+                                            "https://developer.apple.com/xcode/swiftui/"
+                                    )!,
+                                    preview: SharePreview(
+                                        "SwiftUI",
+                                        image: Image("SwiftUI"))
+                                ) {
+                                    Label(
+                                        "Share Preview",
+                                        systemImage: "square.and.arrow.up"
+                                    )
+                                }
+                            case .textFieldLink:
+                                Text("watchOS only")
+                            case .helpLink:
+                                Text("macOS only")
+                            case .slider:
+                                Slider(
+                                    value: $sliderValue.animation(),
+                                    in: sliderRange,
+                                    step: sliderStep
+                                ) {
+                                    Text("Slider")
+                                } minimumValueLabel: {
+                                    Text(
+                                        sliderRange.lowerBound, format: .number)
+                                } maximumValueLabel: {
+                                    Text(
+                                        sliderRange.upperBound, format: .number)
+                                } onEditingChanged: { editing in
+                                    isSliding = editing
+                                }
+                            case .stepper:
+                                Stepper {
+                                    Text("Value")
+                                    Text(stepperValue, format: .number)
+                                } onIncrement: {
+                                    withAnimation {
+                                        stepperValue += stepperStep
+                                        if stepperValue >= 10 {
+                                            stepperValue = 10
+                                        }
+                                    }
+                                } onDecrement: {
+                                    withAnimation {
+                                        stepperValue -= stepperStep
+                                        if stepperValue < 0 { stepperValue = 0 }
+                                    }
+                                }
+                            case .toggle:
+                                Toggle("Toggle", isOn: $toggleValue.animation())
+                            case .picker:
+                                switch selectedPickerStyleType {
                                 case .automatic:
-                                    Button("Click") {
-                                        withAnimation {
-                                            clickCount += 1
-                                        }
-                                    }
-                                    .buttonStyle(.automatic)
-                                    .buttonRepeatBehavior(
-                                        buttonRepeatBehavior ? .enabled : .disabled)
-                                case .bordered:
-                                    Button("Click") {
-                                        withAnimation {
-                                            clickCount += 1
-                                        }
-                                    }
-                                    .buttonStyle(.bordered)
-                                    .buttonRepeatBehavior(
-                                        buttonRepeatBehavior ? .enabled : .disabled)
-                                case .borderedProminent:
-                                    Button("Click") {
-                                        withAnimation {
-                                            clickCount += 1
-                                        }
-                                    }
-                                    .buttonStyle(.borderedProminent)
-                                    .buttonRepeatBehavior(
-                                        buttonRepeatBehavior ? .enabled : .disabled)
-                                case .borderless:
-                                    Button("Click") {
-                                        withAnimation {
-                                            clickCount += 1
-                                        }
-                                    }
-                                    .buttonStyle(.borderless)
-                                    .buttonRepeatBehavior(
-                                        buttonRepeatBehavior ? .enabled : .disabled)
-                                case .plain:
-                                    Button("Click") {
-                                        withAnimation {
-                                            clickCount += 1
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                    .buttonRepeatBehavior(
-                                        buttonRepeatBehavior ? .enabled : .disabled)
-                                }
-                            }
-                            .controlSize(selectedControlSize)
-                        case .editButton:
-                            EditButton()
-                        case .pasteButton:
-                            PasteButton(payloadType: String.self) { strings in
-                                withAnimation {
-                                    pastedText = strings[0]
-                                }
-                            }
-                        case .renameButton:
-                            TextField("Enter new name", text: $name)
-                                .focused($isFocused)
-                            RenameButton()
-                                .renameAction {
-                                    withAnimation {
-                                        self.name = ""
-                                        self.isFocused = true
-                                    }
-                                }
-                        case .link:
-                            Link(
-                                "Open URL",
-                                destination: URL(string: "https://www.example.com")!
-                            )
-                            .environment(
-                                \.openURL,
-                                OpenURLAction { url in
-                                    withAnimation {
-                                        self.openedURL = url.absoluteString
-                                        return .handled
-                                    }
-                                })
-                        case .shareLink:
-                            ShareLink(
-                                item: URL(
-                                    string:
-                                        "https://developer.apple.com/xcode/swiftui/"
-                                )!
-                            ) {
-                                Label(
-                                    "Share Link", systemImage: "square.and.arrow.up"
-                                )
-                            }
-                        case .sharePreview:
-                            ShareLink(
-                                item: URL(
-                                    string:
-                                        "https://developer.apple.com/xcode/swiftui/"
-                                )!,
-                                preview: SharePreview(
-                                    "SwiftUI",
-                                    image: Image("SwiftUI"))
-                            ) {
-                                Label(
-                                    "Share Preview",
-                                    systemImage: "square.and.arrow.up"
-                                )
-                            }
-                        case .textFieldLink:
-                            Text("watchOS only")
-                        case .helpLink:
-                            Text("macOS only")
-                        case .slider:
-                            Slider(
-                                value: $sliderValue.animation(),
-                                in: sliderRange,
-                                step: sliderStep
-                            ) {
-                                Text("Slider")
-                            } minimumValueLabel: {
-                                Text(sliderRange.lowerBound, format: .number)
-                            } maximumValueLabel: {
-                                Text(sliderRange.upperBound, format: .number)
-                            } onEditingChanged: { editing in
-                                isSliding = editing
-                            }
-                        case .stepper:
-                            Stepper {
-                                Text("Value")
-                                Text(stepperValue, format: .number)
-                            } onIncrement: {
-                                withAnimation {
-                                    stepperValue += stepperStep
-                                    if stepperValue >= 10 { stepperValue = 10 }
-                                }
-                            } onDecrement: {
-                                withAnimation {
-                                    stepperValue -= stepperStep
-                                    if stepperValue < 0 { stepperValue = 0 }
-                                }
-                            }
-                        case .toggle:
-                            Toggle("Toggle", isOn: $toggleValue.animation())
-                        case .picker:
-                            switch selectedPickerStyleType {
-                            case .automatic:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.automatic)
-                            case .inline:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.inline)
-                            case .menu:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.menu)
-                            case .navigationLink:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.navigationLink)
-                            case .palette:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.palette)
-                            case .radioGroup:
-                                #if os(iOS)
-                                    Text("macOS only")
-                                #elseif os(macOS)
                                     Picker(selection: $selectedFlavor) {
                                         Text("Chocolate").tag(Flavor.chocolate)
                                         Text("Vanilla").tag(Flavor.vanilla)
-                                        Text("Strawberry").tag(Flavor.strawberry)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
                                     } label: {
                                         Text("Flavor")
                                     }
-                                    .pickerStyle(.radioGroup)
-                                #endif
-                            case .segmented:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
+                                    .pickerStyle(.automatic)
+                                case .inline:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.inline)
+                                case .menu:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.menu)
+                                case .navigationLink:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.navigationLink)
+                                case .palette:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.palette)
+                                case .radioGroup:
+                                    #if os(iOS)
+                                        Text("macOS only")
+                                    #elseif os(macOS)
+                                        Picker(selection: $selectedFlavor) {
+                                            Text("Chocolate").tag(
+                                                Flavor.chocolate)
+                                            Text("Vanilla").tag(Flavor.vanilla)
+                                            Text("Strawberry").tag(
+                                                Flavor.strawberry)
+                                        } label: {
+                                            Text("Flavor")
+                                        }
+                                        .pickerStyle(.radioGroup)
+                                    #endif
+                                case .segmented:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.segmented)
+                                case .wheel:
+                                    Picker(selection: $selectedFlavor) {
+                                        Text("Chocolate").tag(Flavor.chocolate)
+                                        Text("Vanilla").tag(Flavor.vanilla)
+                                        Text("Strawberry").tag(
+                                            Flavor.strawberry)
+                                    } label: {
+                                        Text("Flavor")
+                                    }
+                                    .pickerStyle(.wheel)
                                 }
-                                .pickerStyle(.segmented)
-                            case .wheel:
-                                Picker(selection: $selectedFlavor) {
-                                    Text("Chocolate").tag(Flavor.chocolate)
-                                    Text("Vanilla").tag(Flavor.vanilla)
-                                    Text("Strawberry").tag(Flavor.strawberry)
-                                } label: {
-                                    Text("Flavor")
-                                }
-                                .pickerStyle(.wheel)
-                            }
-                        case .datePicker:
-                            switch selectedDatePickerStyleType {
-                            case .automatic:
-                                DatePicker(
-                                    "Time", selection: $datePickerValue
-                                )
-                                .datePickerStyle(.automatic)
-                            case .compact:
-                                DatePicker(
-                                    "Time", selection: $datePickerValue
-                                )
-                                .datePickerStyle(.compact)
-                            case .field:
-                                #if os(iOS)
-                                    Text(".field macOS only")
-                                #elseif os(macOS)
+                            case .datePicker:
+                                switch selectedDatePickerStyleType {
+                                case .automatic:
                                     DatePicker(
                                         "Time", selection: $datePickerValue
                                     )
-                                    .datePickerStyle(.field)
-                                #endif
-                            case .graphical:
-                                DatePicker(
-                                    "Time", selection: $datePickerValue
-                                )
-                                .datePickerStyle(.graphical)
-                            case .stepperField:
-                                #if os(iOS)
-                                    Text(".stepperField macOS only")
-                                #elseif os(macOS)
+                                    .datePickerStyle(.automatic)
+                                case .compact:
                                     DatePicker(
                                         "Time", selection: $datePickerValue
                                     )
-                                    .datePickerStyle(.stepperField)
-                                #endif
-                            case .wheel:
-                                DatePicker(
-                                    "Time", selection: $datePickerValue
-                                )
-                                .datePickerStyle(.wheel)
-                            }
-                        case .multiDatePicker:
-                            #if os(iOS)
-                                Text("macOS only")
-                            #elseif os(macOS)
-                            MultiDatePicker("Time", selection: $datePickerValue)
-                            #endif
-                        case .colorPicker:
-                            ColorPicker(
-                                "Color Picker", selection: $colorPickerValue,
-                                supportsOpacity: supportsOpacity)
-                        case .gauge:
-                            switch selectedGaugeStyleType {
-                            case .automatic:
-                                Gauge(
-                                    value: gaugeCurrentValue,
-                                    in: gaugeMinValue...gaugeMaxValue
-                                ) {
-                                    Text("BPM")
-                                } currentValueLabel: {
-                                    Text(gaugeCurrentValue, format: .number)
-                                } minimumValueLabel: {
-                                    Text(gaugeMinValue, format: .number)
-                                } maximumValueLabel: {
-                                    Text(gaugeMaxValue, format: .number)
+                                    .datePickerStyle(.compact)
+                                case .field:
+                                    #if os(iOS)
+                                        Text(".field macOS only")
+                                    #elseif os(macOS)
+                                        DatePicker(
+                                            "Time", selection: $datePickerValue
+                                        )
+                                        .datePickerStyle(.field)
+                                    #endif
+                                case .graphical:
+                                    DatePicker(
+                                        "Time", selection: $datePickerValue
+                                    )
+                                    .datePickerStyle(.graphical)
+                                case .stepperField:
+                                    #if os(iOS)
+                                        Text(".stepperField macOS only")
+                                    #elseif os(macOS)
+                                        DatePicker(
+                                            "Time", selection: $datePickerValue
+                                        )
+                                        .datePickerStyle(.stepperField)
+                                    #endif
+                                case .wheel:
+                                    DatePicker(
+                                        "Time", selection: $datePickerValue
+                                    )
+                                    .datePickerStyle(.wheel)
                                 }
-                            case .circular:
+                            case .multiDatePicker:
                                 #if os(iOS)
-                                    Text("watchOS only")
-                                #elseif os(watchOS)
+                                    Text("macOS only")
+                                #elseif os(macOS)
+                                    MultiDatePicker(
+                                        "Time", selection: $datePickerValue)
+                                #endif
+                            case .colorPicker:
+                                ColorPicker(
+                                    "Color Picker",
+                                    selection: $colorPickerValue,
+                                    supportsOpacity: supportsOpacity)
+                            case .gauge:
+                                switch selectedGaugeStyleType {
+                                case .automatic:
                                     Gauge(
                                         value: gaugeCurrentValue,
                                         in: gaugeMinValue...gaugeMaxValue
@@ -652,319 +660,378 @@ struct ControlsAndIndicatorsView: View {
                                     } maximumValueLabel: {
                                         Text(gaugeMaxValue, format: .number)
                                     }
-                                    .gaugeStyle(.circular)
-                                #endif
+                                case .circular:
+                                    #if os(iOS)
+                                        Text("watchOS only")
+                                    #elseif os(watchOS)
+                                        Gauge(
+                                            value: gaugeCurrentValue,
+                                            in: gaugeMinValue...gaugeMaxValue
+                                        ) {
+                                            Text("BPM")
+                                        } currentValueLabel: {
+                                            Text(
+                                                gaugeCurrentValue,
+                                                format: .number)
+                                        } minimumValueLabel: {
+                                            Text(gaugeMinValue, format: .number)
+                                        } maximumValueLabel: {
+                                            Text(gaugeMaxValue, format: .number)
+                                        }
+                                        .gaugeStyle(.circular)
+                                    #endif
 
-                            case .linear:
-                                #if os(iOS)
-                                    Text("watchOS only")
-                                #elseif os(watchOS)
-                                    Gauge(
-                                        value: gaugeCurrentValue,
-                                        in: gaugeMinValue...gaugeMaxValue
-                                    ) {
-                                        Text("BPM")
-                                    } currentValueLabel: {
-                                        Text(gaugeCurrentValue, format: .number)
-                                    } minimumValueLabel: {
-                                        Text(gaugeMinValue, format: .number)
-                                    } maximumValueLabel: {
-                                        Text(gaugeMaxValue, format: .number)
-                                    }
-                                    .gaugeStyle(.linear)
-                                #endif
-                            }
-                        case .progressView:
-                            switch selectedProgressViewStyleType {
-                            case .automatic:
-                                VStack {
-                                    ProgressView(
-                                        "ProgressView", value: progressValue,
-                                        total: progressTotal)
-                                    ProgressView(
-                                        timerInterval:
-                                            Date()...Date().addingTimeInterval(
-                                                5 * 60)
-                                    ) {
-                                        Text("Workout")
-                                    }
+                                case .linear:
+                                    #if os(iOS)
+                                        Text("watchOS only")
+                                    #elseif os(watchOS)
+                                        Gauge(
+                                            value: gaugeCurrentValue,
+                                            in: gaugeMinValue...gaugeMaxValue
+                                        ) {
+                                            Text("BPM")
+                                        } currentValueLabel: {
+                                            Text(
+                                                gaugeCurrentValue,
+                                                format: .number)
+                                        } minimumValueLabel: {
+                                            Text(gaugeMinValue, format: .number)
+                                        } maximumValueLabel: {
+                                            Text(gaugeMaxValue, format: .number)
+                                        }
+                                        .gaugeStyle(.linear)
+                                    #endif
                                 }
-                            case .circular:
-                                HStack {
-                                    Spacer()
+                            case .progressView:
+                                switch selectedProgressViewStyleType {
+                                case .automatic:
                                     VStack {
                                         ProgressView(
-                                            "ProgressView", value: progressValue,
+                                            "ProgressView",
+                                            value: progressValue,
                                             total: progressTotal)
                                         ProgressView(
                                             timerInterval:
-                                                Date()...Date().addingTimeInterval(
+                                                Date()...Date()
+                                                .addingTimeInterval(
                                                     5 * 60)
                                         ) {
                                             Text("Workout")
                                         }
                                     }
-                                    Spacer()
+                                case .circular:
+                                    HStack {
+                                        Spacer()
+                                        VStack {
+                                            ProgressView(
+                                                "ProgressView",
+                                                value: progressValue,
+                                                total: progressTotal)
+                                            ProgressView(
+                                                timerInterval:
+                                                    Date()...Date()
+                                                    .addingTimeInterval(
+                                                        5 * 60)
+                                            ) {
+                                                Text("Workout")
+                                            }
+                                        }
+                                        Spacer()
+                                    }
+                                    .progressViewStyle(.circular)
+                                case .linear:
+                                    VStack {
+                                        ProgressView(
+                                            "ProgressView",
+                                            value: progressValue,
+                                            total: progressTotal)
+                                        ProgressView(
+                                            timerInterval:
+                                                Date()...Date()
+                                                .addingTimeInterval(
+                                                    5 * 60)
+                                        ) {
+                                            Text("Workout")
+                                        }
+                                    }
+                                    .progressViewStyle(.linear)
                                 }
-                                .progressViewStyle(.circular)
-                            case .linear:
-                                VStack {
-                                    ProgressView(
-                                        "ProgressView", value: progressValue,
-                                        total: progressTotal)
-                                    ProgressView(
-                                        timerInterval:
-                                            Date()...Date().addingTimeInterval(
-                                                5 * 60)
+                            case .contentUnavailableView:
+                                ContentUnavailableView {
+                                    Label("No Mail", systemImage: "tray.fill")
+                                } description: {
+                                    Text(
+                                        "New mails you receive will appear here."
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    .scrollDisabled(true)
+                    .frame(height: listHeight)
+                    Divider()
+                    List {
+                        Section {
+                            Picker(
+                                "Type", selection: $selectedCAITye.animation()
+                            ) {
+                                ForEach(ControlsAndIndicatorsType.allCases) {
+                                    type in
+                                    Text(type.name)
+                                }
+                            }
+                        } footer: {
+                            if showDescription {
+                                Text(selectedCAITye.description)
+                            }
+                        }
+
+                        Section("Control") {
+                            switch selectedCAITye {
+                            case .button:
+                                VStack(alignment: .leading) {
+                                    Picker(
+                                        ".controlSize",
+                                        selection: $selectedControlSize
                                     ) {
-                                        Text("Workout")
+                                        ForEach(
+                                            ControlSize.allCases, id: \.self
+                                        ) {
+                                            size in
+                                            Text(size.name)
+                                        }
+                                    }
+                                    if showDescription {
+                                        Text(
+                                            "The size classes, like regular or small, that you can apply to controls within a view."
+                                        )
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    }
+                                    Toggle(
+                                        ".buttonRepeatBehavior",
+                                        isOn: $buttonRepeatBehavior)
+                                    if showDescription {
+                                        Text(
+                                            "Sets whether buttons in this view should repeatedly trigger their actions on prolonged interactions."
+                                        )
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
                                     }
                                 }
-                                .progressViewStyle(.linear)
-                            }
-                        case .contentUnavailableView:
-                            ContentUnavailableView {
-                                Label("No Mail", systemImage: "tray.fill")
-                            } description: {
-                                Text("New mails you receive will appear here.")
-                            }
-                        }
-                    }
-                }
-                .scrollDisabled(true)
-                .frame(height: listHeight)
-                Divider()
-                List {
-                    Section {
-                        Picker("Type", selection: $selectedCAITye.animation()) {
-                            ForEach(ControlsAndIndicatorsType.allCases) { type in
-                                Text(type.name)
-                            }
-                        }
-                    } footer: {
-                        if showDescription {
-                            Text(selectedCAITye.description)
-                        }
-                    }
-
-                    Section("Control") {
-                        switch selectedCAITye {
-                        case .button:
-                            VStack(alignment: .leading) {
-                                Picker(
-                                    ".controlSize", selection: $selectedControlSize
-                                ) {
-                                    ForEach(ControlSize.allCases, id: \.self) {
-                                        size in
-                                        Text(size.name)
+                                VStack {
+                                    Picker(
+                                        ".buttonStyle",
+                                        selection: $selectedButtonStyleType
+                                    ) {
+                                        ForEach(
+                                            ButtonStyleType.allCases, id: \.id
+                                        ) {
+                                            type in
+                                            Text(type.name)
+                                        }
+                                    }
+                                    if showDescription {
+                                        Text(
+                                            "Sets the style for buttons within this view to a button style with a custom appearance and standard interaction behavior."
+                                        )
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
                                     }
                                 }
-                                if showDescription {
+                            case .editButton:
+                                Text("editButton")
+                            case .pasteButton:
+                                Text("pasteButton")
+                            case .renameButton:
+                                Text("renameButton")
+                            case .link:
+                                Text("link")
+                            case .shareLink:
+                                Text("shareLink")
+                            case .sharePreview:
+                                Text("sharePreview")
+                            case .textFieldLink:
+                                Text("textFieldLink")
+                            case .helpLink:
+                                Text("helpLink")
+                            case .slider:
+                                Stepper(value: $sliderStep) {
+                                    Text("Slider step")
+                                    Text(sliderStep, format: .number)
+                                }
+                            case .stepper:
+                                Stepper {
+                                    Text("Stepper step")
+                                    Text(stepperStep, format: .number)
+                                } onIncrement: {
+                                    stepperStep += 1
+                                    if stepperStep >= 10 { stepperStep = 10 }
+                                } onDecrement: {
+                                    stepperStep -= 1
+                                    if stepperStep < 0 { stepperStep = 0 }
+                                }
+                            case .toggle:
+                                Text("Control")
+                            case .picker:
+                                VStack(alignment: .leading) {
+                                    Picker(
+                                        "pickerStyle",
+                                        selection: $selectedPickerStyleType
+                                    ) {
+                                        ForEach(
+                                            PickerStyleType.allCases, id: \.self
+                                        ) {
+                                            type in
+                                            Text(type.name)
+                                        }
+                                    }
                                     Text(
-                                        "The size classes, like regular or small, that you can apply to controls within a view."
+                                        "Sets the style for pickers within this view."
                                     )
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                 }
+                            case .datePicker:
+                                Picker(
+                                    "DatePicker Style",
+                                    selection:
+                                        $selectedDatePickerStyleType.animation()
+                                ) {
+                                    ForEach(
+                                        DatePickerStyleType.allCases, id: \.self
+                                    ) {
+                                        type in
+                                        Text(type.name)
+                                    }
+                                }
+                            case .multiDatePicker:
+                                Text("Control")
+                            case .colorPicker:
                                 Toggle(
-                                    ".buttonRepeatBehavior",
-                                    isOn: $buttonRepeatBehavior)
-                                if showDescription {
-                                    Text(
-                                        "Sets whether buttons in this view should repeatedly trigger their actions on prolonged interactions."
-                                    )
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                }
-                            }
-                            VStack {
+                                    "supportsOpacity", isOn: $supportsOpacity)
+                            case .gauge:
                                 Picker(
-                                    ".buttonStyle",
-                                    selection: $selectedButtonStyleType
+                                    "Gauge Style",
+                                    selection:
+                                        $selectedGaugeStyleType.animation()
                                 ) {
-                                    ForEach(ButtonStyleType.allCases, id: \.id) {
+                                    ForEach(GaugeStyleType.allCases, id: \.id) {
                                         type in
                                         Text(type.name)
                                     }
                                 }
-                                if showDescription {
-                                    Text(
-                                        "Sets the style for buttons within this view to a button style with a custom appearance and standard interaction behavior."
-                                    )
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                }
-                            }
-                        case .editButton:
-                            Text("editButton")
-                        case .pasteButton:
-                            Text("pasteButton")
-                        case .renameButton:
-                            Text("renameButton")
-                        case .link:
-                            Text("link")
-                        case .shareLink:
-                            Text("shareLink")
-                        case .sharePreview:
-                            Text("sharePreview")
-                        case .textFieldLink:
-                            Text("textFieldLink")
-                        case .helpLink:
-                            Text("helpLink")
-                        case .slider:
-                            Stepper(value: $sliderStep) {
-                                Text("Slider step")
-                                Text(sliderStep, format: .number)
-                            }
-                        case .stepper:
-                            Stepper {
-                                Text("Stepper step")
-                                Text(stepperStep, format: .number)
-                            } onIncrement: {
-                                stepperStep += 1
-                                if stepperStep >= 10 { stepperStep = 10 }
-                            } onDecrement: {
-                                stepperStep -= 1
-                                if stepperStep < 0 { stepperStep = 0 }
-                            }
-                        case .toggle:
-                            Text("Control")
-                        case .picker:
-                            VStack(alignment: .leading) {
+                            case .progressView:
                                 Picker(
-                                    "pickerStyle",
-                                    selection: $selectedPickerStyleType
+                                    "ProgressView Style",
+                                    selection:
+                                        $selectedProgressViewStyleType.animation()
                                 ) {
-                                    ForEach(PickerStyleType.allCases, id: \.self) {
+                                    ForEach(
+                                        ProgressViewStyleType.allCases, id: \.id
+                                    ) {
                                         type in
                                         Text(type.name)
                                     }
                                 }
-                                Text("Sets the style for pickers within this view.")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                            case .contentUnavailableView:
+                                Text("Control")
                             }
-                        case .datePicker:
-                            Picker(
-                                "DatePicker Style",
-                                selection: $selectedDatePickerStyleType.animation()
-                            ) {
-                                ForEach(DatePickerStyleType.allCases, id: \.self) {
-                                    type in
-                                    Text(type.name)
-                                }
-                            }
-                        case .multiDatePicker:
-                            Text("Control")
-                        case .colorPicker:
-                            Toggle("supportsOpacity", isOn: $supportsOpacity)
-                        case .gauge:
-                            Picker(
-                                "Gauge Style",
-                                selection: $selectedGaugeStyleType.animation()
-                            ) {
-                                ForEach(GaugeStyleType.allCases, id: \.id) { type in
-                                    Text(type.name)
-                                }
-                            }
-                        case .progressView:
-                            Picker(
-                                "ProgressView Style",
-                                selection:
-                                    $selectedProgressViewStyleType.animation()
-                            ) {
-                                ForEach(ProgressViewStyleType.allCases, id: \.id) {
-                                    type in
-                                    Text(type.name)
-                                }
-                            }
-                        case .contentUnavailableView:
-                            Text("Control")
                         }
-                    }
 
-                    Section("Value") {
-                        switch selectedCAITye {
-                        case .button:
-                            LabeledContent(
-                                "Count", value: clickCount, format: .number)
-                        case .editButton:
-                            LabeledContent("Result", value: pastedText)
-                        case .pasteButton:
-                            LabeledContent("Result", value: pastedText)
-                        case .renameButton:
-                            LabeledContent(
-                                "Result", value: isFocused ? "Renaming" : "")
-                        case .link:
-                            LabeledContent("Opened URL", value: openedURL)
-                        case .shareLink:
-                            LabeledContent("Result", value: pastedText)
-                        case .sharePreview:
-                            LabeledContent("Result", value: pastedText)
-                        case .textFieldLink:
-                            LabeledContent("Result", value: pastedText)
-                        case .helpLink:
-                            LabeledContent("Result", value: pastedText)
-                        case .slider:
-                            LabeledContent(
-                                "Sliding", value: isSliding ? "True" : "False")
-                            LabeledContent(
-                                "Value", value: sliderValue, format: .number)
-                            LabeledContent(
-                                "Range LowerBound", value: sliderRange.lowerBound,
-                                format: .number)
-                            LabeledContent(
-                                "Range UpperBound", value: sliderRange.upperBound,
-                                format: .number)
-                        case .stepper:
-                            LabeledContent(
-                                "Stepper Value", value: stepperValue,
-                                format: .number)
-                        case .toggle:
-                            LabeledContent(
-                                "Value", value: toggleValue ? "True" : "False")
-                        case .picker:
-                            LabeledContent(
-                                "Picker Value", value: selectedFlavor.rawValue)
-                        case .datePicker:
-                            LabeledContent(
-                                "DatePicker Value", value: datePickerValue,
-                                format: .dateTime)
-                        case .multiDatePicker:
-                            LabeledContent("Result", value: pastedText)
-                        case .colorPicker:
-                            LabeledContent("ColorPicker Value") {
-                                Circle()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundStyle(colorPickerValue)
+                        Section("Value") {
+                            switch selectedCAITye {
+                            case .button:
+                                LabeledContent(
+                                    "Count", value: clickCount, format: .number)
+                            case .editButton:
+                                LabeledContent("Result", value: pastedText)
+                            case .pasteButton:
+                                LabeledContent("Result", value: pastedText)
+                            case .renameButton:
+                                LabeledContent(
+                                    "Result", value: isFocused ? "Renaming" : ""
+                                )
+                            case .link:
+                                LabeledContent("Opened URL", value: openedURL)
+                            case .shareLink:
+                                LabeledContent("Result", value: pastedText)
+                            case .sharePreview:
+                                LabeledContent("Result", value: pastedText)
+                            case .textFieldLink:
+                                LabeledContent("Result", value: pastedText)
+                            case .helpLink:
+                                LabeledContent("Result", value: pastedText)
+                            case .slider:
+                                LabeledContent(
+                                    "Sliding",
+                                    value: isSliding ? "True" : "False")
+                                LabeledContent(
+                                    "Value", value: sliderValue, format: .number
+                                )
+                                LabeledContent(
+                                    "Range LowerBound",
+                                    value: sliderRange.lowerBound,
+                                    format: .number)
+                                LabeledContent(
+                                    "Range UpperBound",
+                                    value: sliderRange.upperBound,
+                                    format: .number)
+                            case .stepper:
+                                LabeledContent(
+                                    "Stepper Value", value: stepperValue,
+                                    format: .number)
+                            case .toggle:
+                                LabeledContent(
+                                    "Value",
+                                    value: toggleValue ? "True" : "False")
+                            case .picker:
+                                LabeledContent(
+                                    "Picker Value",
+                                    value: selectedFlavor.rawValue)
+                            case .datePicker:
+                                LabeledContent(
+                                    "DatePicker Value", value: datePickerValue,
+                                    format: .dateTime)
+                            case .multiDatePicker:
+                                LabeledContent("Result", value: pastedText)
+                            case .colorPicker:
+                                LabeledContent("ColorPicker Value") {
+                                    Circle()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(colorPickerValue)
+                                }
+                            case .gauge:
+                                LabeledContent("Result", value: pastedText)
+                            case .progressView:
+                                LabeledContent("Result", value: pastedText)
+                            case .contentUnavailableView:
+                                LabeledContent("Result", value: pastedText)
                             }
-                        case .gauge:
-                            LabeledContent("Result", value: pastedText)
-                        case .progressView:
-                            LabeledContent("Result", value: pastedText)
-                        case .contentUnavailableView:
-                            LabeledContent("Result", value: pastedText)
                         }
                     }
                 }
-            }
-            .navigationTitle("Controls and indicators")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                Menu {
-                    Toggle(isOn: $showDescription.animation()) {
-                        Label("Show Description", systemImage: "eye")
+                .navigationTitle("Controls and indicators")
+                #if os(iOS)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarVisibility(
+                        hideTabBar ? .hidden : .automatic, for: .tabBar)
+                #endif
+                .toolbar {
+                    Menu {
+                        Toggle(isOn: $showDescription.animation()) {
+                            Label("Show Description", systemImage: "eye")
+                        }
+                    } label: {
+                        Label("More", systemImage: "ellipsis.circle")
                     }
-                } label: {
-                    Label("More", systemImage: "ellipsis.circle")
                 }
-            }
-            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
-            .onAppear {
-                withAnimation {
-                    hideTabBar = true
+                .onAppear {
+                    withAnimation {
+                        hideTabBar = true
+                    }
                 }
-            }
+            #endif
         }
     }
 }

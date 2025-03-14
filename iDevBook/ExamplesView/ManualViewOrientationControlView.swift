@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 enum Orientation: String, CaseIterable {
     case all = "All"
     case portrait = "Portrait"
@@ -69,3 +70,4 @@ extension View {
         }
     }
 }
+#endif

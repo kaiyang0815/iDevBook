@@ -60,7 +60,9 @@ struct AcknowledgementDetailsView: View {
                     repository: acknowledgement.repository)
 
             case .failure:
-                UIApplication.shared.open(repository)
+                #if os(iOS)
+                    UIApplication.shared.open(repository)
+                #endif
             }
         }
     }

@@ -8,18 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105692D7662EE00549A0F /* RichTextKit */; };
-		BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */; };
-		BDB1056F2D76668B00549A0F /* Lexical in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1056E2D76668B00549A0F /* Lexical */; };
-		BDB105712D76668B00549A0F /* LexicalHTML in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105702D76668B00549A0F /* LexicalHTML */; };
-		BDB105732D76668B00549A0F /* LexicalInlineImagePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */; };
-		BDB105752D76668B00549A0F /* LexicalLinkPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105742D76668B00549A0F /* LexicalLinkPlugin */; };
-		BDB105772D76668B00549A0F /* LexicalListHTMLSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105762D76668B00549A0F /* LexicalListHTMLSupport */; };
-		BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105782D76668B00549A0F /* LexicalListPlugin */; };
-		BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */ = {isa = PBXBuildFile; productRef = BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */; };
 		FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07942D82CD8C007A3DD1 /* AcknowList */; };
 		FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07972D82D13F007A3DD1 /* MarkdownUI */; };
 		FB432A1A2D81780700BE347E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A192D81780700BE347E /* FeedKit */; };
 		FB432A1C2D81780700BE347E /* XMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A1B2D81780700BE347E /* XMLKit */; };
+		FBA9E9A92D83DB06009B252B /* RichText in Frameworks */ = {isa = PBXBuildFile; productRef = FBA9E9A82D83DB06009B252B /* RichText */; };
 		FBEB1C7C2D76A80C00220F20 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FBEB1C7B2D76A80C00220F20 /* HighlightSwift */; };
 /* End PBXBuildFile section */
 
@@ -69,19 +62,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDB105752D76668B00549A0F /* LexicalLinkPlugin in Frameworks */,
 				FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */,
 				FBEB1C7C2D76A80C00220F20 /* HighlightSwift in Frameworks */,
-				BDB105772D76668B00549A0F /* LexicalListHTMLSupport in Frameworks */,
-				BDB1056F2D76668B00549A0F /* Lexical in Frameworks */,
 				BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */,
-				BDB105712D76668B00549A0F /* LexicalHTML in Frameworks */,
-				BDB1056D2D76668B00549A0F /* EditorHistoryPlugin in Frameworks */,
 				FB432A1C2D81780700BE347E /* XMLKit in Frameworks */,
-				BDB105792D76668B00549A0F /* LexicalListPlugin in Frameworks */,
 				FB432A1A2D81780700BE347E /* FeedKit in Frameworks */,
-				BDB1057B2D76668B00549A0F /* SelectableDecoratorNode in Frameworks */,
-				BDB105732D76668B00549A0F /* LexicalInlineImagePlugin in Frameworks */,
+				FBA9E9A92D83DB06009B252B /* RichText in Frameworks */,
 				FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,19 +130,12 @@
 			name = iDevBook;
 			packageProductDependencies = (
 				BDB105692D7662EE00549A0F /* RichTextKit */,
-				BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */,
-				BDB1056E2D76668B00549A0F /* Lexical */,
-				BDB105702D76668B00549A0F /* LexicalHTML */,
-				BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */,
-				BDB105742D76668B00549A0F /* LexicalLinkPlugin */,
-				BDB105762D76668B00549A0F /* LexicalListHTMLSupport */,
-				BDB105782D76668B00549A0F /* LexicalListPlugin */,
-				BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */,
 				FBEB1C7B2D76A80C00220F20 /* HighlightSwift */,
 				FB432A192D81780700BE347E /* FeedKit */,
 				FB432A1B2D81780700BE347E /* XMLKit */,
 				FB2A07942D82CD8C007A3DD1 /* AcknowList */,
 				FB2A07972D82D13F007A3DD1 /* MarkdownUI */,
+				FBA9E9A82D83DB06009B252B /* RichText */,
 			);
 			productName = iDevBook;
 			productReference = FBA912932D49CF9E00447692 /* iDevBook.app */;
@@ -242,11 +221,11 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */,
-				BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */,
 				FBEB1C7A2D76A80C00220F20 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
 				FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */,
 				FB2A07932D82CD8C007A3DD1 /* XCRemoteSwiftPackageReference "AcknowList" */,
 				FB2A07962D82D13F007A3DD1 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				FBA9E9A72D83DB05009B252B /* XCRemoteSwiftPackageReference "RichText" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FBA912942D49CF9E00447692 /* Products */;
@@ -449,12 +428,14 @@
 				DEVELOPMENT_TEAM = 3XN8RD2554;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -489,12 +470,14 @@
 				DEVELOPMENT_TEAM = 3XN8RD2554;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -652,14 +635,6 @@
 				minimumVersion = 1.1.2;
 			};
 		};
-		BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/lexical-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.0;
-			};
-		};
 		FB2A07932D82CD8C007A3DD1 /* XCRemoteSwiftPackageReference "AcknowList" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vtourraine/AcknowList.git";
@@ -684,6 +659,14 @@
 				minimumVersion = "10.0.0-rc.4";
 			};
 		};
+		FBA9E9A72D83DB05009B252B /* XCRemoteSwiftPackageReference "RichText" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NuPlay/RichText.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.0;
+			};
+		};
 		FBEB1C7A2D76A80C00220F20 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/appstefan/HighlightSwift.git";
@@ -699,46 +682,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */;
 			productName = RichTextKit;
-		};
-		BDB1056C2D76668B00549A0F /* EditorHistoryPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = EditorHistoryPlugin;
-		};
-		BDB1056E2D76668B00549A0F /* Lexical */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = Lexical;
-		};
-		BDB105702D76668B00549A0F /* LexicalHTML */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = LexicalHTML;
-		};
-		BDB105722D76668B00549A0F /* LexicalInlineImagePlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = LexicalInlineImagePlugin;
-		};
-		BDB105742D76668B00549A0F /* LexicalLinkPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = LexicalLinkPlugin;
-		};
-		BDB105762D76668B00549A0F /* LexicalListHTMLSupport */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = LexicalListHTMLSupport;
-		};
-		BDB105782D76668B00549A0F /* LexicalListPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = LexicalListPlugin;
-		};
-		BDB1057A2D76668B00549A0F /* SelectableDecoratorNode */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BDB1056B2D76668B00549A0F /* XCRemoteSwiftPackageReference "lexical-ios" */;
-			productName = SelectableDecoratorNode;
 		};
 		FB2A07942D82CD8C007A3DD1 /* AcknowList */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -759,6 +702,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */;
 			productName = XMLKit;
+		};
+		FBA9E9A82D83DB06009B252B /* RichText */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA9E9A72D83DB05009B252B /* XCRemoteSwiftPackageReference "RichText" */;
+			productName = RichText;
 		};
 		FBEB1C7B2D76A80C00220F20 /* HighlightSwift */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -78,7 +78,9 @@ struct ArticlesView: View {
                 }
             }
             .navigationTitle("Articles")
+#if os(iOS)
             .listRowSpacing(10)
+            #endif
             .overlay {
                 if isFetchingItems {
                     VStack {
