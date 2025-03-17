@@ -82,3 +82,41 @@ extension View {
 
     }
 }
+
+extension View {
+    func switchGaugeStyle(_ styleType: GaugeStyleType) -> some View {
+        switch styleType {
+        case .automatic:
+            return AnyView(self.gaugeStyle(.automatic))
+        case .circular:
+            #if os(watchOS)
+                return AnyView(self.gaugeStyle(.circular))
+            #else
+                return AnyView(self.gaugeStyle(.automatic))
+            #endif
+
+        case .linear:
+
+            #if os(watchOS)
+                return AnyView(self.gaugeStyle(.linear))
+            #else
+                return AnyView(self.gaugeStyle(.automatic))
+            #endif
+        }
+    }
+}
+
+extension View {
+    func switchProgressViewStyle(_ styleType: ProgressViewStyleType)
+        -> some View
+    {
+        switch styleType {
+        case .automatic:
+            return AnyView(self.progressViewStyle(.automatic))
+        case .circular:
+            return AnyView(self.progressViewStyle(.circular))
+        case .linear:
+            return AnyView(self.progressViewStyle(.linear))
+        }
+    }
+}

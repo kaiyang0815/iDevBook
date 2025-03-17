@@ -307,128 +307,77 @@ struct ControlsAndIndicatorsView: View {
                                         selection: $colorPickerValue,
                                         supportsOpacity: supportsOpacity)
                                 case .gauge:
-                                    switch selectedGaugeStyleType {
-                                    case .automatic:
-                                        Gauge(
-                                            value: gaugeCurrentValue,
-                                            in: gaugeMinValue...gaugeMaxValue
-                                        ) {
-                                            Text("BPM")
-                                        } currentValueLabel: {
-                                            Text(
-                                                gaugeCurrentValue,
-                                                format: .number)
-                                        } minimumValueLabel: {
-                                            Text(gaugeMinValue, format: .number)
-                                        } maximumValueLabel: {
-                                            Text(gaugeMaxValue, format: .number)
-                                        }
-                                    case .circular:
-                                        #if os(iOS)
-                                            Text("watchOS only")
-                                        #elseif os(watchOS)
-                                            Gauge(
-                                                value: gaugeCurrentValue,
-                                                in:
-                                                    gaugeMinValue...gaugeMaxValue
-                                            ) {
-                                                Text("BPM")
-                                            } currentValueLabel: {
-                                                Text(
-                                                    gaugeCurrentValue,
-                                                    format: .number)
-                                            } minimumValueLabel: {
-                                                Text(
-                                                    gaugeMinValue,
-                                                    format: .number)
-                                            } maximumValueLabel: {
-                                                Text(
-                                                    gaugeMaxValue,
-                                                    format: .number)
-                                            }
-                                            .gaugeStyle(.circular)
-                                        #endif
-
-                                    case .linear:
-                                        #if os(iOS)
-                                            Text("watchOS only")
-                                        #elseif os(watchOS)
-                                            Gauge(
-                                                value: gaugeCurrentValue,
-                                                in:
-                                                    gaugeMinValue...gaugeMaxValue
-                                            ) {
-                                                Text("BPM")
-                                            } currentValueLabel: {
-                                                Text(
-                                                    gaugeCurrentValue,
-                                                    format: .number)
-                                            } minimumValueLabel: {
-                                                Text(
-                                                    gaugeMinValue,
-                                                    format: .number)
-                                            } maximumValueLabel: {
-                                                Text(
-                                                    gaugeMaxValue,
-                                                    format: .number)
-                                            }
-                                            .gaugeStyle(.linear)
-                                        #endif
+                                    Gauge(
+                                        value: gaugeCurrentValue,
+                                        in: gaugeMinValue...gaugeMaxValue
+                                    ) {
+                                        Text("BPM")
+                                    } currentValueLabel: {
+                                        Text(
+                                            gaugeCurrentValue,
+                                            format: .number)
+                                    } minimumValueLabel: {
+                                        Text(gaugeMinValue, format: .number)
+                                    } maximumValueLabel: {
+                                        Text(gaugeMaxValue, format: .number)
                                     }
+                                    .switchGaugeStyle(selectedGaugeStyleType)
                                 case .progressView:
-                                    switch selectedProgressViewStyleType {
-                                    case .automatic:
-                                        VStack {
-                                            ProgressView(
-                                                "ProgressView",
-                                                value: progressValue,
-                                                total: progressTotal)
-                                            ProgressView(
-                                                timerInterval:
-                                                    Date()...Date()
-                                                    .addingTimeInterval(
-                                                        5 * 60)
-                                            ) {
-                                                Text("Workout")
-                                            }
+                                    VStack {
+                                        ProgressView(
+                                            "ProgressView",
+                                            value: progressValue,
+                                            total: progressTotal)
+                                        ProgressView(
+                                            timerInterval:
+                                                Date()...Date()
+                                                .addingTimeInterval(
+                                                    5 * 60)
+                                        ) {
+                                            Text("Workout")
                                         }
-                                    case .circular:
-                                        HStack {
-                                            Spacer()
-                                            VStack {
-                                                ProgressView(
-                                                    "ProgressView",
-                                                    value: progressValue,
-                                                    total: progressTotal)
-                                                ProgressView(
-                                                    timerInterval:
-                                                        Date()...Date()
-                                                        .addingTimeInterval(
-                                                            5 * 60)
-                                                ) {
-                                                    Text("Workout")
-                                                }
-                                            }
-                                            Spacer()
-                                        }
-                                        .progressViewStyle(.circular)
-                                    case .linear:
-                                        VStack {
-                                            ProgressView(
-                                                "ProgressView",
-                                                value: progressValue,
-                                                total: progressTotal)
-                                            ProgressView(
-                                                timerInterval:
-                                                    Date()...Date()
-                                                    .addingTimeInterval(
-                                                        5 * 60)
-                                            ) {
-                                                Text("Workout")
-                                            }
-                                        }
-                                        .progressViewStyle(.linear)
                                     }
+                                    .switchProgressViewStyle(selectedProgressViewStyleType)
+//                                    switch selectedProgressViewStyleType {
+//                                    case .automatic:
+//                                        VStack {
+//                                            ProgressView(
+//                                                "ProgressView",
+//                                                value: progressValue,
+//                                                total: progressTotal)
+//                                            ProgressView(
+//                                                timerInterval:
+//                                                    Date()...Date()
+//                                                    .addingTimeInterval(
+//                                                        5 * 60)
+//                                            ) {
+//                                                Text("Workout")
+//                                            }
+//                                        }
+//                                    case .circular:
+//                                        HStack {
+//                                            Spacer()
+//                                            
+//                                            Spacer()
+//                                        }
+//                                        .progressViewStyle(.circular)
+//                                    case .linear:
+//                                        VStack {
+//                                            ProgressView(
+//                                                "ProgressView",
+//                                                value: progressValue,
+//                                                total: progressTotal)
+//                                            ProgressView(
+//                                                timerInterval:
+//                                                    Date()...Date()
+//                                                    .addingTimeInterval(
+//                                                        5 * 60)
+//                                            ) {
+//                                                Text("Workout")
+//                                            }
+//                                        }
+//                                        .progressViewStyle(.linear)
+//                                    }
                                 case .contentUnavailableView:
                                     ContentUnavailableView {
                                         Label(

@@ -109,55 +109,86 @@ struct HighlightSwiftView: View {
     @State private var selectedTheme: HighlightTheme = .a11y
     @State private var selectedLanguage: HighlightLanguage = .swift
     @State private var selecteedStyle: CodeTextStyleType = .plain
+    @State private var showInspector: Bool = true
+    @State private var hideTabBar: Bool = false
 
     var body: some View {
         NavigationStack {
             VStack {
-                List {
+                Form {
                     Section("Preview") {
-                        CodeText(someCode)
-                            .highlightLanguage(selectedLanguage)
-                            .codeTextStyle(selecteedStyle.codeTextStyle)
-                            .codeTextColors(.theme(selectedTheme))
-                            .frame(height: 100)
-                    }
-                }
-                .scrollDisabled(true)
-                .frame(height: 280)
-                Divider()
-                List {
-                    Section("Controll") {
-                        TextEditor(text: $someCode)
-
-                        Picker("Style", selection: $selecteedStyle) {
-                            ForEach(CodeTextStyleType.allCases, id: \.self) {
-                                style in
-                                Text(style.rawValue)
-                                    .tag(style)
-                            }
-                        }
-
-                        Picker("Theme", selection: $selectedTheme) {
-                            ForEach(HighlightTheme.allCases) { theme in
-                                Text(theme.rawValue)
-                                    .tag(theme)
-                            }
-                        }
-
-                        Picker("Language", selection: $selectedLanguage) {
-                            ForEach(HighlightLanguage.allCases, id: \.self) {
-                                lang in
-                                Text(lang.rawValue)
-                                    .tag(lang)
-                            }
+                        CardContainerView {
+                            CodeText(someCode)
+                                .highlightLanguage(selectedLanguage)
+                                .codeTextStyle(selecteedStyle.codeTextStyle)
+                                .codeTextColors(.theme(selectedTheme))
+                                .frame(height: 100)
                         }
                     }
+                    .clearSectionStyle()
                 }
+                .inspector(isPresented: $showInspector) {
+                    List {
+                        Section("Controll") {
+                            TextEditor(text: $someCode)
+
+                            Picker("Style", selection: $selecteedStyle) {
+                                ForEach(CodeTextStyleType.allCases, id: \.self)
+                                {
+                                    style in
+                                    Text(style.rawValue)
+                                        .tag(style)
+                                }
+                            }
+
+                            Picker("Theme", selection: $selectedTheme) {
+                                ForEach(HighlightTheme.allCases) { theme in
+                                    Text(theme.rawValue)
+                                        .tag(theme)
+                                }
+                            }
+
+                            Picker("Language", selection: $selectedLanguage) {
+                                ForEach(HighlightLanguage.allCases, id: \.self)
+                                {
+                                    lang in
+                                    Text(lang.rawValue)
+                                        .tag(lang)
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
-            .navigationTitle("HighlightSwift Demo")
+            .navigationTitle("HighlightSwift")
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarVisibility(
+                    hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #endif
             .toolbar {
-                RepoLink("https://github.com/appstefan/HighlightSwift")
+                Menu {
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
+                    RepoLink("https://github.com/appstefan/HighlightSwift")
+                } label: {
+                    Label("More", systemImage: "ellipsis.circle")
+                }
             }
+            .onAppear {
+                withAnimation {
+                    hideTabBar = true
+                }
+            }
+            #if os(iOS)
+                .onWillDisappear {
+                    withAnimation {
+                        showInspector = false
+                    }
+                }
+            #endif
         }
     }
 }

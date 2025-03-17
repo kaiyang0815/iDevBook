@@ -15,6 +15,8 @@ struct AnimationsView: View {
     @State private var showDescription: Bool = false
     @State private var showInspector: Bool = true
     @State private var showSpacer: Bool = false
+    @State private var showSpacer2: Bool = false
+    @State private var showVS: Bool = true
 
     @State private var animationDelay: Double = 0.0
     @State private var animationSpeed: Double = 1.0
@@ -38,10 +40,7 @@ struct AnimationsView: View {
                 Form {
                     Section("Preview") {
                         CardContainerView {
-                            HStack {
-                                if showSpacer {
-                                    Spacer()
-                                }
+                            VStack(alignment: .leading, spacing: 10) {
                                 RoundedRectangle(
                                     cornerRadius: 10
                                 )
@@ -50,10 +49,22 @@ struct AnimationsView: View {
                                     .frame(
                                         width: size.width / 4,
                                         height: size.width / 4)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 #endif
-                                if !showSpacer {
-                                    Spacer()
-                                }
+                                    .offset(x: 0.25 * size.width - 26)
+                                
+                                Divider()
+                                
+                                RoundedRectangle(
+                                    cornerRadius: 10
+                                )
+                                .fill(.green.gradient)
+                                #if os(iOS)
+                                    .frame(
+                                        width: size.width / 4,
+                                        height: size.width / 4)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                #endif
                             }
                         }
                     }
@@ -395,6 +406,11 @@ struct AnimationsView: View {
                     }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
+                    }
+                    Toggle(isOn: $showVS.animation()) {
+                        Label(
+                            "Show Other RoundedRectangle",
+                            systemImage: "square.filled.on.square")
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
