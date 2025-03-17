@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ESFSymbolCategory: String, CaseIterable, Identifiable {
+enum ESFSymbolCategory: String, CaseIterable, Identifiable, Equatable {
     var id: Self {
         return self
     }
@@ -108,6 +108,73 @@ enum ESFSymbolCategory: String, CaseIterable, Identifiable {
             "Indices"
         case .math:
             "Math"
+        }
+    }
+    
+    var labelSymbol: String {
+        switch self {
+        case .all:
+            "square.grid.2x2"
+        case .whatsNew:
+            "sparkles"
+        case .multicolor:
+            "paintpalette"
+        case .variableColor:
+            "slider.horizontal.below.square.and.square.filled"
+        case .communication:
+            "message"
+        case .weather:
+            "cloud.sun"
+        case .maps:
+            "map"
+        case .objectsAndTools:
+            "folder"
+        case .devices:
+            "desktopcomputer"
+        case .cameraAndPhotos:
+            "camera"
+        case .gaming:
+            "gamecontroller"
+        case .connectivity:
+            "dot.radiowaves.left.and.right"
+        case .transportation:
+            "car"
+        case .automotive:
+            "steeringwheel"
+        case .accessibility:
+            "accessibility"
+        case .privacyAndSecurity:
+            "lock"
+        case .human:
+            "person.crop.circle"
+        case .home:
+            "house"
+        case .fitness:
+            "figure.run"
+        case .nature:
+            "leaf"
+        case .editing:
+            "slider.horizontal.3"
+        case .textFormatting:
+            "textformat"
+        case .media:
+            "playpause"
+        case .keyboard:
+            "command"
+        case .commerce:
+            "cart"
+        case .time:
+            "timer"
+        case .health:
+            "heart"
+        case .shapes:
+            "square.on.circle"
+        case .arrows:
+            "arrow.right"
+        case .indices:
+            "a.circle"
+        case .math:
+            "x.squareroot"
         }
     }
 

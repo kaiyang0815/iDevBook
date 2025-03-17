@@ -295,7 +295,7 @@ enum EMaterial: String, CaseIterable, Identifiable {
 }
 
 struct DrawingandGraphicsView: View {
-    @State private var selectedDGType: DGType = .color
+    @State private var selectedDGType: DGType = .canvas
     @State private var showDescription: Bool = false
     @State private var hideTabBar: Bool = false
     @State private var selectedInnerColor: InnerColor = .black
@@ -347,7 +347,8 @@ struct DrawingandGraphicsView: View {
     @State private var selectedEMaterial: EMaterial = .regular
     @State private var backgroundColor: Color = .orange
 
-    @State private var showInspector: Bool = false
+    @State private var showInspector: Bool = true
+    @State private var size: CGSize = .zero
 
     private func generatePoints(_ width: Int, _ height: Int) -> [SIMD2<Float>] {
         var points: [SIMD2<Float>] = []
@@ -410,165 +411,178 @@ struct DrawingandGraphicsView: View {
     }
 
     var body: some View {
-        //        let points = Binding<[SIMD2<Float>]>(
-        //            get: {
-        //                return self.meshGradientPoints
-        //            },
-        //            set: {
-        //                self.meshGradientPoints = $0
-        //            })
         NavigationStack {
-            VStack {
-                switch selectedDGType {
-                case .canvas:
-                    Canvas(
-                        opaque: canvasIsOpaque,
-                        colorMode: canvasColorRenderingMode
-                    ) { context, size in
-                        var maskedContext = context
-                        let halfSize = size.applying(
-                            CGAffineTransform(scaleX: 0.5, y: 0.5))
-                        maskedContext.clip(
-                            to: Path(
-                                CGRect(origin: .zero, size: halfSize)))
-                        maskedContext.fill(
-                            Path(
-                                ellipseIn: CGRect(
-                                    origin: .zero, size: size)),
-                            with: .color(canvasFillColor))
+            GeometryReader { proxy in
+                Form {
+                    Section("Preview") {
+                        CardContainerView {
+                            switch selectedDGType {
+                            case .canvas:
+                                Canvas(
+                                    opaque: canvasIsOpaque,
+                                    colorMode: canvasColorRenderingMode
+                                ) { context, size in
+                                    var maskedContext = context
+                                    let halfSize = size.applying(
+                                        CGAffineTransform(scaleX: 0.5, y: 0.5))
+                                    maskedContext.clip(
+                                        to: Path(
+                                            CGRect(
+                                                origin: .zero, size: halfSize)))
+                                    maskedContext.fill(
+                                        Path(
+                                            ellipseIn: CGRect(
+                                                origin: .zero, size: size)),
+                                        with: .color(canvasFillColor))
 
-                        let origin = CGPoint(
-                            x: size.width / 4, y: size.height / 4)
-                        context.fill(
-                            Path(
-                                CGRect(origin: origin, size: halfSize)),
-                            with: .color(canvasFillColor))
+                                    let origin = CGPoint(
+                                        x: size.width / 4, y: size.height / 4)
+                                    context.fill(
+                                        Path(
+                                            CGRect(
+                                                origin: origin, size: halfSize)),
+                                        with: .color(canvasFillColor))
 
-                        let thridOrigin = CGPoint(
-                            x: size.width / 2, y: size.height / 2)
-                        let thirdSize = size.applying(
-                            CGAffineTransform(scaleX: 0.4, y: 0.5))
-                        context.stroke(
-                            Path(
-                                CGRect(
-                                    origin: thridOrigin, size: thirdSize
-                                )), with: .color(canvasStrokeColor),
-                            lineWidth: 4)
-                    }
-                    .if(showCanvasBorder) { view in
-                        view.border(Color.blue)
-                    }
-                case .color:
-                    ZStack {
-                        if useColorGradient {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(
-                                    selectedInnerColor.uiColor.gradient
-                                )
-                        } else {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(selectedInnerColor.uiColor)
-                        }
-                        if showTransformingColors {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(squareFillColor)
-                                .padding()
-                                .frame(width: 120, height: 120)
-                                .if(showColorMultiply) { view in
-                                    view.colorMultiply(.blue)
+                                    let thridOrigin = CGPoint(
+                                        x: size.width / 2, y: size.height / 2)
+                                    let thirdSize = size.applying(
+                                        CGAffineTransform(scaleX: 0.4, y: 0.5))
+                                    context.stroke(
+                                        Path(
+                                            CGRect(
+                                                origin: thridOrigin,
+                                                size: thirdSize
+                                            )), with: .color(canvasStrokeColor),
+                                        lineWidth: 4)
                                 }
-                        }
-                    }
-                    .if(showTransformingColors) { view in
-                        view
-                            .brightness(colorBrightness)
-                            .contrast(colorContrast)
-                            .saturation(colorSaturation)
-                            .grayscale(colorGrayscale)
-                            .hueRotation(
-                                (.degrees(Double(colorHueRotation * 36)))
-                            )
-                            .if(showColorInvert) { view in
-                                view.colorInvert()
-                            }
-                            .if(showLuminanceToAlpha) { view in
-                                view.luminanceToAlpha()
-                            }
-                    }
-                case .linearGradient:
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            LinearGradient(
-                                stops: generateStops(
-                                    linearGradientStopsCount),
-                                startPoint: .top, endPoint: .bottom)
-                        )
-                case .meshGradient:
-                    MeshGradient(
-                        width: meshGradientWidth,
-                        height: meshGradientHeight,
-                        points: generatePoints(
-                            meshGradientWidth, meshGradientWidth),
-                        colors: generateMeshGradientColors(
-                            meshGradientWidth, meshGradientWidth),
-                        background: meshGradientBackground,
-                        smoothsColors: meshGradientSmoothsColors,
-                        colorSpace: meshGradientColorSpace.space
-                    )
-                case .material:
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(backgroundColor)
+                                .if(showCanvasBorder) { view in
+                                    view.border(Color.blue)
+                                }
+                            case .color:
+                                ZStack {
+                                    if useColorGradient {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(
+                                                selectedInnerColor.uiColor
+                                                    .gradient
+                                            )
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(selectedInnerColor.uiColor)
+                                    }
+                                    if showTransformingColors {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(squareFillColor)
+                                            .padding()
+                                            .frame(width: 120, height: 120)
+                                            .if(showColorMultiply) { view in
+                                                view.colorMultiply(.blue)
+                                            }
+                                    }
+                                }
+                                .if(showTransformingColors) { view in
+                                    view
+                                        .brightness(colorBrightness)
+                                        .contrast(colorContrast)
+                                        .saturation(colorSaturation)
+                                        .grayscale(colorGrayscale)
+                                        .hueRotation(
+                                            (.degrees(
+                                                Double(colorHueRotation * 36)))
+                                        )
+                                        .if(showColorInvert) { view in
+                                            view.colorInvert()
+                                        }
+                                        .if(showLuminanceToAlpha) { view in
+                                            view.luminanceToAlpha()
+                                        }
+                                }
+                            case .linearGradient:
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(
+                                        LinearGradient(
+                                            stops: generateStops(
+                                                linearGradientStopsCount),
+                                            startPoint: .top, endPoint: .bottom)
+                                    )
+                            case .meshGradient:
+                                MeshGradient(
+                                    width: meshGradientWidth,
+                                    height: meshGradientHeight,
+                                    points: generatePoints(
+                                        meshGradientWidth, meshGradientWidth),
+                                    colors: generateMeshGradientColors(
+                                        meshGradientWidth, meshGradientWidth),
+                                    background: meshGradientBackground,
+                                    smoothsColors: meshGradientSmoothsColors,
+                                    colorSpace: meshGradientColorSpace.space
+                                )
+                            case .material:
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(backgroundColor)
 
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(selectedEMaterial.material)
-                            .padding()
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(selectedEMaterial.material)
+                                        .padding()
+                                }
+                            case .angularGradient:
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(
+                                        AngularGradient(
+                                            stops: generateStops(
+                                                angularGradientStopsCount),
+                                            center: angularGradientCenter
+                                                .unitPoint,
+                                            startAngle: Angle(
+                                                degrees: angularStartAngle),
+                                            endAngle: Angle(
+                                                degrees: angularEndAngle)
+                                        )
+                                    )
+                            case .ellipticalGradient:
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(
+                                        EllipticalGradient(
+                                            stops: generateStops(
+                                                ellipticalGradientStopsCount),
+                                            center: ellipticalGradientCenter
+                                                .unitPoint,
+                                            startRadiusFraction:
+                                                ellipticalGradientStartRadiusFraction,
+                                            endRadiusFraction:
+                                                ellipticalGradientEndRadiusFraction
+                                        )
+                                    )
+                            case .radialGradient:
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(
+                                        RadialGradient(
+                                            stops: generateStops(
+                                                radialGradientStopsCount),
+                                            center: radialGradientCenter
+                                                .unitPoint,
+                                            startRadius:
+                                                radialGradientStartRadius,
+                                            endRadius:
+                                                radialGradientEndRadius
+                                        )
+                                    )
+                            }
+                        }
+                        .frame(height: size.height / 4)
                     }
-                case .angularGradient:
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            AngularGradient(
-                                stops: generateStops(
-                                    angularGradientStopsCount),
-                                center: angularGradientCenter.unitPoint,
-                                startAngle: Angle(
-                                    degrees: angularStartAngle),
-                                endAngle: Angle(
-                                    degrees: angularEndAngle)
-                            )
-                        )
-                case .ellipticalGradient:
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            EllipticalGradient(
-                                stops: generateStops(
-                                    ellipticalGradientStopsCount),
-                                center: ellipticalGradientCenter
-                                    .unitPoint,
-                                startRadiusFraction:
-                                    ellipticalGradientStartRadiusFraction,
-                                endRadiusFraction:
-                                    ellipticalGradientEndRadiusFraction
-                            )
-                        )
-                case .radialGradient:
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            RadialGradient(
-                                stops: generateStops(
-                                    radialGradientStopsCount),
-                                center: radialGradientCenter
-                                    .unitPoint,
-                                startRadius:
-                                    radialGradientStartRadius,
-                                endRadius:
-                                    radialGradientEndRadius
-                            )
-                        )
+                    .clearSectionStyle()
+                }
+                .task {
+                    size = proxy.size
+                }
+                .onTapGesture(count: 2) {
+                    withAnimation {
+                        showInspector.toggle()
+                    }
                 }
             }
-            .padding(100)
-            .frame(maxHeight: .infinity)
             .navigationTitle("Drawing and Graphics")
             #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
@@ -681,22 +695,33 @@ struct DrawingandGraphicsView: View {
                                 Toggle(isOn: $showLuminanceToAlpha) {
                                     Text(".luminanceToAlpha")
                                 }
-                                CustomStepper(
+                                CustomStepperWithDescription(
                                     value: $colorBrightness,
+                                    showDescription: $showDescription,
                                     label: "Brightness",
                                     range: 0...1, step: 0.1)
-                                CustomStepper(
-                                    value: $colorContrast, label: "Contrast",
-                                    range: -0.2...1, step: 0.1)
-                                CustomStepper(
+                                CustomStepperWithDescription(
+                                    value: $colorContrast,
+                                    showDescription: $showDescription,
+                                    label: "Contrast",
+                                    range: -0.2...1,
+                                    step: 0.1
+                                )
+                                CustomStepperWithDescription(
                                     value: $colorSaturation,
+                                    showDescription: $showDescription,
                                     label: "Saturation",
                                     range: 0...1, step: 0.1)
-                                CustomStepper(
-                                    value: $colorGrayscale, label: "Grayscale",
-                                    range: 0...1, step: 0.1)
-                                CustomStepper(
+                                CustomStepperWithDescription(
+                                    value: $colorGrayscale,
+                                    showDescription: $showDescription,
+                                    label: "Grayscale",
+                                    range: 0...1,
+                                    step: 0.1
+                                )
+                                CustomStepperWithDescription(
                                     value: $colorHueRotation,
+                                    showDescription: $showDescription,
                                     label: "HueRotation",
                                     range: 0...10, step: 1)
                             }
@@ -939,18 +964,14 @@ struct DrawingandGraphicsView: View {
             }
             .toolbar {
                 Menu {
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
-                }
-                Button {
-                    withAnimation {
-                        showInspector.toggle()
-                    }
-                } label: {
-                    Label("Show Inspector", systemImage: "sidebar.right")
                 }
             }
             .onAppear {
@@ -958,6 +979,13 @@ struct DrawingandGraphicsView: View {
                     hideTabBar = true
                 }
             }
+            #if os(iOS)
+                .onWillDisappear {
+                    withAnimation {
+                        showInspector = false
+                    }
+                }
+            #endif
         }
     }
 }

@@ -93,7 +93,7 @@ struct ImagesView: View {
     @State private var asyncImagePhaseString: String = "ready"
 
     @State private var showDescription: Bool = false
-    @State private var showInspector: Bool = false
+    @State private var showInspector: Bool = true
     @State private var showBorder: Bool = false
     @State private var showSymbolEffect: Bool = true
     @State private var showSymbolEffectsRemoved: Bool = true
@@ -159,7 +159,7 @@ struct ImagesView: View {
                             )
                             .border(
                                 showBorder
-                                    ? Color.primary : Color.clear)
+                                    ? Color.primary : Color.clear, width: 4)
                     case .asyncImage:
                         AsyncImage(
                             url: URL(
@@ -213,26 +213,26 @@ struct ImagesView: View {
                     case .bitmap:
                         HStack {
                             Spacer()
-#if os(iOS)
-                            if let cgImage = cgImage {
-                                Image(
-                                    uiImage: UIImage(
-                                        cgImage: cgImage, scale: 1,
-                                        orientation:
-                                            selectedImageOrientation)
-                                )
-                                .resizable(
-                                    resizingMode:
-                                        selectedImageResizingMode
-                                )
-                                .aspectRatio(
-                                    contentMode: selectedContentMode
-                                )
-                                .border(
-                                    showBorder
-                                        ? Color.primary : Color.clear)
-                            }
-#endif
+                            #if os(iOS)
+                                if let cgImage = cgImage {
+                                    Image(
+                                        uiImage: UIImage(
+                                            cgImage: cgImage, scale: 1,
+                                            orientation:
+                                                selectedImageOrientation)
+                                    )
+                                    .resizable(
+                                        resizingMode:
+                                            selectedImageResizingMode
+                                    )
+                                    .aspectRatio(
+                                        contentMode: selectedContentMode
+                                    )
+                                    .border(
+                                        showBorder
+                                            ? Color.primary : Color.clear)
+                                }
+                            #endif
                             Spacer()
                         }
                     case .symbol:
@@ -250,9 +250,9 @@ struct ImagesView: View {
                     }
                 }
                 .onAppear {
-#if os(iOS)
-                    cgImage = createTriangleCGImage()
-#endif
+                    #if os(iOS)
+                        cgImage = createTriangleCGImage()
+                    #endif
                 }
                 .frame(width: 200, height: 200)
                 .overlay {
@@ -264,25 +264,11 @@ struct ImagesView: View {
         }
     }
 
-    var listHeight: Double {
-        switch selectedSource {
-        case .local:
-            280
-        case .asyncImage:
-            280
-        case .bitmap:
-            200
-        case .symbol:
-            360
-        }
-    }
-
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                Section {
-                    HStack {
-                        Spacer()
+            Form {
+                Section("Preview") {
+                    CardContainerView {
                         VStack {
                             switch selectedSource {
                             case .local:
@@ -296,7 +282,8 @@ struct ImagesView: View {
                                     )
                                     .border(
                                         showBorder
-                                            ? Color.primary : Color.clear)
+                                            ? Color.red : Color.clear,
+                                        width: 4)
                             case .asyncImage:
                                 AsyncImage(
                                     url: URL(
@@ -395,18 +382,18 @@ struct ImagesView: View {
                             }
                         }
                         .onAppear {
-#if os(iOS)
-                            cgImage = createTriangleCGImage()
-#endif
+                            #if os(iOS)
+                                cgImage = createTriangleCGImage()
+                            #endif
                         }
                         .frame(width: 200, height: 200)
                         .overlay {
                             Rectangle()
                                 .stroke(Color.accentColor, lineWidth: 2)
                         }
-                        Spacer()
                     }
                 }
+                .clearSectionStyle()
                 if selectedSource == .symbol {
                     Section {
                         HStack {
@@ -470,195 +457,212 @@ struct ImagesView: View {
                 }
             }
             .navigationTitle("Images")
+            .onTapGesture(count: 2) {
+                withAnimation {
+                    showInspector.toggle()
+                }
+            }
+            .formStyle(.grouped)
             #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbarVisibility(
                     hideTabBar ? .hidden : .automatic, for: .tabBar)
             #endif
-                .inspector(isPresented: $showInspector, content: {
-                    List {
-                        Section("Control") {
-                            Picker("Type", selection: $selectedSource.animation()) {
-                                ForEach(SourceType.allCases) { type in
-                                    Text(type.name)
+            .inspector(isPresented: $showInspector) {
+                List {
+                    Section("Control") {
+                        Picker(
+                            "Type", selection: $selectedSource.animation()
+                        ) {
+                            ForEach(SourceType.allCases) { type in
+                                Text(type.name)
+                            }
+                        }
+
+                        Toggle(
+                            "Image Border", isOn: $showBorder.animation())
+
+                        VStack(alignment: .leading) {
+                            Picker(
+                                "Content Mode",
+                                selection: $selectedContentMode.animation()
+                            ) {
+                                ForEach(ContentMode.allCases, id: \.self) {
+                                    mode in
+                                    Text(mode.name)
                                 }
                             }
+                            if showDescription {
+                                Text(
+                                    "Constants that define how a view’s content fills the available space."
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+                        }
 
-                            Toggle("Image Border", isOn: $showBorder.animation())
-
-                            VStack(alignment: .leading) {
-                                Picker(
-                                    "Content Mode",
-                                    selection: $selectedContentMode.animation()
+                        VStack(alignment: .leading) {
+                            Picker(
+                                "Resizing Mode",
+                                selection:
+                                    $selectedImageResizingMode.animation()
+                            ) {
+                                ForEach(
+                                    Image.ResizingMode.allCases, id: \.self
                                 ) {
-                                    ForEach(ContentMode.allCases, id: \.self) {
-                                        mode in
-                                        Text(mode.name)
-                                    }
-                                }
-                                if showDescription {
-                                    Text(
-                                        "Constants that define how a view’s content fills the available space."
-                                    )
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    mode in
+                                    Text(mode.name)
                                 }
                             }
+                            if showDescription {
+                                Text(
+                                    "The modes that SwiftUI uses to resize an image to fit within its containing view."
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+                        }
 
+                        if selectedSource == .symbol {
                             VStack(alignment: .leading) {
                                 Picker(
-                                    "Resizing Mode",
+                                    "ImageScale",
                                     selection:
-                                        $selectedImageResizingMode.animation()
+                                        $selectedImageScale.animation()
                                 ) {
-                                    ForEach(Image.ResizingMode.allCases, id: \.self)
-                                    {
-                                        mode in
-                                        Text(mode.name)
+                                    ForEach(
+                                        Image.Scale.allCases, id: \.self
+                                    ) {
+                                        scale in
+                                        Text(scale.name)
                                     }
                                 }
                                 if showDescription {
                                     Text(
-                                        "The modes that SwiftUI uses to resize an image to fit within its containing view."
+                                        "A scale to apply to vector images relative to text."
                                     )
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
-                                }
-                            }
-
-                            if selectedSource == .symbol {
-                                VStack(alignment: .leading) {
-                                    Picker(
-                                        "ImageScale",
-                                        selection: $selectedImageScale.animation()
-                                    ) {
-                                        ForEach(Image.Scale.allCases, id: \.self) {
-                                            scale in
-                                            Text(scale.name)
-                                        }
-                                    }
-                                    if showDescription {
-                                        Text(
-                                            "A scale to apply to vector images relative to text."
-                                        )
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    }
-                                }
-                            }
-
-                            if selectedSource == .bitmap {
-                                VStack(alignment: .leading) {
-                                    #if os(iOS)
-                                        Picker(
-                                            "Orientation",
-                                            selection:
-                                                $selectedImageOrientation.animation()
-                                        ) {
-                                            ForEach(
-                                                UIImage.Orientation.allCases,
-                                                id: \.self
-                                            ) { orientation in
-                                                Text(orientation.name)
-                                            }
-                                        }
-                                    #endif
-                                    if showDescription {
-                                        Text("The orientation of an image.")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                }
-                            }
-
-                            if selectedSource == .symbol {
-                                VStack(alignment: .leading) {
-                                    Picker(
-                                        "symbolVariant",
-                                        selection: $selectedSymbolVariants
-                                    ) {
-                                        ForEach(
-                                            SymbolVariants.predefinedVariants,
-                                            id: \.self
-                                        ) {
-                                            variant in
-                                            switch variant {
-                                            case SymbolVariants.circle:
-                                                Button("Circle") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .none
-                                                    }
-                                                }
-                                            case SymbolVariants.fill:
-                                                Button("Fill") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .none
-                                                    }
-                                                }
-                                            case SymbolVariants.rectangle:
-                                                Button("Rectangle") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .none
-                                                    }
-                                                }
-                                            case SymbolVariants.slash:
-                                                Button("Slash") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .none
-                                                    }
-                                                }
-                                            case SymbolVariants.square:
-                                                Button("Square") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .square
-                                                    }
-                                                }
-                                            case SymbolVariants.none:
-                                                Button("None") {
-                                                    withAnimation {
-                                                        selectedSymbolVariants =
-                                                            .none
-                                                    }
-                                                }
-                                            default:
-                                                Text("None")
-                                            }
-                                        }
-                                    }
-                                    if showDescription {
-                                        Text(
-                                            "Makes symbols within the view show a particular variant."
-                                        )
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    }
-                                }
-                            }
-
-                            if selectedSource == .symbol {
-                                Button("Show Symbol Effect") {
-                                    withAnimation {
-                                        showSymbolEffect.toggle()
-                                    }
                                 }
                             }
                         }
 
-                        Section("Value") {
-                            if selectedSource == .asyncImage {
-                                LabeledContent(
-                                    "Phase", value: asyncImagePhaseString)
+                        if selectedSource == .bitmap {
+                            VStack(alignment: .leading) {
+                                #if os(iOS)
+                                    Picker(
+                                        "Orientation",
+                                        selection:
+                                            $selectedImageOrientation
+                                            .animation()
+                                    ) {
+                                        ForEach(
+                                            UIImage.Orientation.allCases,
+                                            id: \.self
+                                        ) { orientation in
+                                            Text(orientation.name)
+                                        }
+                                    }
+                                #endif
+                                if showDescription {
+                                    Text("The orientation of an image.")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+
+                        if selectedSource == .symbol {
+                            VStack(alignment: .leading) {
+                                Picker(
+                                    "symbolVariant",
+                                    selection: $selectedSymbolVariants
+                                ) {
+                                    ForEach(
+                                        SymbolVariants.predefinedVariants,
+                                        id: \.self
+                                    ) {
+                                        variant in
+                                        switch variant {
+                                        case SymbolVariants.circle:
+                                            Button("Circle") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .none
+                                                }
+                                            }
+                                        case SymbolVariants.fill:
+                                            Button("Fill") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .none
+                                                }
+                                            }
+                                        case SymbolVariants.rectangle:
+                                            Button("Rectangle") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .none
+                                                }
+                                            }
+                                        case SymbolVariants.slash:
+                                            Button("Slash") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .none
+                                                }
+                                            }
+                                        case SymbolVariants.square:
+                                            Button("Square") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .square
+                                                }
+                                            }
+                                        case SymbolVariants.none:
+                                            Button("None") {
+                                                withAnimation {
+                                                    selectedSymbolVariants =
+                                                        .none
+                                                }
+                                            }
+                                        default:
+                                            Text("None")
+                                        }
+                                    }
+                                }
+                                if showDescription {
+                                    Text(
+                                        "Makes symbols within the view show a particular variant."
+                                    )
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+
+                        if selectedSource == .symbol {
+                            Button("Show Symbol Effect") {
+                                withAnimation {
+                                    showSymbolEffect.toggle()
+                                }
                             }
                         }
                     }
-                })
+
+                    Section("Value") {
+                        if selectedSource == .asyncImage {
+                            LabeledContent(
+                                "Phase", value: asyncImagePhaseString)
+                        }
+                    }
+                }
+            }
             .toolbar {
                 Menu {
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
                     }
@@ -680,19 +684,19 @@ struct ImagesView: View {
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
                 }
-                Button {
-                    withAnimation {
-                        showInspector.toggle()
-                    }
-                } label: {
-                    Label("Show Inspector", systemImage: "sidebar.right")
-                }
             }
             .onAppear {
                 withAnimation {
                     hideTabBar = true
                 }
             }
+#if os(iOS)
+    .onWillDisappear {
+        withAnimation {
+            showInspector = false
+        }
+    }
+#endif
         }
     }
 }

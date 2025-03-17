@@ -10,8 +10,9 @@ import SwiftUI
 
 struct SFSymbolsView: View {
     @State private var selectedSymbolCategory: ESFSymbolCategory = .all
+    @State private var selectedDisplayStyle: DisplayStyle = .grid
     @State private var searchText: String = ""
-    @State private var showSymbolInpector: Bool = false
+    @State private var showInspector: Bool = true
     @State private var selectedSymbol: String = ""
     @State private var hideTabBar: Bool = false
 
@@ -24,7 +25,8 @@ struct SFSymbolsView: View {
                     ForEach(
                         selectedSymbolCategory.symbols.filter({ symbol in
                             if !searchText.isEmpty {
-                                return symbol.localizedStandardContains(searchText)
+                                return symbol.localizedStandardContains(
+                                    searchText)
                             } else {
                                 return true
                             }
@@ -46,10 +48,7 @@ struct SFSymbolsView: View {
                                 .frame(minHeight: 40, alignment: .top)
                         }
                         .onTapGesture {
-                            withAnimation {
-                                selectedSymbol = symbol
-                                showSymbolInpector.toggle()
-                            }
+                            selectedSymbol = symbol
                         }
                     }
                 }
@@ -58,23 +57,60 @@ struct SFSymbolsView: View {
             .navigationTitle("SF Symbols Picker")
             .searchable(text: $searchText, prompt: Text("Search"))
             .toolbar {
-                Picker("Category", selection: $selectedSymbolCategory) {
-                    ForEach(ESFSymbolCategory.allCases) { category in
-                        Text(category.name)
+                ToolbarItemGroup(placement: .secondaryAction) {
+                    Picker(selection: $selectedSymbolCategory) {
+                        ForEach(ESFSymbolCategory.allCases) { category in
+                            Label(
+                                category.name, systemImage: category.labelSymbol
+                            )
                             .tag(category)
+                        }
+                    } label: {
+                        Label(
+                            "Category", systemImage: "chevron.up.chevron.down")
+                    }
+                    .pickerStyle(.menu)
+                    Button {
+                        withAnimation {
+                            showInspector.toggle()
+                        }
+                    } label: {
+                        Label("Show Inspector", systemImage: "info.circle")
                     }
                 }
             }
-            .sheet(isPresented: $showSymbolInpector) {
+            .toolbar {
+                ToolbarItem {
+                    Picker("Display", selection: $selectedDisplayStyle) {
+                        ForEach(DisplayStyle.allCases, id: \.self) { style in
+                            Label(style.name, systemImage: style.symbol)
+                        }
+                    }
+                }
+            }
+            .inspector(isPresented: $showInspector) {
                 SymbolInspectorView(symbol: $selectedSymbol)
             }
-#if os(iOS)
-            .toolbarVisibility(hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarVisibility(
+                    hideTabBar ? .hidden : .automatic, for: .tabBar)
             #endif
             .onAppear {
                 withAnimation {
+                    selectedSymbol = selectedSymbolCategory.symbols.first!
                     hideTabBar.toggle()
                 }
+            }
+            #if os(iOS)
+                .onWillDisappear {
+                    withAnimation {
+                        showInspector = false
+                    }
+                }
+            #endif
+            .onChange(of: selectedSymbolCategory) { _, _ in
+                selectedSymbol = selectedSymbolCategory.symbols.first!
             }
         }
     }

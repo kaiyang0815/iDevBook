@@ -52,7 +52,11 @@ struct MainView: View {
                         Text("Drawing and graphics")
                     }
                 }
-
+                
+                Section("App Intents") {
+                    
+                }
+                
                 Section("AVFoundation") {
                     NavigationLink {
                         AVCaptureView()
@@ -114,8 +118,8 @@ struct MainView: View {
                     }
                 }
             }
-            .formStyle(.grouped)
             .navigationTitle("iDev Book")
+            .formStyle(.grouped)
             #if os(iOS)
                 .toolbarRole(.editor)
             #endif

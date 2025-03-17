@@ -124,151 +124,139 @@ struct SymbolInspectorView: View {
     @State private var isActive = false
     @State private var isPresented = false
     @State private var foregroundColor: Color = .primary
-#if os(iOS)
-    @State private var backgroundColor: Color = Color(
-        uiColor: UIColor.secondarySystemGroupedBackground)
-#endif
+    #if os(iOS)
+        @State private var backgroundColor: Color = Color(
+            uiColor: UIColor.secondarySystemGroupedBackground)
+    #endif
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    HStack {
-                        switch selectedSymbolEffect {
-                        case .appear:
-                            if isPresented {
-                                Image(systemName: symbol)
-                                    .symbolRenderingMode(renderingMode.mode)
-                                    .transition(.symbolEffect(.appear))
-                                    .foregroundStyle(foregroundColor)
-                                    .font(.system(size: 80))
-                                    .frame(
-                                        maxWidth: .infinity, alignment: .center)
-                            }
-                        case .bounce:
+        Form {
+            Section("Preview") {
+                CardContainerView {
+                    switch selectedSymbolEffect {
+                    case .appear:
+                        if isPresented {
                             Image(systemName: symbol)
                                 .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(
-                                    .bounce.down.byLayer, value: isActive
-                                )
+                                .transition(.symbolEffect(.appear))
                                 .foregroundStyle(foregroundColor)
                                 .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .disappear:
-                            if isPresented {
-                                Image(systemName: symbol)
-                                    .symbolRenderingMode(renderingMode.mode)
-                                    .transition(.symbolEffect(.disappear))
-                                    .foregroundStyle(foregroundColor)
-                                    .font(.system(size: 80))
-                                    .frame(
-                                        maxWidth: .infinity, alignment: .center)
-                            }
-                        case .pulse:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(.pulse, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .scale:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                //                                .symbolEffect(.scale, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .variableColor:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(.variableColor, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .breathe:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(.breathe, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .rotate:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(.rotate, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        case .wiggle:
-                            Image(systemName: symbol)
-                                .symbolRenderingMode(renderingMode.mode)
-                                .symbolEffect(.wiggle, value: isActive)
-                                .foregroundStyle(foregroundColor)
-                                .font(.system(size: 80))
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                .frame(
+                                    maxWidth: .infinity, alignment: .center)
                         }
+                    case .bounce:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(
+                                .bounce.down.byLayer, value: isActive
+                            )
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .disappear:
+                        if isPresented {
+                            Image(systemName: symbol)
+                                .symbolRenderingMode(renderingMode.mode)
+                                .transition(.symbolEffect(.disappear))
+                                .foregroundStyle(foregroundColor)
+                                .font(.system(size: 80))
+                                .frame(
+                                    maxWidth: .infinity, alignment: .center)
+                        }
+                    case .pulse:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(.pulse, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .scale:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            //                                .symbolEffect(.scale, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .variableColor:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(.variableColor, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .breathe:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(.breathe, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .rotate:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(.rotate, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    case .wiggle:
+                        Image(systemName: symbol)
+                            .symbolRenderingMode(renderingMode.mode)
+                            .symbolEffect(.wiggle, value: isActive)
+                            .foregroundStyle(foregroundColor)
+                            .font(.system(size: 80))
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .frame(minHeight: 120)
-                } header: {
-                    Text("Inspector")
-                } footer: {
+                }
+                .frame(height: 200)
+            }
+            .clearSectionStyle()
+
+            Section("Control") {
+                Picker("Mode", selection: $selectedTab) {
+                    ForEach(SFSymbolInspectorTab.allCases) { tab in
+                        Text(tab.name)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                switch selectedTab {
+                case .info:
                     Text(symbol)
-                }
-#if os(iOS)
-                .listRowBackground(backgroundColor)
-                #endif
-
-                Section("Control") {
-                    Picker("Mode", selection: $selectedTab) {
-                        ForEach(SFSymbolInspectorTab.allCases) { tab in
-                            Text(tab.name)
+                case .rendering:
+                    Picker("Rendering", selection: $renderingMode) {
+                        ForEach(ESymbolRenderingMode.allCases) { mode in
+                            Text(mode.name)
+                                .tag(mode)
                         }
                     }
-                    .pickerStyle(.segmented)
-
-                    switch selectedTab {
-                    case .info:
-                        Text(symbol)
-                    case .rendering:
-                        Picker("Rendering", selection: $renderingMode) {
-                            ForEach(ESymbolRenderingMode.allCases) { mode in
-                                Text(mode.name)
-                                    .tag(mode)
-                            }
-                        }
-                        ColorPicker("Color", selection: $foregroundColor)
-                        #if os(iOS)
+                    ColorPicker("Color", selection: $foregroundColor)
+                    #if os(iOS)
                         ColorPicker("Background", selection: $backgroundColor)
-                        #endif
-                    case .animation:
-                        Picker("Animation", selection: $selectedSymbolEffect) {
-                            ForEach(ESymbolEffect.allCases) { effect in
-                                Text(effect.name)
-                            }
-                        }
-                        Button {
-                            withAnimation {
-                                isPresented.toggle()
-                                isActive.toggle()
-                            }
-                        } label: {
-                            Label("Preview", systemImage: "play.fill")
+                    #endif
+                case .animation:
+                    Picker("Animation", selection: $selectedSymbolEffect) {
+                        ForEach(ESymbolEffect.allCases) { effect in
+                            Text(effect.name)
                         }
                     }
-                }
-                .onChange(of: selectedSymbolEffect) { oldValue, newValue in
-                    if newValue == .disappear {
-                        isPresented = true
-                    }
-                    if newValue == .appear {
-                        isPresented = false
+                    Button {
+                        withAnimation {
+                            isPresented.toggle()
+                            isActive.toggle()
+                        }
+                    } label: {
+                        Label("Preview", systemImage: "play.fill")
                     }
                 }
             }
-            .navigationTitle("Inspector")
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
+            .onChange(of: selectedSymbolEffect) { oldValue, newValue in
+                if newValue == .disappear {
+                    isPresented = true
+                }
+                if newValue == .appear {
+                    isPresented = false
+                }
+            }
         }
     }
 }

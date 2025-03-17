@@ -8,61 +8,9 @@
 
 import SwiftUI
 
-enum GestureType: String, CaseIterable, Identifiable {
-    case tapGesture
-    case spatialTapGesture
-    case longPressGesture
-    case dragGesture
-    case windowDragGesture
-    case magnifyGesture
-    case rotateGesture
-
-    var id: Self {
-        return self
-    }
-
-    var name: String {
-        switch self {
-        case .tapGesture:
-            "TapGesture"
-        case .spatialTapGesture:
-            "SpatialTapGesture"
-        case .longPressGesture:
-            "LongPressGesture"
-        case .dragGesture:
-            "DragGesture"
-        case .windowDragGesture:
-            "WindowDragGesture"
-        case .magnifyGesture:
-            "MagnifyGesture"
-        case .rotateGesture:
-            "RotateGestrure"
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .tapGesture:
-            "A gesture that recognizes one or more taps."
-        case .spatialTapGesture:
-            "A gesture that recognizes one or more taps and reports their location."
-        case .longPressGesture:
-            "A gesture that succeeds when the user performs a long press."
-        case .dragGesture:
-            "A dragging motion that invokes an action as the drag-event sequence changes."
-        case .windowDragGesture:
-            "A gesture that recognizes the motion of and handles dragging a window."
-        case .magnifyGesture:
-            "A gesture that recognizes a magnification motion and tracks the amount of magnification."
-        case .rotateGesture:
-            "A gesture that recognizes a rotation motion and tracks the angle of the rotation."
-        }
-    }
-}
-
 struct GesturesView: View {
     @State private var showDescription: Bool = false
-    @State private var showInspector: Bool = false
+    @State private var showInspector: Bool = true
 
     @State private var selectedGesture: GestureType = .tapGesture
     @State private var tapCount: Int = 0
@@ -81,6 +29,7 @@ struct GesturesView: View {
     @GestureState private var isDetectingLongPress = false
     @State private var completedLongPress = false
     @State private var hideTabBar: Bool = false
+    @State private var size: CGSize = .zero
 
     var tapGesture: some Gesture {
         TapGesture(count: tapStep)
@@ -151,93 +100,110 @@ struct GesturesView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                switch selectedGesture {
-                case .tapGesture:
-                    RoundedRectangle(cornerRadius: 12)
-                        .gesture(tapGesture)
-                        .shadow(radius: 4)
-                        .sensoryFeedback(
-                            .success, trigger: tapCount)
-                case .spatialTapGesture:
-                    RoundedRectangle(cornerRadius: 12)
-                        .gesture(spatialTapGesture)
-                        .shadow(radius: 4)
-                        .sensoryFeedback(
-                            .success, trigger: tapCount)
-                case .longPressGesture:
-                    RoundedRectangle(cornerRadius: 12)
-                        .gesture(longPressGesture)
-                        .shadow(radius: 4)
-                        .sensoryFeedback(
-                            .success, trigger: tapCount)
-                case .dragGesture:
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(.secondary.opacity(0.35))
-                            .frame(width: 50, height: 50)
-                            .overlay {
+            GeometryReader { proxy in
+                Form {
+                    Section("Preview") {
+                        CardContainerView {
+                            switch selectedGesture {
+                            case .tapGesture:
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(
-                                        .secondary, lineWidth: 1)
+                                    .gesture(tapGesture)
+                                    .shadow(radius: 4)
+                                    .sensoryFeedback(
+                                        .success, trigger: tapCount)
+                            case .spatialTapGesture:
+                                RoundedRectangle(cornerRadius: 12)
+                                    .gesture(spatialTapGesture)
+                                    .shadow(radius: 4)
+                                    .sensoryFeedback(
+                                        .success, trigger: tapCount)
+                            case .longPressGesture:
+                                RoundedRectangle(cornerRadius: 12)
+                                    .gesture(longPressGesture)
+                                    .shadow(radius: 4)
+                                    .sensoryFeedback(
+                                        .success, trigger: tapCount)
+                            case .dragGesture:
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.secondary.opacity(0.35))
+                                        .frame(width: 50, height: 50)
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(
+                                                    .secondary, lineWidth: 1)
+                                        }
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .frame(width: 50, height: 50)
+                                        .offset(
+                                            x: dragOffset.width,
+                                            y: dragOffset.height
+                                        )
+                                        .gesture(dragGesture)
+                                        .shadow(radius: 4)
+                                        .sensoryFeedback(
+                                            .success, trigger: tapCount)
+                                }
+                            case .windowDragGesture:
+                                #if os(iOS)
+                                    Text("macOS Only")
+                                #endif
+                            case .magnifyGesture:
+                                ZStack {
+                                    HStack {
+                                        Spacer()
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .frame(width: 120, height: 120)
+                                        Spacer()
+                                    }
+                                    Image(
+                                        systemName:
+                                            "arrow.down.left.and.arrow.up.right"
+                                    )
+                                    .foregroundStyle(.white)
+                                    .font(.largeTitle)
+                                }
+                                .gesture(magnifyGesture)
+                                .scaleEffect(magnifyBy)
+                                .shadow(radius: 4)
+                            case .rotateGesture:
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .frame(height: 60)
+                                    HStack {
+                                        Image(systemName: "arrowshape.up")
+                                            .foregroundStyle(.white)
+                                        Spacer()
+                                        Image(systemName: "arrowshape.down")
+                                            .foregroundStyle(.white)
+                                    }
+                                    .padding(.horizontal)
+                                }
+                                .gesture(rotateGesture)
+                                .rotationEffect(angle)
+                                .shadow(radius: 4)
                             }
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(width: 50, height: 50)
-                            .offset(
-                                x: dragOffset.width,
-                                y: dragOffset.height
-                            )
-                            .gesture(dragGesture)
-                            .shadow(radius: 4)
-                            .sensoryFeedback(
-                                .success, trigger: tapCount)
-                    }
-                case .windowDragGesture:
-                    #if os(iOS)
-                        Text("macOS Only")
-                    #endif
-                case .magnifyGesture:
-                    ZStack {
-                        HStack {
-                            Spacer()
-                            RoundedRectangle(cornerRadius: 12)
-                                .frame(width: 120, height: 120)
-                            Spacer()
                         }
-                        Image(
-                            systemName:
-                                "arrow.down.left.and.arrow.up.right"
-                        )
-                        .foregroundStyle(.white)
-                        .font(.largeTitle)
+                        .frame(height: size.height / 4)
                     }
-                    .gesture(magnifyGesture)
-                    .scaleEffect(magnifyBy)
-                    .shadow(radius: 4)
-                case .rotateGesture:
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(height: 60)
-                        HStack {
-                            Image(systemName: "arrowshape.up")
-                                .foregroundStyle(.white)
-                            Spacer()
-                            Image(systemName: "arrowshape.down")
-                                .foregroundStyle(.white)
-                        }
-                        .padding(.horizontal)
+                    .clearSectionStyle()
+                }
+                .task {
+                    size = proxy.size
+                }
+                .onTapGesture(count: 2) {
+                    withAnimation {
+                        showInspector.toggle()
                     }
-                    .gesture(rotateGesture)
-                    .rotationEffect(angle)
-                    .shadow(radius: 4)
                 }
             }
             .navigationTitle("Gestures")
-            .inspector(isPresented: $showInspector, content: {
+            .inspector(isPresented: $showInspector) {
                 List {
                     Section {
-                        Picker("Type", selection: $selectedGesture.animation())
-                        {
+                        Picker(
+                            "Type", selection: $selectedGesture.animation()
+                        ) {
                             ForEach(GestureType.allCases) { type in
                                 Text(type.name)
                             }
@@ -247,7 +213,6 @@ struct GesturesView: View {
                             Text(selectedGesture.description)
                         }
                     }
-
                     Section("Control") {
                         switch selectedGesture {
                         case .tapGesture:
@@ -316,7 +281,9 @@ struct GesturesView: View {
                                 }
                             } onDecrement: {
                                 maximumDistance -= 1
-                                if maximumDistance < 10 { maximumDistance = 10 }
+                                if maximumDistance < 10 {
+                                    maximumDistance = 10
+                                }
                             }
                             if showDescription {
                                 Text(
@@ -336,7 +303,9 @@ struct GesturesView: View {
                                 }
                             } onDecrement: {
                                 minimumDistance -= 1
-                                if minimumDistance < 10 { minimumDistance = 10 }
+                                if minimumDistance < 10 {
+                                    minimumDistance = 10
+                                }
                             }
                             if showDescription {
                                 Text(
@@ -372,7 +341,9 @@ struct GesturesView: View {
                         case .rotateGesture:
                             Stepper {
                                 Text("minimumAngleDelta")
-                                Text(minimumAngleDelta.degrees, format: .number)
+                                Text(
+                                    minimumAngleDelta.degrees,
+                                    format: .number)
                             } onIncrement: {
                                 let newAngle = Angle(
                                     degrees: minimumAngleDelta.degrees + 1)
@@ -402,10 +373,12 @@ struct GesturesView: View {
                         switch selectedGesture {
                         case .tapGesture:
                             LabeledContent(
-                                "Tap Count", value: tapCount, format: .number)
+                                "Tap Count", value: tapCount,
+                                format: .number)
                         case .spatialTapGesture:
                             LabeledContent(
-                                "Tap Count", value: tapCount, format: .number)
+                                "Tap Count", value: tapCount,
+                                format: .number)
                             LabeledContent(
                                 "Tap Location X", value: location.x,
                                 format: .number)
@@ -414,10 +387,12 @@ struct GesturesView: View {
                                 format: .number)
                         case .longPressGesture:
                             LabeledContent(
-                                "Tap Count", value: tapCount, format: .number)
+                                "Tap Count", value: tapCount,
+                                format: .number)
                         case .dragGesture:
                             LabeledContent(
-                                "Draging", value: isDragging ? "True" : "False")
+                                "Draging",
+                                value: isDragging ? "True" : "False")
                             LabeledContent(
                                 "Drag Offset X", value: dragOffset.width,
                                 format: .number)
@@ -426,31 +401,30 @@ struct GesturesView: View {
                                 format: .number)
                         case .windowDragGesture:
                             LabeledContent(
-                                "Tap Count", value: tapCount, format: .number)
+                                "Tap Count", value: tapCount,
+                                format: .number)
                         case .magnifyGesture:
                             LabeledContent(
-                                "magnifyBy", value: magnifyBy, format: .number)
+                                "magnifyBy", value: magnifyBy,
+                                format: .number)
                         case .rotateGesture:
                             LabeledContent(
-                                "Angle", value: angle.degrees, format: .number)
+                                "Angle", value: angle.degrees,
+                                format: .number)
                         }
                     }
                 }
-            })
+            }
             .toolbar {
                 Menu {
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
-                }
-                Button {
-                    withAnimation {
-                        showInspector.toggle()
-                    }
-                } label: {
-                    Label("Show Inspector", systemImage: "sidebar.right")
                 }
             }
             #if os(iOS)
@@ -462,6 +436,13 @@ struct GesturesView: View {
                     hideTabBar = true
                 }
             }
+            #if os(iOS)
+                .onWillDisappear {
+                    withAnimation {
+                        showInspector = false
+                    }
+                }
+            #endif
         }
     }
 }

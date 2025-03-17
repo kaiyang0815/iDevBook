@@ -8,163 +8,56 @@
 
 import SwiftUI
 
-struct CustomStepper: View {
-    @Binding var value: Double
-    var label: String
-    var range: ClosedRange<Double>
-    var step: Double
-
-    var body: some View {
-        Stepper {
-            Text(label)
-            Text(value, format: .number)
-        } onIncrement: {
-            withAnimation {
-                value = min(value + step, range.upperBound)
-            }
-        } onDecrement: {
-            withAnimation {
-                value = max(value - step, range.lowerBound)
-            }
-        }
-    }
-}
-
-struct DescriptionTextView: View {
-    let content: String
-
-    init(_ content: String) {
-        self.content = content
-    }
-
-    var body: some View {
-        Text(content)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-    }
-}
-
-enum AnimationType: String, CaseIterable, Identifiable {
-    case `default`
-    case spring
-    case linear
-    case easeIn
-    case easeOut
-    case easeInOut
-    case bouncy
-    case smooth
-    case snappy
-    case interactiveSpring
-    case custom
-
-    var id: Self {
-        return self
-    }
-
-    var name: String {
-        switch self {
-        case .default:
-            "Default"
-        case .spring:
-            "Spring"
-        case .linear:
-            "Linear"
-        case .easeIn:
-            "Ease In"
-        case .easeOut:
-            "Ease Out"
-        case .easeInOut:
-            "Ease In Out"
-        case .bouncy:
-            "Bouncy"
-        case .smooth:
-            "Smooth"
-        case .snappy:
-            "Snappy"
-        case .interactiveSpring:
-            "Interactive Spring"
-        case .custom:
-            "Custom"
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .default:
-            "A default animation instance."
-        case .spring:
-            ""
-        case .linear:
-            "An animation that moves at a constant speed."
-        case .easeIn:
-            "An animation that starts slowly and then increases speed towards the end of the movement."
-        case .easeOut:
-            "An animation that starts quickly and then slows towards the end of the movement."
-        case .easeInOut:
-            "An animation that combines the behaviors of in and out easing animations."
-        case .bouncy:
-            "A spring animation with a predefined duration and higher amount of bounce that can be tuned."
-        case .smooth:
-            "A smooth spring animation with a predefined duration and no bounce that can be tuned."
-        case .snappy:
-            "A spring animation with a predefined duration and small amount of bounce that feels more snappy and can be tuned."
-        case .interactiveSpring:
-            ""
-        case .custom:
-            ""
-        }
-    }
-}
-
 struct AnimationsView: View {
-    @State private var selectedAnimationType: AnimationType = .default
-    @State private var showDescription: Bool = false
-    @State private var showInspector: Bool = false
+    @State private var selectedAnimationType: AnimationType = .spring
+    @State private var selectedSpringType: SpringAnimationType = .type1
 
+    @State private var showDescription: Bool = false
+    @State private var showInspector: Bool = true
     @State private var showSpacer: Bool = false
-    @State private var showSpacer2: Bool = false
-    @State private var showVS: Bool = false
-    @State private var largeRadius: Bool = false
 
     @State private var animationDelay: Double = 0.0
     @State private var animationSpeed: Double = 1.0
     @State private var animationRepeatCount: Int = 1
     @State private var animationAutoreverses: Bool = true
-
-    @State private var linearAnimationDuration: Double = 0.35
-    @State private var easeInAnimationDuration: Double = 0.35
-    @State private var easeOutAnimationDuration: Double = 0.35
-    @State private var easeInOutAnimationDuration: Double = 0.35
-
-    @State private var bouncyAnimationDuration: Double = 0.5
-    @State private var bouncyExtraBounce: Double = 0.0
-
-    @State private var smoothAnimationDuration: Double = 0.5
-    @State private var smoothExtraBounce: Double = 0.0
-
-    @State private var snappyAnimationDuration: Double = 0.5
-    @State private var snappyExtraBounce: Double = 0.0
+    @State private var animationDuration: Double = 0.5
+    @State private var animationExtraBounce: Double = 0.0
 
     @State private var springAnimationDuration: Double = 0.5
     @State private var springAnimationBounce: Double = 0.0
+    @State private var springAnimationBlendDuration: TimeInterval = 0.0
+    @State private var springAnimationDampingFraction: Double = 0.825
+    @State private var springAnimationResponse: Double = 0.5
 
-    @State private var offseX: CGFloat = 180
     @State private var hideTabBar: Bool = false
+    @State private var size: CGSize = .zero
 
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    if showSpacer {
-                        Spacer()
+            GeometryReader { proxy in
+                Form {
+                    Section("Preview") {
+                        CardContainerView {
+                            HStack {
+                                if showSpacer {
+                                    Spacer()
+                                }
+                                RoundedRectangle(
+                                    cornerRadius: 10
+                                )
+                                .fill(.green.gradient)
+                                #if os(iOS)
+                                    .frame(
+                                        width: size.width / 4,
+                                        height: size.width / 4)
+                                #endif
+                                if !showSpacer {
+                                    Spacer()
+                                }
+                            }
+                        }
                     }
-                    RoundedRectangle(
-                        cornerRadius: largeRadius ? 50 : 12
-                    )
-                    .fill(.green.gradient)
-                    .frame(
-                        width: 100, height: 100, alignment: .center
-                    )
+                    .clearSectionStyle()
                     .onTapGesture {
                         switch selectedAnimationType {
                         case .default:
@@ -178,106 +71,144 @@ struct AnimationsView: View {
                                             animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .spring:
-                            withAnimation(
-                                .spring(
-                                    duration:
-                                        springAnimationDuration,
-                                    bounce: springAnimationBounce
-                                )
-                                .delay(animationDelay)
-                                .speed(animationSpeed)
-                                .repeatCount(
-                                    animationRepeatCount,
-                                    autoreverses:
-                                        animationAutoreverses)
-                            ) {
-                                showSpacer.toggle()
-                                largeRadius.toggle()
+                            switch selectedSpringType {
+                            case .type1:
+                                withAnimation(
+                                    .spring(
+                                        Spring(
+                                            duration: springAnimationDuration,
+                                            bounce: springAnimationBounce),
+                                        blendDuration:
+                                            springAnimationBlendDuration
+                                    )
+                                    .delay(animationDelay)
+                                    .speed(animationSpeed)
+                                    .repeatCount(
+                                        animationRepeatCount,
+                                        autoreverses:
+                                            animationAutoreverses)
+                                ) {
+                                    showSpacer.toggle()
+                                }
+                            case .type2:
+                                withAnimation(
+                                    .spring(
+                                        duration:
+                                            springAnimationDuration,
+                                        bounce: springAnimationBounce,
+                                        blendDuration:
+                                            springAnimationBlendDuration
+                                    )
+                                    .delay(animationDelay)
+                                    .speed(animationSpeed)
+                                    .repeatCount(
+                                        animationRepeatCount,
+                                        autoreverses:
+                                            animationAutoreverses)
+                                ) {
+                                    showSpacer.toggle()
+                                }
+                            case .type3:
+                                withAnimation(
+                                    .spring(
+                                        response: springAnimationResponse,
+                                        dampingFraction:
+                                            springAnimationDampingFraction,
+                                        blendDuration:
+                                            springAnimationBlendDuration
+                                    )
+                                    .delay(animationDelay)
+                                    .speed(animationSpeed)
+                                    .repeatCount(
+                                        animationRepeatCount,
+                                        autoreverses:
+                                            animationAutoreverses)
+                                ) {
+                                    showSpacer.toggle()
+                                }
                             }
                         case .linear:
                             withAnimation(
                                 .linear(
                                     duration:
-                                        linearAnimationDuration)
+                                        animationDuration)
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .easeIn:
                             withAnimation(
                                 .easeIn(
                                     duration:
-                                        easeInAnimationDuration)
+                                        animationDuration)
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .easeOut:
                             withAnimation(
                                 .easeOut(
                                     duration:
-                                        easeOutAnimationDuration)
+                                        animationDuration)
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .easeInOut:
                             withAnimation(
                                 .easeInOut(
                                     duration:
-                                        easeInOutAnimationDuration
+                                        animationDuration
                                 )
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .bouncy:
                             withAnimation(
                                 .bouncy(
                                     duration:
-                                        bouncyAnimationDuration,
-                                    extraBounce: bouncyExtraBounce
+                                        animationDuration,
+                                    extraBounce: animationExtraBounce
                                 )
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .smooth:
                             withAnimation(
                                 .smooth(
                                     duration:
-                                        smoothAnimationDuration,
-                                    extraBounce: smoothExtraBounce
+                                        animationDuration,
+                                    extraBounce: animationExtraBounce
                                 )
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .snappy:
                             withAnimation(
                                 .snappy(
                                     duration:
-                                        snappyAnimationDuration,
-                                    extraBounce: snappyExtraBounce
+                                        animationDuration,
+                                    extraBounce: animationExtraBounce
                                 )
                             ) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .interactiveSpring:
                             withAnimation(.interactiveSpring) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         case .custom:
                             withAnimation(.linear(duration: 2)) {
                                 showSpacer.toggle()
-                                largeRadius.toggle()
                             }
                         }
+                    }
+                }
+                .task {
+                    size = proxy.size
+                }
+                .onTapGesture(count: 2) {
+                    withAnimation {
+                        showInspector.toggle()
                     }
                 }
             }
@@ -288,53 +219,72 @@ struct AnimationsView: View {
                     hideTabBar ? .hidden : .automatic, for: .tabBar)
             #endif
             .inspector(
-                isPresented: $showInspector,
-                content: {
-                    List {
-                        Section {
-                            Picker(
-                                "Type",
-                                selection: $selectedAnimationType.animation()
-                            ) {
-                                ForEach(AnimationType.allCases, id: \.id) {
-                                    type in
-                                    Text(type.name).tag(type)
-                                }
+                isPresented: $showInspector.animation()
+            ) {
+                List {
+                    Section {
+                        Picker(
+                            "Animation",
+                            selection: $selectedAnimationType.animation()
+                        ) {
+                            ForEach(AnimationType.allCases, id: \.id) {
+                                type in
+                                Text(type.name)
+                                    .tag(type)
                             }
-                            .onChange(of: selectedAnimationType) { _, _ in
-                                withAnimation {
-                                    showSpacer = false
-                                    largeRadius = false
+                        }
+                        .onChange(of: selectedAnimationType) { _, newValue in
+                            withAnimation {
+                                showSpacer = false
+                                if newValue == .smooth {
+                                    animationDuration = 0.5
+                                    animationExtraBounce = 0.0
                                 }
-                            }
-                        } footer: {
-                            if showDescription {
-                                Text(selectedAnimationType.description)
                             }
                         }
 
-                        Section("Control") {
-                            VStack(alignment: .leading) {
-                                CustomStepper(
-                                    value: $animationDelay, label: ".delay",
-                                    range: 0...10, step: 0.5)
-                                if showDescription {
-                                    DescriptionTextView(
-                                        "Delays the start of the animation by the specified number of seconds."
-                                    )
+                        if selectedAnimationType == .spring {
+                            Picker("Spring", selection: $selectedSpringType) {
+                                ForEach(SpringAnimationType.allCases, id: \.id)
+                                {
+                                    type in
+                                    Text(type.name)
+                                        .tag(type)
                                 }
                             }
-                            VStack(alignment: .leading) {
-                                CustomStepper(
-                                    value: $animationSpeed, label: ".speed",
-                                    range: 0...5, step: 0.25)
-                                if showDescription {
-                                    DescriptionTextView(
-                                        "Changes the duration of an animation by adjusting its speed."
-                                    )
-                                }
-                            }
+                        }
+                    } header: {
+                        Text("Type")
+                    } footer: {
+                        if showDescription {
+                            Text(selectedAnimationType.description)
+                        }
+                    }
 
+                    Section("Control") {
+                        CustomStepperWithDescription(
+                            value: $animationDelay,
+                            showDescription: $showDescription,
+                            label: "Delay",
+                            range: 0...10,
+                            step: 0.5,
+                            description:
+                                "Delays the start of the animation by the specified number of seconds."
+                        )
+                        CustomStepperWithDescription(
+                            value: $animationSpeed,
+                            showDescription: $showDescription,
+                            label: "Speed",
+                            range: 0...5,
+                            step: 0.1,
+                            description:
+                                "Changes the duration of an animation by adjusting its speed."
+                        )
+                        WithDescriptionView(
+                            showDescription: $showDescription,
+                            description:
+                                "The number of times that the animation repeats. Each repeated sequence starts at the beginning when autoreverse is false."
+                        ) {
                             Stepper {
                                 Text("RepeatCount")
                                 Text(animationRepeatCount, format: .number)
@@ -353,133 +303,101 @@ struct AnimationsView: View {
                                     }
                                 }
                             }
-
-                            if selectedAnimationType == .spring {
-                                CustomStepper(
-                                    value: $springAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...10,
-                                    step: 0.5
-                                )
-                                CustomStepper(
-                                    value: $springAnimationBounce,
-                                    label: "Bounce",
-                                    range: -1...1,
-                                    step: 0.1
-                                )
-                            }
-
-                            if selectedAnimationType == .linear {
-                                CustomStepper(
-                                    value: $linearAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
-                            if selectedAnimationType == .easeIn {
-                                CustomStepper(
-                                    value: $easeInAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
-                            if selectedAnimationType == .easeOut {
-                                CustomStepper(
-                                    value: $easeOutAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
-                            if selectedAnimationType == .easeInOut {
-                                CustomStepper(
-                                    value: $easeInOutAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
-                            if selectedAnimationType == .bouncy {
-                                CustomStepper(
-                                    value: $bouncyAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                                CustomStepper(
-                                    value: $bouncyExtraBounce,
-                                    label: "ExtraBounce",
-                                    range: 0...2,
-                                    step: 0.1
-                                )
-                            }
-
-                            if selectedAnimationType == .smooth {
-                                CustomStepper(
-                                    value: $smoothAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                                CustomStepper(
-                                    value: $smoothExtraBounce,
-                                    label: "ExtraBounce",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
-                            if selectedAnimationType == .snappy {
-                                CustomStepper(
-                                    value: $snappyAnimationDuration,
-                                    label: "Duration",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                                CustomStepper(
-                                    value: $snappyExtraBounce,
-                                    label: "ExtraBounce",
-                                    range: 0...2,
-                                    step: 0.05
-                                )
-                            }
-
+                        }
+                        WithDescriptionView(
+                            showDescription: $showDescription,
+                            description:
+                                "A Boolean value that indicates whether the animation sequence plays in reverse after playing forward. Autoreverse counts towards the repeatCount. For instance, a repeatCount of one plays the animation forward once, but it doesn’t play in reverse even if autoreverse is true. When autoreverse is true and repeatCount is 2, the animation moves forward, then reverses, then stops."
+                        ) {
                             Toggle("Autoreverses", isOn: $animationAutoreverses)
                         }
 
-                        Section {
-                            Button("Reset") {
+                        if selectedAnimationType != .default {
+                            CustomStepperWithDescription(
+                                value: $animationDuration,
+                                showDescription: $showDescription,
+                                label: "Duration",
+                                range: 0...10,
+                                step: 0.5,
+                                description:
+                                    "The perceptual duration, which defines the pace of the spring. This is approximately equal to the settling duration, but for very bouncy springs, will be the duration of the period of oscillation for the spring."
+                            )
+                        }
 
+                        if selectedAnimationType != .linear
+                            && selectedAnimationType != .easeIn
+                            && selectedAnimationType != .easeInOut
+                            && selectedAnimationType != .easeOut
+                        {
+                            CustomStepperWithDescription(
+                                value: $animationExtraBounce,
+                                showDescription: $showDescription,
+                                label: "ExtraBounce",
+                                range: 0...2,
+                                step: 0.1,
+                                description: selectedAnimationType == .bouncy
+                                    ? "How much additional bounce should be added to the base bounce of 0.3."
+                                    : selectedAnimationType == .smooth
+                                        ? "How much additional bounce should be added to the base bounce of 0."
+                                        : "How much additional bounce should be added to the base bounce of 0.15."
+                            )
+                        }
+
+                        if selectedAnimationType == .spring {
+                            if selectedSpringType == .type2 {
+                                CustomStepperWithDescription(
+                                    value: $springAnimationBounce,
+                                    showDescription: $showDescription,
+                                    label: "Bounce",
+                                    range: -1...1,
+                                    step: 0.1,
+                                    description:
+                                        "How bouncy the spring should be. A value of 0 indicates no bounces (a critically damped spring), positive values indicate increasing amounts of bounciness up to a maximum of 1.0 (corresponding to undamped oscillation), and negative values indicate overdamped springs with a minimum value of -1.0."
+                                )
                             }
+                            if selectedSpringType == .type3 {
+                                CustomStepperWithDescription(
+                                    value: $springAnimationResponse,
+                                    showDescription: $showDescription,
+                                    label: "Response",
+                                    range: 0...1,
+                                    step: 0.1,
+                                    description:
+                                        "The stiffness of the spring, defined as an approximate duration in seconds. A value of zero requests an infinitely-stiff spring, suitable for driving interactive animations."
+                                )
+                                CustomStepperWithDescription(
+                                    value: $springAnimationDampingFraction,
+                                    showDescription: $showDescription,
+                                    label: "DampingFraction",
+                                    range: 0...1,
+                                    step: 0.005,
+                                    description:
+                                        "The amount of drag applied to the value being animated, as a fraction of an estimate of amount needed to produce critical damping."
+                                )
+                            }
+                            CustomStepperWithDescription(
+                                value: $springAnimationBlendDuration,
+                                showDescription: $showDescription,
+                                label: "BlendDuration",
+                                range: 0...10,
+                                step: 1,
+                                description:
+                                    "The duration in seconds over which to interpolate changes to the response value of the spring."
+                            )
                         }
                     }
                 }
-            )
+            }
             .toolbar {
                 Menu {
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
                     }
-                    Toggle(isOn: $showVS.animation()) {
-                        Label(
-                            "Show Other",
-                            systemImage: "rectangle.bottomhalf.filled")
-                    }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
-                }
-                Button {
-                    withAnimation {
-                        showInspector.toggle()
-                    }
-                } label: {
-                    Label("Show Inspector", systemImage: "sidebar.right")
                 }
             }
             .onAppear {
@@ -487,6 +405,13 @@ struct AnimationsView: View {
                     hideTabBar = true
                 }
             }
+            #if os(iOS)
+                .onWillDisappear {
+                    withAnimation {
+                        showInspector = false
+                    }
+                }
+            #endif
         }
     }
 }
