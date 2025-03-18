@@ -341,75 +341,45 @@ struct ShapesView: View {
                                 showDescription: $showDescription,
                                 description: ""
                             ) {
-                                LabeledContent {
-                                    Slider(
-                                        value: $unevenRoundedRectangle
-                                            .cornerRadii
-                                            .topLeading, in: 0...100, step: 1) {
-                                                Text("topLeading")
-                                            } minimumValueLabel: {
-                                                Text("0")
-                                            } maximumValueLabel: {
-                                                Text("100")
-                                            }
-                                } label: {
-                                    Image(
-                                        systemName:
-                                            "inset.filled.topleading.rectangle")
-                                }
+                                LabeledSlider(
+                                    title: "topLeading",
+                                    value: $unevenRoundedRectangle
+                                        .cornerRadii
+                                        .topLeading,
+                                    range: 0...100)
                             }
 
                             WithDescriptionView(
                                 showDescription: $showDescription,
                                 description: ""
                             ) {
-                                LabeledContent {
-                                    Slider(
-                                        value: $unevenRoundedRectangle
-                                            .cornerRadii
-                                            .topTrailing, in: 0...100, step: 1)
-                                } label: {
-                                    Image(
-                                        systemName:
-                                            "inset.filled.toptrailing.rectangle"
-                                    )
-                                }
+                                LabeledSlider(
+                                    title: "topTrailing",
+                                    value: $unevenRoundedRectangle
+                                        .cornerRadii
+                                        .topTrailing, range: 0...100)
                             }
 
                             WithDescriptionView(
                                 showDescription: $showDescription,
                                 description: ""
                             ) {
-                                LabeledContent {
-                                    Slider(
-                                        value: $unevenRoundedRectangle
-                                            .cornerRadii
-                                            .bottomLeading, in: 0...100, step: 1
-                                    )
-                                } label: {
-                                    Image(
-                                        systemName:
-                                            "inset.filled.bottomleading.rectangle"
-                                    )
-                                }
+                                LabeledSlider(
+                                    title: "bottomLeading",
+                                    value: $unevenRoundedRectangle
+                                        .cornerRadii
+                                        .bottomLeading, range: 0...100)
                             }
 
                             WithDescriptionView(
                                 showDescription: $showDescription,
                                 description: ""
                             ) {
-                                LabeledContent {
-                                    Slider(
-                                        value: $unevenRoundedRectangle
-                                            .cornerRadii
-                                            .bottomTrailing, in: 0...100,
-                                        step: 1)
-                                } label: {
-                                    Image(
-                                        systemName:
-                                            "inset.filled.bottomtrailing.rectangle"
-                                    )
-                                }
+                                LabeledSlider(
+                                    title: "bottomTrailing",
+                                    value: $unevenRoundedRectangle
+                                        .cornerRadii
+                                        .bottomTrailing, range: 0...100)
                             }
                         }
                     }

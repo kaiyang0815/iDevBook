@@ -126,28 +126,18 @@ struct EFQRCodeView: View {
                                 "icon", selection: $iconItem,
                                 matching: .images)
                         }
-                        LabeledContent {
-                            Slider(value: $codeIconSize.width, in: 0...200) {
-                                Text("iconSize")
-                            } minimumValueLabel: {
-                                Text("0")
-                            } maximumValueLabel: {
-                                Text("100")
-                            }
-                        } label: {
-                            Text("iconSize.width")
-                        }
-                        LabeledContent {
-                            Slider(value: $codeIconSize.height, in: 0...200) {
-                                Text("iconSize")
-                            } minimumValueLabel: {
-                                Text("0")
-                            } maximumValueLabel: {
-                                Text("100")
-                            }
-                        } label: {
-                            Text("iconSize.height")
-                        }
+                        LabeledSlider(
+                            title: "iconSize.width", value: $codeIconSize.width,
+                            range: 0...100)
+                        LabeledSlider(
+                            title: "iconSize.height",
+                            value: $codeIconSize.height, range: 0...100)
+                        LabeledSlider(
+                            title: "size.width", value: $codeSize.width,
+                            range: 0...600)
+                        LabeledSlider(
+                            title: "size.height", value: $codeSize.height,
+                            range: 0...600)
                     }
                 }
                 .onChange(of: watermarkItem) {
