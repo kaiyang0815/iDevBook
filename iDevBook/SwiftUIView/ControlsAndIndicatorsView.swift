@@ -337,47 +337,8 @@ struct ControlsAndIndicatorsView: View {
                                             Text("Workout")
                                         }
                                     }
-                                    .switchProgressViewStyle(selectedProgressViewStyleType)
-//                                    switch selectedProgressViewStyleType {
-//                                    case .automatic:
-//                                        VStack {
-//                                            ProgressView(
-//                                                "ProgressView",
-//                                                value: progressValue,
-//                                                total: progressTotal)
-//                                            ProgressView(
-//                                                timerInterval:
-//                                                    Date()...Date()
-//                                                    .addingTimeInterval(
-//                                                        5 * 60)
-//                                            ) {
-//                                                Text("Workout")
-//                                            }
-//                                        }
-//                                    case .circular:
-//                                        HStack {
-//                                            Spacer()
-//                                            
-//                                            Spacer()
-//                                        }
-//                                        .progressViewStyle(.circular)
-//                                    case .linear:
-//                                        VStack {
-//                                            ProgressView(
-//                                                "ProgressView",
-//                                                value: progressValue,
-//                                                total: progressTotal)
-//                                            ProgressView(
-//                                                timerInterval:
-//                                                    Date()...Date()
-//                                                    .addingTimeInterval(
-//                                                        5 * 60)
-//                                            ) {
-//                                                Text("Workout")
-//                                            }
-//                                        }
-//                                        .progressViewStyle(.linear)
-//                                    }
+                                    .switchProgressViewStyle(
+                                        selectedProgressViewStyleType)
                                 case .contentUnavailableView:
                                     ContentUnavailableView {
                                         Label(
@@ -564,39 +525,75 @@ struct ControlsAndIndicatorsView: View {
                                 }
                             }
                         case .datePicker:
-                            PickerContainer(
-                                ".datePickerStyle",
-                                selection: $selectedDatePickerStyleType
-                            ) { type in
-                                Text(type.name)
-                                    #if os(iOS)
-                                        .selectionDisabled(
-                                            type == .field
-                                                || type == .stepperField)
-                                    #endif
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description:
+                                    "Sets the style for date pickers within this view."
+                            ) {
+                                PickerContainer(
+                                    ".datePickerStyle",
+                                    selection: $selectedDatePickerStyleType
+                                ) { type in
+                                    Text(type.name)
+                                        #if os(iOS)
+                                            .selectionDisabled(
+                                                type == .field
+                                                    || type == .stepperField)
+                                        #endif
+                                }
                             }
-                            PickerContainer(
-                                "displayedComponents", selection: $selectedMode
-                            ) { mode in
-                                Text(mode.rawValue)
-                                    .tag(mode)
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description:
+                                    "The date components that user is able to view and edit. Defaults to [.hourAndMinute, .date]. On watchOS, if .hourAndMinute or .hourMinuteAndSecond are included with .date, only .date is displayed."
+                            ) {
+                                PickerContainer(
+                                    "displayedComponents",
+                                    selection: $selectedMode
+                                ) { mode in
+                                    Text(mode.rawValue)
+                                        .tag(mode)
+                                }
                             }
                         case .colorPicker:
-                            Toggle(
-                                "supportsOpacity", isOn: $supportsOpacity)
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description:
+                                    "A Boolean value that indicates whether the color picker allows adjusting the selected color’s opacity; the default is true."
+                            ) {
+                                Toggle(
+                                    "supportsOpacity", isOn: $supportsOpacity)
+                            }
                         case .gauge:
-                            PickerContainer(
-                                ".gaugeStyle",
-                                selection: $selectedGaugeStyleType
-                            ) { type in
-                                Text(type.name)
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description:
+                                    "Sets the style for gauges within this view."
+                            ) {
+                                PickerContainer(
+                                    ".gaugeStyle",
+                                    selection: $selectedGaugeStyleType
+                                ) { type in
+                                    Text(type.name)
+                                        #if os(iOS)
+                                            .selectionDisabled(
+                                                type == .circular
+                                                    || type == .linear)
+                                        #endif
+                                }
                             }
                         case .progressView:
-                            PickerContainer(
-                                ".progressViewStyle",
-                                selection: $selectedProgressViewStyleType
-                            ) { type in
-                                Text(type.name)
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description:
+                                    "Sets the style for progress views in this view."
+                            ) {
+                                PickerContainer(
+                                    ".progressViewStyle",
+                                    selection: $selectedProgressViewStyleType
+                                ) { type in
+                                    Text(type.name)
+                                }
                             }
                         case .contentUnavailableView:
                             Text("Control")

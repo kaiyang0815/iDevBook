@@ -17,7 +17,8 @@ struct CardContainerView<Content: View>: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 12)
+            // outer radius = inner radius + padding
+            RoundedRectangle(cornerRadius: 16)
                 .fill(backgroundColor)
             RoundedRectangle(cornerRadius: 10)
                 .fill(.ultraThickMaterial)
@@ -46,5 +47,6 @@ struct CardContainerView<Content: View>: View {
                     .padding(20)
             }
         }
+        .clearSectionStyle()
     }
 }

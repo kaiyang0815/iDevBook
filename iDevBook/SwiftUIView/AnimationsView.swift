@@ -15,8 +15,6 @@ struct AnimationsView: View {
     @State private var showDescription: Bool = false
     @State private var showInspector: Bool = true
     @State private var showSpacer: Bool = false
-    @State private var showSpacer2: Bool = false
-    @State private var showVS: Bool = true
 
     @State private var animationDelay: Double = 0.0
     @State private var animationSpeed: Double = 1.0
@@ -48,22 +46,14 @@ struct AnimationsView: View {
                                 #if os(iOS)
                                     .frame(
                                         width: size.width / 4,
-                                        height: size.width / 4)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                #endif
-                                    .offset(x: 0.25 * size.width - 26)
-                                
-                                Divider()
-                                
-                                RoundedRectangle(
-                                    cornerRadius: 10
-                                )
-                                .fill(.green.gradient)
-                                #if os(iOS)
+                                        height: size.width / 4
+                                    )
                                     .frame(
-                                        width: size.width / 4,
-                                        height: size.width / 4)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                        maxWidth: .infinity, alignment: .leading
+                                    )
+                                    .offset(
+                                        x: showSpacer
+                                            ? size.width * 0.5 + 20 : 0)
                                 #endif
                             }
                         }
@@ -144,7 +134,14 @@ struct AnimationsView: View {
                             withAnimation(
                                 .linear(
                                     duration:
-                                        animationDuration)
+                                        animationDuration
+                                )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -152,7 +149,14 @@ struct AnimationsView: View {
                             withAnimation(
                                 .easeIn(
                                     duration:
-                                        animationDuration)
+                                        animationDuration
+                                )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -160,7 +164,14 @@ struct AnimationsView: View {
                             withAnimation(
                                 .easeOut(
                                     duration:
-                                        animationDuration)
+                                        animationDuration
+                                )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -170,6 +181,12 @@ struct AnimationsView: View {
                                     duration:
                                         animationDuration
                                 )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -180,6 +197,12 @@ struct AnimationsView: View {
                                         animationDuration,
                                     extraBounce: animationExtraBounce
                                 )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -190,6 +213,12 @@ struct AnimationsView: View {
                                         animationDuration,
                                     extraBounce: animationExtraBounce
                                 )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
@@ -200,15 +229,35 @@ struct AnimationsView: View {
                                         animationDuration,
                                     extraBounce: animationExtraBounce
                                 )
+                                .delay(animationDelay)
+                                .speed(animationSpeed)
+                                .repeatCount(
+                                    animationRepeatCount,
+                                    autoreverses:
+                                        animationAutoreverses)
                             ) {
                                 showSpacer.toggle()
                             }
                         case .interactiveSpring:
-                            withAnimation(.interactiveSpring) {
+                            withAnimation(
+                                .interactiveSpring.delay(animationDelay)
+                                    .speed(animationSpeed)
+                                    .repeatCount(
+                                        animationRepeatCount,
+                                        autoreverses:
+                                            animationAutoreverses)
+                            ) {
                                 showSpacer.toggle()
                             }
                         case .custom:
-                            withAnimation(.linear(duration: 2)) {
+                            withAnimation(
+                                .linear(duration: 2).delay(animationDelay)
+                                    .speed(animationSpeed)
+                                    .repeatCount(
+                                        animationRepeatCount,
+                                        autoreverses:
+                                            animationAutoreverses)
+                            ) {
                                 showSpacer.toggle()
                             }
                         }
@@ -406,11 +455,6 @@ struct AnimationsView: View {
                     }
                     Toggle(isOn: $showDescription.animation()) {
                         Label("Show Description", systemImage: "eye")
-                    }
-                    Toggle(isOn: $showVS.animation()) {
-                        Label(
-                            "Show Other RoundedRectangle",
-                            systemImage: "square.filled.on.square")
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")

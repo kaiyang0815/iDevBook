@@ -112,11 +112,11 @@ struct ShapesView: View {
             GeometryReader { proxy in
                 Form {
                     Section("Preview") {
-                        HStack {
-                            switch selectedShapeType {
-                            case .rectangle:
-                                CardContainerView {
-                                    rectangle
+                        CardContainerView {
+                            VStack {
+                                switch selectedShapeType {
+                                case .rectangle:
+                                    Rectangle()
                                         .fill(selectedFillColor)
                                         .stroke(
                                             selectedStrokeColor,
@@ -129,9 +129,7 @@ struct ShapesView: View {
                                             ),
                                             antialiased: true
                                         )
-                                }
-                            case .roundedRectangle:
-                                CardContainerView {
+                                case .roundedRectangle:
                                     roundedRectangle
                                         .fill(selectedFillColor)
                                         .stroke(
@@ -145,9 +143,7 @@ struct ShapesView: View {
                                             ),
                                             antialiased: true
                                         )
-                                }
-                            case .unevenRoundedRectangle:
-                                CardContainerView {
+                                case .unevenRoundedRectangle:
                                     unevenRoundedRectangle
                                         .fill(selectedFillColor)
                                         .stroke(
@@ -161,29 +157,21 @@ struct ShapesView: View {
                                             ),
                                             antialiased: true
                                         )
-                                }
-                            case .circle:
-                                CardContainerView {
-                                    HStack {
-                                        Spacer()
-                                        circle
-                                            .fill(selectedFillColor)
-                                            .stroke(
-                                                selectedStrokeColor,
-                                                style: StrokeStyle(
-                                                    lineWidth: lineWidth,
-                                                    lineCap: lineCap,
-                                                    lineJoin: lineJoin,
-                                                    dash: dash,
-                                                    dashPhase: dashPhase
-                                                ),
-                                                antialiased: true
-                                            )
-                                        Spacer()
-                                    }
-                                }
-                            case .ellipse:
-                                CardContainerView {
+                                case .circle:
+                                    circle
+                                        .fill(selectedFillColor)
+                                        .stroke(
+                                            selectedStrokeColor,
+                                            style: StrokeStyle(
+                                                lineWidth: lineWidth,
+                                                lineCap: lineCap,
+                                                lineJoin: lineJoin,
+                                                dash: dash,
+                                                dashPhase: dashPhase
+                                            ),
+                                            antialiased: true
+                                        )
+                                case .ellipse:
                                     ellipse
                                         .fill(selectedFillColor)
                                         .stroke(
@@ -197,9 +185,7 @@ struct ShapesView: View {
                                             ),
                                             antialiased: true
                                         )
-                                }
-                            case .capsule:
-                                CardContainerView {
+                                case .capsule:
                                     capsule
                                         .fill(selectedFillColor)
                                         .stroke(
@@ -213,9 +199,7 @@ struct ShapesView: View {
                                             ),
                                             antialiased: true
                                         )
-                                }
-                            case .path:
-                                CardContainerView {
+                                case .path:
                                     Path { path in
                                         path.move(
                                             to: CGPoint(
@@ -244,8 +228,8 @@ struct ShapesView: View {
                                     )
                                 }
                             }
+                            .frame(height: size.height / 4)
                         }
-                        .frame(height: size.height / 4)
                     }
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
@@ -265,25 +249,26 @@ struct ShapesView: View {
                 .toolbarVisibility(
                     hideTabBar ? .hidden : .automatic, for: .tabBar)
             #endif
-            .inspector(
-                isPresented: $showInspector,
-                content: {
-                    List {
-                        Section {
-                            Picker("Type", selection: $selectedShapeType) {
-                                ForEach(ShapeType.allCases) { type in
-                                    Text(type.name)
-                                }
-                            }
-                        } footer: {
-                            if showDescription {
-                                Text(selectedShapeType.description)
+            .inspector(isPresented: $showInspector) {
+                List {
+                    Section {
+                        Picker("Type", selection: $selectedShapeType) {
+                            ForEach(ShapeType.allCases) { type in
+                                Text(type.name)
                             }
                         }
-                        Section("Control") {
-                            ColorPicker(".fill", selection: $selectedFillColor)
-                            ColorPicker(
-                                ".stroke", selection: $selectedStrokeColor)
+                    } footer: {
+                        if showDescription {
+                            Text(selectedShapeType.description)
+                        }
+                    }
+                    Section("Control") {
+                        ColorPicker(".fill", selection: $selectedFillColor)
+                        ColorPicker(
+                            ".stroke", selection: $selectedStrokeColor)
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             LabeledContent {
                                 Slider(
                                     value: $lineWidth, in: 0...10,
@@ -293,7 +278,11 @@ struct ShapesView: View {
                                 Text("lineWidth")
                                 Text(lineWidth, format: .number)
                             }
+                        }
 
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             Stepper(
                                 value: Binding(
                                     get: { dash[0] },
@@ -303,7 +292,11 @@ struct ShapesView: View {
                                 Text("short")
                                 Text(dash[0], format: .number)
                             }
+                        }
 
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             Stepper(
                                 value: Binding(
                                     get: { dash.count > 1 ? dash[1] : 0 },
@@ -315,31 +308,61 @@ struct ShapesView: View {
                                     Int(dash.count > 1 ? dash[1] : 0),
                                     format: .number)
                             }
+                        }
 
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             Slider(value: $dashPhase, in: 0...50, step: 1)
+                        }
 
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             Picker("lineCap", selection: $lineCap) {
                                 ForEach(lineCapOptions, id: \.1) { option in
                                     Text(option.0).tag(option.1)
                                 }
                             }
+                        }
 
+                        WithDescriptionView(
+                            showDescription: $showDescription, description: ""
+                        ) {
                             Picker("lineJoin", selection: $lineJoin) {
                                 ForEach(lineJoinOptions, id: \.1) { option in
                                     Text(option.0).tag(option.1)
                                 }
                             }
-                            if selectedShapeType == .unevenRoundedRectangle {
+                        }
+
+                        if selectedShapeType == .unevenRoundedRectangle {
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description: ""
+                            ) {
                                 LabeledContent {
                                     Slider(
                                         value: $unevenRoundedRectangle
                                             .cornerRadii
-                                            .topLeading, in: 0...100, step: 1)
+                                            .topLeading, in: 0...100, step: 1) {
+                                                Text("topLeading")
+                                            } minimumValueLabel: {
+                                                Text("0")
+                                            } maximumValueLabel: {
+                                                Text("100")
+                                            }
                                 } label: {
                                     Image(
                                         systemName:
                                             "inset.filled.topleading.rectangle")
                                 }
+                            }
+
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description: ""
+                            ) {
                                 LabeledContent {
                                     Slider(
                                         value: $unevenRoundedRectangle
@@ -351,6 +374,12 @@ struct ShapesView: View {
                                             "inset.filled.toptrailing.rectangle"
                                     )
                                 }
+                            }
+
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description: ""
+                            ) {
                                 LabeledContent {
                                     Slider(
                                         value: $unevenRoundedRectangle
@@ -363,6 +392,12 @@ struct ShapesView: View {
                                             "inset.filled.bottomleading.rectangle"
                                     )
                                 }
+                            }
+
+                            WithDescriptionView(
+                                showDescription: $showDescription,
+                                description: ""
+                            ) {
                                 LabeledContent {
                                     Slider(
                                         value: $unevenRoundedRectangle
@@ -377,54 +412,54 @@ struct ShapesView: View {
                                 }
                             }
                         }
-                        Section("Value") {
-                            if selectedShapeType == .roundedRectangle {
-                                LabeledContent(
-                                    "cornerSize.width",
-                                    value: roundedRectangle.cornerSize.width,
-                                    format: .number)
-                                LabeledContent(
-                                    "cornerSize.height",
-                                    value: roundedRectangle.cornerSize.height,
-                                    format: .number)
-                                LabeledContent(
-                                    "style",
-                                    value: roundedRectangle.style == .circular
-                                        ? "Circular" : "Continuous")
-                            }
-                            if selectedShapeType == .unevenRoundedRectangle {
-                                LabeledContent(
-                                    "cornerRadii.topLeading",
-                                    value: unevenRoundedRectangle.cornerRadii
-                                        .topLeading, format: .number)
-                                LabeledContent(
-                                    "cornerRadii.topTrailing",
-                                    value: unevenRoundedRectangle.cornerRadii
-                                        .topTrailing, format: .number)
-                                LabeledContent(
-                                    "cornerRadii.bottomLeading",
-                                    value: unevenRoundedRectangle.cornerRadii
-                                        .bottomLeading, format: .number)
-                                LabeledContent(
-                                    "cornerRadii.bottomTrailing",
-                                    value: unevenRoundedRectangle.cornerRadii
-                                        .bottomTrailing, format: .number)
-                                LabeledContent(
-                                    "style",
-                                    value: unevenRoundedRectangle.style
-                                        == .circular
-                                        ? "Circular" : "Continuous")
-                            }
-                            if selectedShapeType == .capsule {
-                                LabeledContent(
-                                    "style",
-                                    value: capsule.style == .circular
-                                        ? "Circular" : "Continuous")
-                            }
+                    }
+                    Section("Value") {
+                        if selectedShapeType == .roundedRectangle {
+                            LabeledContent(
+                                "cornerSize.width",
+                                value: roundedRectangle.cornerSize.width,
+                                format: .number)
+                            LabeledContent(
+                                "cornerSize.height",
+                                value: roundedRectangle.cornerSize.height,
+                                format: .number)
+                            LabeledContent(
+                                "style",
+                                value: roundedRectangle.style == .circular
+                                    ? "Circular" : "Continuous")
+                        }
+                        if selectedShapeType == .unevenRoundedRectangle {
+                            LabeledContent(
+                                "cornerRadii.topLeading",
+                                value: unevenRoundedRectangle.cornerRadii
+                                    .topLeading, format: .number)
+                            LabeledContent(
+                                "cornerRadii.topTrailing",
+                                value: unevenRoundedRectangle.cornerRadii
+                                    .topTrailing, format: .number)
+                            LabeledContent(
+                                "cornerRadii.bottomLeading",
+                                value: unevenRoundedRectangle.cornerRadii
+                                    .bottomLeading, format: .number)
+                            LabeledContent(
+                                "cornerRadii.bottomTrailing",
+                                value: unevenRoundedRectangle.cornerRadii
+                                    .bottomTrailing, format: .number)
+                            LabeledContent(
+                                "style",
+                                value: unevenRoundedRectangle.style
+                                    == .circular
+                                    ? "Circular" : "Continuous")
+                        }
+                        if selectedShapeType == .capsule {
+                            LabeledContent(
+                                "style",
+                                value: capsule.style == .circular
+                                    ? "Circular" : "Continuous")
                         }
                     }
                 }
-            )
+            }
             .toolbar {
                 Menu {
                     Toggle(isOn: $showInspector.animation()) {
