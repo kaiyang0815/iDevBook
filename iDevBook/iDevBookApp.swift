@@ -40,6 +40,23 @@ struct iDevBookApp: App {
             RootView()
         }
         .modelContainer(sharedModelContainer)
+        .commands {
+            CommandMenu("First menu") {
+                Button("Print message") {
+                    print("Hello World!")
+                }.keyboardShortcut("p")
+
+                Button("Print second message") {
+                    print("Second message!")
+                }
+
+                Divider()
+
+                Button("Print third message") {
+                    print("Third message!")
+                }
+            }
+        }
     }
 }
 #if os(iOS)
