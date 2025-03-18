@@ -8,84 +8,143 @@
 
 import SwiftUI
 
-enum LayoutFundamentalsType: String, CaseIterable, Identifiable {
-    case hStack
-    case vStack
-    case zStack
-    case lazyHStack
-    case lazyVStack
-    case grid
-    case gridRow
-    case lazyHGrid
-    case lazyVGrid
-    case gridItem
-    case viewThatFits
-    case spacer
-    case divider
+enum EVerticalAlignment: String, CaseIterable, Identifiable {
+    case top
+    case center
+    case bottom
+    case firstTextBaseline
+    case lastTextBaseline
 
-    var id: Self {
-        return self
-    }
+    var id: Self { self }
 
     var name: String {
         switch self {
-        case .hStack:
-            "HStack"
-        case .vStack:
-            "VStack"
-        case .zStack:
-            "ZStack"
-        case .lazyHStack:
-            "LazyHStack"
-        case .lazyVStack:
-            "LazyVStack"
-        case .grid:
-            "Grid"
-        case .gridRow:
-            "GridRow"
-        case .lazyHGrid:
-            "LazyHGrid"
-        case .lazyVGrid:
-            "LazyVGrid"
-        case .gridItem:
-            "GridItem"
-        case .viewThatFits:
-            "ViewThatFits"
-        case .spacer:
-            "Spacer"
-        case .divider:
-            "Divider"
+        case .top:
+            ".top"
+        case .center:
+            ".center"
+        case .bottom:
+            ".bottom"
+        case .firstTextBaseline:
+            ".firstTextBaseline"
+        case .lastTextBaseline:
+            ".lastTextBaseline"
         }
     }
 
-    var description: String {
+    var alignment: VerticalAlignment {
         switch self {
-        case .hStack:
-            "A view that arranges its subviews in a horizontal line."
-        case .vStack:
-            "A view that arranges its subviews in a vertical line."
-        case .zStack:
-            "A view that overlays its subviews, aligning them in both axes."
-        case .lazyHStack:
-            "A view that arranges its children in a line that grows horizontally, creating items only as needed."
-        case .lazyVStack:
-            "A view that arranges its children in a line that grows vertically, creating items only as needed."
-        case .grid:
-            "A container view that arranges other views in a two dimensional layout."
-        case .gridRow:
-            "A horizontal row in a two dimensional grid container."
-        case .lazyHGrid:
-            "A container view that arranges its child views in a grid that grows horizontally, creating items only as needed."
-        case .lazyVGrid:
-            "A container view that arranges its child views in a grid that grows vertically, creating items only as needed."
-        case .gridItem:
-            "A description of a row or a column in a lazy grid."
-        case .viewThatFits:
-            "A view that adapts to the available space by providing the first child view that fits."
-        case .spacer:
-            "A flexible space that expands along the major axis of its containing stack layout, or on both axes if not contained in a stack."
-        case .divider:
-            "A visual element that can be used to separate other content."
+        case .top:
+            .top
+        case .center:
+            .center
+        case .bottom:
+            .bottom
+        case .firstTextBaseline:
+            .firstTextBaseline
+        case .lastTextBaseline:
+            .lastTextBaseline
+        }
+    }
+}
+
+enum EHorizontalAlignment: String, CaseIterable, Identifiable {
+    case leading
+    case center
+    case trailing
+
+    var id: Self { self }
+
+    var name: String {
+        switch self {
+        case .leading:
+            ".leading"
+        case .center:
+            ".center"
+        case .trailing:
+            ".trailing"
+        }
+    }
+
+    var alignment: HorizontalAlignment {
+        switch self {
+        case .leading:
+            .leading
+        case .center:
+            .center
+        case .trailing:
+            .trailing
+        }
+    }
+}
+
+enum EZStackAlignment: String, CaseIterable, Identifiable {
+
+    case topLeading
+    case top
+    case topTrailing
+    case leading
+    case center
+    case trailing
+    case bottomLeading
+    case bottom
+    case bottomTrailing
+    case leadingLastTextBaseline
+    case trailingFirstTextBaseline
+
+    var id: Self { self }
+
+    var name: String {
+        switch self {
+        case .topLeading:
+            ".topLeading"
+        case .top:
+            ".top"
+        case .topTrailing:
+            ".topTrailing"
+        case .leading:
+            ".leading"
+        case .center:
+            ".center"
+        case .trailing:
+            ".trailing"
+        case .bottomLeading:
+            ".bottomLeading"
+        case .bottom:
+            ".bottom"
+        case .bottomTrailing:
+            ".bottomTrailing"
+        case .leadingLastTextBaseline:
+            ".leadingLastTextBaseline"
+        case .trailingFirstTextBaseline:
+            ".trailingFirstTextBaseline"
+        }
+    }
+
+    var alignment: Alignment {
+        switch self {
+        case .topLeading:
+            .topLeading
+        case .top:
+            .top
+        case .topTrailing:
+            .topTrailing
+        case .leading:
+            .leading
+        case .center:
+            .center
+        case .trailing:
+            .trailing
+        case .bottomLeading:
+            .bottomLeading
+        case .bottom:
+            .bottom
+        case .bottomTrailing:
+            .bottomTrailing
+        case .leadingLastTextBaseline:
+            .leadingLastTextBaseline
+        case .trailingFirstTextBaseline:
+            .leadingFirstTextBaseline
         }
     }
 }
@@ -94,112 +153,194 @@ struct LayoutFundamentalsView: View {
     @Environment(\.openURL) private var openURL
 
     @State private var showDescription: Bool = true
-    @State private var selectdContainerType: LayoutFundamentalsType = .hStack
+    @State private var hideTabBar: Bool = false
+    @State private var showInspector: Bool = false
+    @State private var textLabel: Bool = false
+    @State private var size: CGSize = .zero
+    @State private var selectedContainerType: LayoutFundamentalsType = .zStack
+    @State private var selectedVerticalAlignment: EVerticalAlignment = .top
+    @State private var selectedHorizontalAlignment: EHorizontalAlignment =
+        .leading
+    @State private var selectedZStackAlignment: EZStackAlignment = .center
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    switch selectdContainerType {
-                    case .hStack:
-                        HStack {
-                            Spacer()
-                            HStack(alignment: .center, spacing: 20) {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(.red)
-                                    .frame(width: 40, height: 40)
-                                Capsule()
-                                    .fill(.blue)
-                                    .frame(width: 80, height: 60)
-                                Circle()
-                                    .fill(.green)
-                                    .frame(width: 100, height: 100)
+            GeometryReader { proxy in
+                Form {
+                    Section("Preview") {
+                        CardContainerView {
+                            switch selectedContainerType {
+                            case .hStack:
+                                HStack(
+                                    alignment: selectedVerticalAlignment
+                                        .alignment
+                                ) {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.red)
+                                        .frame(height: size.width / 7)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.blue)
+                                        .frame(height: size.width / 5)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.green)
+                                        .frame(height: size.width / 3)
+                                }
+                            case .vStack:
+                                VStack(
+                                    alignment: selectedHorizontalAlignment
+                                        .alignment
+                                ) {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.red)
+                                        .frame(height: size.height / 12)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.blue)
+                                        .frame(
+                                            width: size.width / 2,
+                                            height: size.height / 12)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.green)
+                                        .frame(
+                                            width: size.width / 4,
+                                            height: size.height / 12)
+                                }
+                            case .zStack:
+                                ZStack(alignment: selectedZStackAlignment.alignment) {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.green)
+                                        .frame(height: size.height / 5)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.blue)
+                                        .frame(
+                                            width: size.height / 4,
+                                            height: size.height / 8)
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.red)
+                                        .frame(
+                                            width: size.height / 8,
+                                            height: size.height / 12)
+                                }
+                            case .lazyHStack:
+                                Text("")
+                            case .lazyVStack:
+                                Text("")
+                            case .grid:
+                                Text("")
+                            case .gridRow:
+                                Text("")
+                            case .lazyHGrid:
+                                Text("")
+                            case .lazyVGrid:
+                                Text("")
+                            case .gridItem:
+                                Text("")
+                            case .viewThatFits:
+                                Text("")
+                            case .spacer:
+                                Text("")
+                            case .divider:
+                                Text("")
                             }
-                            Spacer()
                         }
-                    case .vStack:
-                        HStack {
-                            Spacer()
-                            VStack(alignment: .center, spacing: 20) {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(.red)
-                                    .frame(width: 40, height: 40)
-                                Capsule()
-                                    .fill(.blue)
-                                    .frame(width: 80, height: 60)
-                                Circle()
-                                    .fill(.green)
-                                    .frame(width: 100, height: 100)
-                            }
-                            Spacer()
-                        }
-                    case .zStack:
-                        HStack {
-                            Spacer()
-                            ZStack {
-                                Circle()
-                                    .fill(.green)
-                                    .frame(width: 100, height: 100)
-                                Capsule()
-                                    .fill(.blue)
-                                    .frame(width: 80, height: 50)
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(.red)
-                                    .frame(width: 40, height: 40)
-                            }
-                            Spacer()
-                        }
-                    case .lazyHStack:
-                        Text("")
-                    case .lazyVStack:
-                        Text("")
-                    case .grid:
-                        Text("")
-                    case .gridRow:
-                        Text("")
-                    case .lazyHGrid:
-                        Text("")
-                    case .lazyVGrid:
-                        Text("")
-                    case .gridItem:
-                        Text("")
-                    case .viewThatFits:
-                        Text("")
-                    case .spacer:
-                        Text("")
-                    case .divider:
-                        Text("")
                     }
-                }
-                Section {
-                    Picker("Type", selection: $selectdContainerType.animation()) {
-                        ForEach(LayoutFundamentalsType.allCases) { type in
-                            Text(type.name)
-                        }
-                    }
-                } footer: {
-                    if showDescription {
-                        Text(selectdContainerType.description)
+                    .clearSectionStyle()
+                    .task {
+                        size = proxy.size
                     }
                 }
             }
             .navigationTitle("Layout fundamentals")
+            .navigationTitle("Menus and commands")
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarVisibility(
+                    hideTabBar ? .hidden : .automatic, for: .tabBar)
+            #endif
+            .onAppear {
+                withAnimation {
+                    hideTabBar.toggle()
+                    showInspector = true
+                }
+            }
+            .onWillDisappear {
+                withAnimation {
+                    showInspector = false
+                }
+            }
             .toolbar {
                 Menu {
-                    Button {
-                        if let url = URL(
-                            string:
-                                "https://developer.apple.com/design/Human-Interface-Guidelines/layout"
-                        ) {
-                            openURL(url)
-                        }
-                    } label: {
-                        Label(
-                            "Human Interface Guidelines",
-                            systemImage: "book.pages")
+                    Toggle(isOn: $showInspector.animation()) {
+                        Label("Show Inspector", systemImage: "info.circle")
+                    }
+                    Toggle(isOn: $showDescription.animation()) {
+                        Label("Show Description", systemImage: "eye")
                     }
                 } label: {
                     Label("More", systemImage: "ellipsis.circle")
+                }
+            }
+            .inspector(isPresented: $showInspector) {
+                Form {
+                    Section {
+                        Picker(
+                            "Type",
+                            selection: $selectedContainerType.animation()
+                        ) {
+                            ForEach(LayoutFundamentalsType.allCases) { type in
+                                Text(type.name)
+                            }
+                        }
+                    } footer: {
+                        if showDescription {
+                            Text(selectedContainerType.description)
+                        }
+                    }
+
+                    Section {
+                        switch selectedContainerType {
+                        case .hStack:
+                            PickerContainer(
+                                "alignment",
+                                selection: $selectedVerticalAlignment
+                            ) { alginment in
+                                Text(alginment.name)
+                            }
+                        case .vStack:
+                            PickerContainer(
+                                "alignment",
+                                selection: $selectedHorizontalAlignment
+                            ) { alginment in
+                                Text(alginment.name)
+                            }
+                        case .zStack:
+                            PickerContainer(
+                                "alignment",
+                                selection: $selectedZStackAlignment
+                            ) { alginment in
+                                Text(alginment.name)
+                            }
+                        case .lazyHStack:
+                            Text("")
+                        case .lazyVStack:
+                            Text("")
+                        case .grid:
+                            Text("")
+                        case .gridRow:
+                            Text("")
+                        case .lazyHGrid:
+                            Text("")
+                        case .lazyVGrid:
+                            Text("")
+                        case .gridItem:
+                            Text("")
+                        case .viewThatFits:
+                            Text("")
+                        case .spacer:
+                            Text("")
+                        case .divider:
+                            Text("")
+                        }
+                    }
                 }
             }
         }
