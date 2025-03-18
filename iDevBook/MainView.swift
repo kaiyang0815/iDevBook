@@ -93,6 +93,13 @@ struct MainView: View {
                     } label: {
                         Text("HighlightSwift")
                     }
+                    
+                    NavigationLink {
+                        EFQRCodeView()
+                    } label: {
+                        Text("EFQRCode")
+                    }
+
                 }
 
                 #if os(iOS)

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD18928B2D88DF8000296DC0 /* EFQRCode in Frameworks */ = {isa = PBXBuildFile; productRef = BD18928A2D88DF8000296DC0 /* EFQRCode */; };
 		BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105692D7662EE00549A0F /* RichTextKit */; };
 		FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07942D82CD8C007A3DD1 /* AcknowList */; };
 		FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07972D82D13F007A3DD1 /* MarkdownUI */; };
@@ -63,6 +64,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */,
+				BD18928B2D88DF8000296DC0 /* EFQRCode in Frameworks */,
 				FBEB1C7C2D76A80C00220F20 /* HighlightSwift in Frameworks */,
 				BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */,
 				FB432A1C2D81780700BE347E /* XMLKit in Frameworks */,
@@ -136,6 +138,7 @@
 				FB2A07942D82CD8C007A3DD1 /* AcknowList */,
 				FB2A07972D82D13F007A3DD1 /* MarkdownUI */,
 				FBA9E9A82D83DB06009B252B /* RichText */,
+				BD18928A2D88DF8000296DC0 /* EFQRCode */,
 			);
 			productName = iDevBook;
 			productReference = FBA912932D49CF9E00447692 /* iDevBook.app */;
@@ -226,6 +229,7 @@
 				FB2A07932D82CD8C007A3DD1 /* XCRemoteSwiftPackageReference "AcknowList" */,
 				FB2A07962D82D13F007A3DD1 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				FBA9E9A72D83DB05009B252B /* XCRemoteSwiftPackageReference "RichText" */,
+				BD1892892D88DF8000296DC0 /* XCRemoteSwiftPackageReference "EFQRCode" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FBA912942D49CF9E00447692 /* Products */;
@@ -627,6 +631,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		BD1892892D88DF8000296DC0 /* XCRemoteSwiftPackageReference "EFQRCode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/EFPrefix/EFQRCode.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.2;
+			};
+		};
 		BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/RichTextKit.git";
@@ -678,6 +690,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BD18928A2D88DF8000296DC0 /* EFQRCode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BD1892892D88DF8000296DC0 /* XCRemoteSwiftPackageReference "EFQRCode" */;
+			productName = EFQRCode;
+		};
 		BDB105692D7662EE00549A0F /* RichTextKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BDB105682D7662EE00549A0F /* XCRemoteSwiftPackageReference "RichTextKit" */;
