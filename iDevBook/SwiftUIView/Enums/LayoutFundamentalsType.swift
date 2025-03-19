@@ -14,10 +14,8 @@ enum LayoutFundamentalsType: String, CaseIterable, Identifiable {
     case lazyHStack
     case lazyVStack
     case grid
-    case gridRow
     case lazyHGrid
     case lazyVGrid
-    case gridItem
     case viewThatFits
     case spacer
     case divider
@@ -40,14 +38,10 @@ enum LayoutFundamentalsType: String, CaseIterable, Identifiable {
             "LazyVStack"
         case .grid:
             "Grid"
-        case .gridRow:
-            "GridRow"
         case .lazyHGrid:
             "LazyHGrid"
         case .lazyVGrid:
             "LazyVGrid"
-        case .gridItem:
-            "GridItem"
         case .viewThatFits:
             "ViewThatFits"
         case .spacer:
@@ -71,14 +65,10 @@ enum LayoutFundamentalsType: String, CaseIterable, Identifiable {
             "A view that arranges its children in a line that grows vertically, creating items only as needed."
         case .grid:
             "A container view that arranges other views in a two dimensional layout."
-        case .gridRow:
-            "A horizontal row in a two dimensional grid container."
         case .lazyHGrid:
             "A container view that arranges its child views in a grid that grows horizontally, creating items only as needed."
         case .lazyVGrid:
             "A container view that arranges its child views in a grid that grows vertically, creating items only as needed."
-        case .gridItem:
-            "A description of a row or a column in a lazy grid."
         case .viewThatFits:
             "A view that adapts to the available space by providing the first child view that fits."
         case .spacer:
