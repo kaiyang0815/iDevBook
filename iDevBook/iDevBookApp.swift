@@ -6,6 +6,7 @@
 //
 //
 
+import os
 import SwiftData
 import SwiftUI
 
@@ -77,3 +78,6 @@ struct iDevBookApp: App {
         }
     }
 #endif
+
+/// A global logger for the app.
+let logger = Logger()
