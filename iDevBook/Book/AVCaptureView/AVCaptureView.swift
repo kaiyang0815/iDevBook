@@ -5,7 +5,64 @@
 // Copyright © 2025 Kaiyang0815.
 // All Rights Reserved.
 
+import AVFoundation
 import SwiftUI
+
+struct CameraPreview: UIViewRepresentable {
+    private let source: PreviewSource
+
+    init(source: PreviewSource) {
+        self.source = source
+    }
+
+    func makeUIView(context: Context) -> PreviewView {
+        let preview = PreviewView()
+        source.connect(to: preview)
+        return preview
+    }
+
+    func updateUIView(_ previewView: PreviewView, context: Context) {
+        // No-op.
+    }
+
+    class PreviewView: UIView, PreviewTarget {
+        override class var layerClass: AnyClass {
+            AVCaptureVideoPreviewLayer.self
+        }
+
+        var previewLayer: AVCaptureVideoPreviewLayer {
+            layer as! AVCaptureVideoPreviewLayer
+        }
+
+        nonisolated func setSession(_ session: AVCaptureSession) {
+            Task { @MainActor in
+                previewLayer.session = session
+            }
+        }
+    }
+}
+
+protocol PreviewSource {
+    func connect(to target: PreviewTarget)
+}
+
+protocol PreviewTarget {
+    func setSession(_ session: AVCaptureSession)
+}
+
+struct DefaultPreviewSource: PreviewSource {
+    private let session: AVCaptureSession
+
+    init(session: AVCaptureSession) {
+        self.session = session
+    }
+
+    func connect(to target: PreviewTarget) {
+        target.setSession(session)
+    }
+}
+
+
 
 struct AVCaptureView: View {
     @State private var hideTabBar: Bool = false
@@ -19,7 +76,7 @@ struct AVCaptureView: View {
                 Form {
                     Section("Preview") {
                         CardContainerView {
-                            
+
                         }
                     }
                     .clearSectionStyle()
@@ -44,7 +101,7 @@ struct AVCaptureView: View {
                     Section("Control") {
                         Button {
                             Task {
-                                
+
                             }
                         } label: {
                             Label("Start", systemImage: "play")
