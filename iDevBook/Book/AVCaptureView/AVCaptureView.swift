@@ -6,63 +6,80 @@
 // All Rights Reserved.
 
 import AVFoundation
+import Combine
 import SwiftUI
 
 struct CameraPreview: UIViewRepresentable {
-    private let source: PreviewSource
-
-    init(source: PreviewSource) {
-        self.source = source
-    }
+    let session: AVCaptureSession
 
     func makeUIView(context: Context) -> PreviewView {
-        let preview = PreviewView()
-        source.connect(to: preview)
-        return preview
+        let view = PreviewView()
+        view.videoPreviewLayer.session = session
+        view.videoPreviewLayer.videoGravity = .resizeAspectFill
+        return view
     }
 
-    func updateUIView(_ previewView: PreviewView, context: Context) {
-        // No-op.
+    func updateUIView(_ uiView: PreviewView, context: Context) {
+        uiView.videoPreviewLayer.frame = uiView.bounds
     }
 
-    class PreviewView: UIView, PreviewTarget {
+    class PreviewView: UIView {
         override class var layerClass: AnyClass {
             AVCaptureVideoPreviewLayer.self
         }
 
-        var previewLayer: AVCaptureVideoPreviewLayer {
+        var videoPreviewLayer: AVCaptureVideoPreviewLayer {
             layer as! AVCaptureVideoPreviewLayer
         }
+    }
+}
 
-        nonisolated func setSession(_ session: AVCaptureSession) {
-            Task { @MainActor in
-                previewLayer.session = session
+@Observable
+final class CameraManager {
+    var session = AVCaptureSession()
+
+    var status: Status = .unconfigured
+
+    enum Status {
+        case unconfigured, configured, unauthorized, failed
+    }
+
+    func configureCaptureSession() {
+        session.beginConfiguration()
+        session.sessionPreset = .photo
+        guard
+            let camera = AVCaptureDevice.default(
+                .builtInWideAngleCamera, for: .video, position: .back),
+            let videoInput = try? AVCaptureDeviceInput(device: camera),
+            session.canAddInput(videoInput)
+        else {
+            status = .failed
+            session.commitConfiguration()
+            return
+        }
+        session.addInput(videoInput)
+        session.commitConfiguration()
+        status = .configured
+    }
+
+    func startSession() {
+        guard status == .configured, !session.isRunning else {
+            print("not configured or already running")
+            return
+        }
+        DispatchQueue.global(qos: .background).async {
+            self.session.startRunning()
+        }
+    }
+
+    func stopSession() {
+        if session.isRunning {
+            DispatchQueue.global(qos: .background).async {
+                self.session.stopRunning()
             }
         }
     }
 }
-
-protocol PreviewSource {
-    func connect(to target: PreviewTarget)
-}
-
-protocol PreviewTarget {
-    func setSession(_ session: AVCaptureSession)
-}
-
-struct DefaultPreviewSource: PreviewSource {
-    private let session: AVCaptureSession
-
-    init(session: AVCaptureSession) {
-        self.session = session
-    }
-
-    func connect(to target: PreviewTarget) {
-        target.setSession(session)
-    }
-}
-
-
 
 struct AVCaptureView: View {
     @State private var hideTabBar: Bool = false
@@ -70,19 +87,23 @@ struct AVCaptureView: View {
     @State private var showInspector: Bool = true
     @State private var size: CGSize = .zero
 
+    @State private var cameraManager = CameraManager()
+
     var body: some View {
         NavigationStack {
             GeometryReader { proxy in
                 Form {
                     Section("Preview") {
                         CardContainerView {
-
+                            CameraPreview(session: cameraManager.session)
+                                .frame(height: size.height / 4)
                         }
                     }
                     .clearSectionStyle()
                 }
                 .task {
                     size = proxy.size
+                    cameraManager.configureCaptureSession()
                 }
                 .onTapGesture(count: 2) {
                     withAnimation {
@@ -101,7 +122,7 @@ struct AVCaptureView: View {
                     Section("Control") {
                         Button {
                             Task {
-
+                                cameraManager.startSession()
                             }
                         } label: {
                             Label("Start", systemImage: "play")
