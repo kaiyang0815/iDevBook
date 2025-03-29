@@ -11,6 +11,7 @@
 		BDB1056A2D7662EE00549A0F /* RichTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = BDB105692D7662EE00549A0F /* RichTextKit */; };
 		FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07942D82CD8C007A3DD1 /* AcknowList */; };
 		FB2A07982D82D13F007A3DD1 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = FB2A07972D82D13F007A3DD1 /* MarkdownUI */; };
+		FB4282E52D96EAF9007DF510 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FB4282E42D96EAF9007DF510 /* OpenAI */; };
 		FB432A1A2D81780700BE347E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A192D81780700BE347E /* FeedKit */; };
 		FB432A1C2D81780700BE347E /* XMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB432A1B2D81780700BE347E /* XMLKit */; };
 		FBA9E9A92D83DB06009B252B /* RichText in Frameworks */ = {isa = PBXBuildFile; productRef = FBA9E9A82D83DB06009B252B /* RichText */; };
@@ -70,6 +71,7 @@
 				FB432A1C2D81780700BE347E /* XMLKit in Frameworks */,
 				FB432A1A2D81780700BE347E /* FeedKit in Frameworks */,
 				FBA9E9A92D83DB06009B252B /* RichText in Frameworks */,
+				FB4282E52D96EAF9007DF510 /* OpenAI in Frameworks */,
 				FB2A07952D82CD8C007A3DD1 /* AcknowList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +141,7 @@
 				FB2A07972D82D13F007A3DD1 /* MarkdownUI */,
 				FBA9E9A82D83DB06009B252B /* RichText */,
 				BD18928A2D88DF8000296DC0 /* EFQRCode */,
+				FB4282E42D96EAF9007DF510 /* OpenAI */,
 			);
 			productName = iDevBook;
 			productReference = FBA912932D49CF9E00447692 /* iDevBook.app */;
@@ -230,6 +233,7 @@
 				FB2A07962D82D13F007A3DD1 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				FBA9E9A72D83DB05009B252B /* XCRemoteSwiftPackageReference "RichText" */,
 				BD1892892D88DF8000296DC0 /* XCRemoteSwiftPackageReference "EFQRCode" */,
+				FB4282E32D96EAF9007DF510 /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FBA912942D49CF9E00447692 /* Products */;
@@ -667,6 +671,14 @@
 				minimumVersion = 2.4.1;
 			};
 		};
+		FB4282E32D96EAF9007DF510 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.8;
+			};
+		};
 		FB432A182D81780700BE347E /* XCRemoteSwiftPackageReference "FeedKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nmdias/FeedKit.git";
@@ -713,6 +725,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FB2A07962D82D13F007A3DD1 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		FB4282E42D96EAF9007DF510 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB4282E32D96EAF9007DF510 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
 		};
 		FB432A192D81780700BE347E /* FeedKit */ = {
 			isa = XCSwiftPackageProductDependency;
