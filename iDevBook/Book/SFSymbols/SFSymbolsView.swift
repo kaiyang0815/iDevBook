@@ -10,49 +10,80 @@ import SwiftUI
 
 struct SFSymbolsView: View {
     @State private var selectedSymbolCategory: ESFSymbolCategory = .all
-    @State private var selectedDisplayStyle: DisplayStyle = .grid
+    @State private var selectedDisplayStyle: DisplayStyle = .list
     @State private var searchText: String = ""
-    @State private var showInspector: Bool = true
+    @State private var showInspector: Bool = false
     @State private var selectedSymbol: String = ""
     @State private var hideTabBar: Bool = false
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(
-                    columns: [GridItem(.adaptive(minimum: 100))], spacing: 20
-                ) {
-                    ForEach(
-                        selectedSymbolCategory.symbols.filter({ symbol in
-                            if !searchText.isEmpty {
-                                return symbol.localizedStandardContains(
-                                    searchText)
-                            } else {
-                                return true
-                            }
-                        }), id: \.self
-                    ) {
-                        symbol in
-                        VStack(alignment: .center) {
-                            Image(systemName: symbol)
-                                .font(.largeTitle)
-                                .frame(maxWidth: .infinity, minHeight: 100)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.ultraThickMaterial)
+            Group {
+                switch selectedDisplayStyle {
+                case .grid:
+                    ScrollView {
+                        LazyVGrid(
+                            columns: [GridItem(.adaptive(minimum: 100))],
+                            spacing: 20
+                        ) {
+                            ForEach(
+                                selectedSymbolCategory.symbols.filter({
+                                    symbol in
+                                    if !searchText.isEmpty {
+                                        return symbol.localizedStandardContains(
+                                            searchText)
+                                    } else {
+                                        return true
+                                    }
+                                }), id: \.self
+                            ) {
+                                symbol in
+                                VStack(alignment: .center) {
+                                    Image(systemName: symbol)
+                                        .font(.largeTitle)
+                                        .frame(
+                                            maxWidth: .infinity, minHeight: 100
+                                        )
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(.ultraThickMaterial)
+                                        }
+                                    Text(symbol)
+                                        .padding(2)
+                                        .font(.caption)
+                                        .lineLimit(2)
+                                        .frame(minHeight: 40, alignment: .top)
                                 }
-                            Text(symbol)
-                                .padding(2)
-                                .font(.caption)
-                                .lineLimit(2)
-                                .frame(minHeight: 40, alignment: .top)
+                                .onTapGesture {
+                                    selectedSymbol = symbol
+                                }
+                            }
                         }
-                        .onTapGesture {
-                            selectedSymbol = symbol
+                        .padding()
+                    }
+                case .list:
+                    List {
+                        ForEach(
+                            selectedSymbolCategory.symbols.filter({
+                                symbol in
+                                if !searchText.isEmpty {
+                                    return symbol.localizedStandardContains(
+                                        searchText)
+                                } else {
+                                    return true
+                                }
+                            }), id: \.self
+                        ) {
+                            symbol in
+                            Label(symbol, systemImage: symbol)
+                                .onTapGesture {
+                                    selectedSymbol = symbol
+                                }
                         }
                     }
+                case .gallery:
+                    Text("gallery")
                 }
-                .padding()
             }
             .navigationTitle("SF Symbols Picker")
             .searchable(text: $searchText, prompt: Text("Search"))
