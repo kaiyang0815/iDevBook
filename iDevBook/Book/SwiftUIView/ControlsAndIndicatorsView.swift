@@ -363,11 +363,6 @@ struct ControlsAndIndicatorsView: View {
                         showInspector.toggle()
                     }
                 }
-                .onTapGesture(count: 2) {
-                    withAnimation {
-                        showInspector.toggle()
-                    }
-                }
             }
             .navigationTitle("Controls and indicators")
             .formStyle(.grouped)

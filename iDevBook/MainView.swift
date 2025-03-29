@@ -52,11 +52,20 @@ struct MainView: View {
                         Text("Drawing and graphics")
                     }
                 }
-                
+
                 Section("App Intents") {
                     
                 }
-                
+
+                Section("Pencil Kit") {
+                    NavigationLink {
+                        PencilKitCanvasView()
+                    } label: {
+                        Text("Canvas")
+                    }
+
+                }
+
                 Section("AVFoundation") {
                     NavigationLink {
                         AVCaptureView()
@@ -82,7 +91,7 @@ struct MainView: View {
 
                     #if os(iOS)
                         NavigationLink {
-//                            LexicalDemoView()
+                            //                            LexicalDemoView()
                         } label: {
                             Text("lexical-ios")
                         }
@@ -93,11 +102,17 @@ struct MainView: View {
                     } label: {
                         Text("HighlightSwift")
                     }
-                    
+
                     NavigationLink {
                         EFQRCodeView()
                     } label: {
                         Text("EFQRCode")
+                    }
+
+                    NavigationLink {
+                        OpenAIView()
+                    } label: {
+                        Text("OpenAI")
                     }
 
                 }
